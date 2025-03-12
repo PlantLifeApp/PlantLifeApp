@@ -3,9 +3,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
-import HomeScreen from "../screens/HomeScreen"; 
 import { AuthContext } from "../context/authContext";
 import { ActivityIndicator, View } from "react-native";
+import TabNavigator from "./TabNavigator";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,7 +14,7 @@ const AuthNavigator = () => {
 
     if (loading) {
         return (
-            <View style={{ flex:1, justifyContent: "center", alignItems: "center" }} >
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }} >
                 <ActivityIndicator size="large" color="#0000ff" />
             </View>
         )
@@ -22,15 +22,15 @@ const AuthNavigator = () => {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator>
+            <Stack.Navigator options={{ headerShown: false }} >
                 {user ? (
                     // Jos käyttäjä on kirjautunut, näytetään vain HomeScreen
-                    <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+                    <Stack.Screen name="Main" component={TabNavigator} options={{headerShown: false}}/>
                 ) : (
                     // Muuten näytetään kirjautumisnäkymät
                     <>
-                        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-                        <Stack.Screen name="Register" component={RegisterScreen} options={{ headerShown: false }} />
+                        <Stack.Screen name="Login" component={LoginScreen} />
+                        <Stack.Screen name="Register" component={RegisterScreen} />
                     </>
                 )}
             </Stack.Navigator>
