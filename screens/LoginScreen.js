@@ -11,8 +11,6 @@ const LoginScreen = () => {
     const handleLogin = async () => {
         try {
             await loginUser(email, password);
-            alert("Kirjautuminen onnistui!");
-            navigation.replace("Home"); // Navigoi HomeScreeniin (tai sovelluksen päänäkymään)
         } catch (error) {
             alert("Virhe: " + error.message);
         }

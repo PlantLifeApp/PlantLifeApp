@@ -1,21 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, Text, Button } from "react-native";
-import { auth } from "../services/firebaseConfig";
-import { signOut } from "firebase/auth";
-import { useNavigation } from "@react-navigation/native";
+import { getAuth, signOut } from "firebase/auth";
+import { AuthContext } from "../context/authContext";
 
 const HomeScreen = () => {
-    const navigation = useNavigation();
-
-    const handleLogout = async () => {
-        await signOut(auth);
-        navigation.replace("Login"); // Palaa kirjautumisnäkymään
-    };
+    const { user } = useContext(AuthContext)
+    const auth = getAuth()
 
     return (
         <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <Text>Tervetuloa sovellukseen!</Text>
-            <Button title="Kirjaudu ulos" onPress={handleLogout} />
+            <Text>Tervetuloa sovellukseen {user?.email}!</Text>
+            <Button title="Kirjaudu ulos" onPress={() => signOut(auth)} />
         </View>
     );
 };

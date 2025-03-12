@@ -15,7 +15,6 @@ const RegisterScreen = () => {
         try {
             await registerUser(email, password, username);
             alert("Käyttäjä rekisteröity!");
-            navigation.replace("Login")
         } catch (error) {
             alert("Virhe: " + error.message);
         }
@@ -28,6 +27,9 @@ const RegisterScreen = () => {
             <TextInput style={styles.input} placeholder="Sähköposti" onChangeText={setEmail} keyboardType="email-address" />
             <TextInput style={styles.input} placeholder="Salasana" onChangeText={setPassword} secureTextEntry />
             <Button title="Rekisteröidy" onPress={handleRegister} />
+            <Text style={styles.link} onPress={() => navigation.navigate("Login")}>
+                Oletko jo rekisteröitynyt? Kirjaudu tästä.
+            </Text>
         </View>
     );
 };

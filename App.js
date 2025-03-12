@@ -4,15 +4,8 @@ import AuthNavigator from './navigation/AuthNavigator';
 
 export default function App() {
   return (
-    <AuthNavigator />
+    <AuthProvider>
+      <AuthNavigator />
+    </AuthProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
