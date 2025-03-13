@@ -1,10 +1,9 @@
 import React, { useContext } from "react"
-import { Surface, Text, Button, Switch } from "react-native-paper"
+import { Surface, Text, Button, SegmentedButtons } from "react-native-paper"
 import { StyleSheet, View } from "react-native"
 import { getAuth, signOut } from "firebase/auth"
 import { AuthContext } from "../context/authContext"
 import { ThemeContext } from "../context/themeContext"
-import { SafeAreaView } from "react-native-safe-area-context"
 
 export default function ProfileScreen() {
     const { user } = useContext(AuthContext)
@@ -16,21 +15,27 @@ export default function ProfileScreen() {
             <Surface style={styles.container}>
 
                 <View style={styles.topContent}>
-                    <Text variant="bodyLarge">Signed in as:</Text>
+                    <Text variant="bodyMedium">Signed in as:</Text>
                     <Text variant="bodyLarge" style={styles.sectionEnd}>{user?.email}</Text>
 
-                    <Text variant="bodyMedium" style={styles.paragraph}>Use System Theme:</Text>
-                    <Switch 
-                        value={useSystemTheme} 
-                        onValueChange={(value) => setUseSystemTheme(value)} 
-                    />
+                    <Text variant="bodyMedium">Theme:</Text>
+                    <SegmentedButtons
+                            value={useSystemTheme ? "system" : isDarkMode ? "dark" : "light"}
+                            onValueChange={(value) => {
+                                if (value === "system") {
+                                    setUseSystemTheme(true)
+                                } else {
+                                    setUseSystemTheme(false)
+                                    setIsDarkMode(value === "dark")
+                                }
+                            }}
+                            buttons={[
+                                { value: "system", label: "System" },
+                                { value: "light", label: "Light" },
+                                { value: "dark", label: "Dark" },
+                            ]}
+                        />
 
-                    <Text variant="bodyMedium" style={styles.paragraph}>Always Use Dark Theme:</Text>
-                    <Switch 
-                        value={isDarkMode}
-                        onValueChange={(value) => setIsDarkMode(value)}
-                        disabled={useSystemTheme}
-                    />  
                 </View>
 
                 <View style={styles.bottomContent}>
