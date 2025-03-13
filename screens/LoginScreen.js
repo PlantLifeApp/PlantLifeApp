@@ -19,23 +19,23 @@ const LoginScreen = () => {
 
     return (
         <Surface style={styles.container}>
-            <Text style={styles.title}>Kirjaudu sisään</Text>
+            
             <TextInput 
                 style={styles.input} 
-                placeholder="Sähköposti" 
+                placeholder="Email address" 
                 onChangeText={setEmail} 
                 keyboardType="email-address"
                 autoCapitalize="none"
             />
             <TextInput 
                 style={styles.input} 
-                placeholder="Salasana" 
+                placeholder="Password" 
                 onChangeText={setPassword} 
                 secureTextEntry
             />
-            <Button title="Kirjaudu" onPress={handleLogin} />
+            <Button style={styles.mainButton} mode="contained" onPress={handleLogin}>Log In</Button>
             <Text style={styles.link} onPress={() => navigation.navigate("Register")}>
-                Ei tiliä? Rekisteröidy tästä.
+                No account yet? Register here.
             </Text>
         </Surface>
     );
@@ -44,14 +44,10 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
         alignItems: "center",
         padding: 20,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: "bold",
-        marginBottom: 20,
+        height: "100%",
+        paddingTop: 100,
     },
     input: {
         width: "100%",
@@ -67,6 +63,12 @@ const styles = StyleSheet.create({
         color: "blue",
         textDecorationLine: "underline",
     },
-});
+
+    mainButton: {
+        alignSelf: "stretch",
+        marginTop: 20,
+        marginBottom: 20
+    }
+})
 
 export default LoginScreen;
