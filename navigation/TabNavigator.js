@@ -20,11 +20,11 @@ export default function TabNavigator() {
             />
 
             <Tab.Screen
-                name="Profile"
+                name="Options"
                 component={ProfileScreen}
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="person" color={color} size={size} />
+                        <Ionicons name="cog" color={color} size={size} />
                     )
                 }}
             />

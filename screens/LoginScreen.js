@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import { Surface, Text, TextInput, Button } from "react-native-paper";
 import { loginUser } from "../services/authService";
 import { useNavigation } from "@react-navigation/native";
 
@@ -17,7 +18,7 @@ const LoginScreen = () => {
     };
 
     return (
-        <View style={styles.container}>
+        <Surface style={styles.container}>
             <Text style={styles.title}>Kirjaudu sisään</Text>
             <TextInput 
                 style={styles.input} 
@@ -36,7 +37,7 @@ const LoginScreen = () => {
             <Text style={styles.link} onPress={() => navigation.navigate("Register")}>
                 Ei tiliä? Rekisteröidy tästä.
             </Text>
-        </View>
+        </Surface>
     );
 };
 

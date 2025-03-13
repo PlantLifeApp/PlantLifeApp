@@ -5,6 +5,7 @@ import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import { AuthContext } from "../context/authContext";
 import { ActivityIndicator, View } from "react-native";
+import { Surface } from "react-native-paper"
 import TabNavigator from "./TabNavigator";
 
 const Stack = createNativeStackNavigator();
@@ -14,9 +15,9 @@ const AuthNavigator = () => {
 
     if (loading) {
         return (
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }} >
+            <Surface style={{ flex: 1, justifyContent: "center", alignItems: "center" }} >
                 <ActivityIndicator size="large" color="#0000ff" />
-            </View>
+            </Surface>
         )
     }
 
