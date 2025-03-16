@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
-import { Alert, Image } from "react-native"
-import { FAB, PaperProvider, Portal } from "react-native-paper"
+import { Alert, Image, StyleSheet, View } from "react-native"
+import { FAB, Portal } from "react-native-paper"
 import * as ImagePicker from 'expo-image-picker'
 
 
@@ -49,20 +49,21 @@ export default function FloatingButton() {
     }
   }
 
- //----------- RETURNISTA POISTAA PAPERPROVIDER JA PORTAL ----------
- //----------- KUN EI ENÄÄN TARVITSE 
-  return (
-    <PaperProvider>
+ //----------- RETURNISTA POISTAA PORTAL ----------
+ //----------- KUN EI ENÄÄN TARVITSE --------
+ // ---------- Ainakin yhden ohjeen mukaan ei tarvi Portal. View myös ?
+ return (
+
+    <View style={styles.container}>
       {
       image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} /> // TESTAUS tuleeko kuva
       } 
       <Portal>
         <FAB.Group
           open={open}
-          visible
+          visible={true} // Varmista, että FAB on näkyvissä
           icon={open ? 'flower' : 'plus-circle-outline'}
           actions={[
-            // { icon: 'plus', onPress: () => console.log('plus pressed')},
             {
               icon: 'camera',
               label: 'Camera',
@@ -75,10 +76,24 @@ export default function FloatingButton() {
             }
           ]}
           onStateChange={onStateChange} //FAB tarvii tätä
+          style={styles.fabGroup}
         />
       </Portal>
-  
-    </PaperProvider>
+    </View>
 
-  )
+)
 }
+
+const styles = StyleSheet.create({
+container: {
+  flex: 1,
+  justifyContent: 'space-evenly',
+  alignItems: 'center',
+  padding: 20,
+},
+fabGroup: {
+  position: 'absolute',
+  bottom: 60,
+  right: 16,
+},
+})

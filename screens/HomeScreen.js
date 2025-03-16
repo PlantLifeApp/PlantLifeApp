@@ -1,20 +1,27 @@
 import React, { useContext } from "react";
-import { View, Text, Button } from "react-native";
-import { getAuth, signOut } from "firebase/auth";
+import { StyleSheet } from "react-native";
+import { Text, Surface } from "react-native-paper";
 import { AuthContext } from "../context/authContext";
 import FloatingButton from "../components/FloatingButton.js"
 
 const HomeScreen = () => {
-    const { user } = useContext(AuthContext) // Tämä ei ole vielä lopullinen tapa tuoda dataa käyttäjästä fronttiin. Vaatii selvitystä
+    const { user } = useContext(AuthContext);
 
     return (
-        <View style={{ flex: 1 }}>
-            <View style={{ flex:1, justifyContent: "center", alignItems: "center"}}>
-                <Text>Tervetuloa sovellukseen {user?.email}!</Text>
-            </View>
+        <Surface style={styles.container}>
+            <Text variant="headlineLarge">Welcome to PlantLife, {user?.email}!</Text>
             <FloatingButton/>
-        </View>
+        </Surface>
     );
 };
 
-export default HomeScreen;
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 20,
+    },
+})
+
+export default HomeScreen
