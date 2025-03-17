@@ -1,7 +1,7 @@
 const LANGUAGES = [
     { label: 'English', value: 'en' },
-    { label: 'Finnish', value: 'fi' },
-    { label: 'Swedish', value: 'sv' },
+    { label: 'Suomi', value: 'fi' },
+    { label: 'Svenska', value: 'sv' },
 ]
 
 export default LANGUAGES
