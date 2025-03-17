@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { Ionicons } from "@expo/vector-icons"
 import { ThemeContext } from "../context/themeContext"
 import { useTheme } from "react-native-paper"
+import { useTranslation } from "react-i18next"
 import { PlantsProvider } from "../context/plantsContext"
 
 const Tab = createBottomTabNavigator();
@@ -12,6 +13,7 @@ const Tab = createBottomTabNavigator();
 export default function TabNavigator() {
     const { theme } = useContext(ThemeContext) // get the custom theme
     const paperTheme = useTheme() // get theme colors
+    const { t } = useTranslation() // Localization usage
 
     return (
         <PlantsProvider>
@@ -29,6 +31,8 @@ export default function TabNavigator() {
                     name="Home"
                     component={HomeScreen}
                     options={{
+                        title: t("tabs.home"),
+                        tabBarLabel: t("tabs.home"),
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="home" color={color} size={size} />
                         ),
@@ -39,13 +43,14 @@ export default function TabNavigator() {
                     name="Options"
                     component={ProfileScreen}
                     options={{
+                        title: t("tabs.options"),
+                        tabBarLabel: t("tabs.options"),
                         tabBarIcon: ({ color, size }) => (
                             <Ionicons name="cog" color={color} size={size} />
                         ),
                     }}
                 />
             </Tab.Navigator>
-
         </PlantsProvider>
     );
 }

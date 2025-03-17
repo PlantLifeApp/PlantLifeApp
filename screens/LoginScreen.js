@@ -3,11 +3,14 @@ import { StyleSheet } from "react-native";
 import { Surface, Text, TextInput, Button } from "react-native-paper";
 import { loginUser } from "../services/authService";
 import { useNavigation } from "@react-navigation/native";
+import { useTranslation } from "react-i18next";
 
 const LoginScreen = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
     const navigation = useNavigation();
+    const { t } = useTranslation()
 
     const handleLogin = async () => {
         try {
@@ -22,20 +25,20 @@ const LoginScreen = () => {
             
             <TextInput 
                 style={styles.input} 
-                placeholder="Email address" 
+                placeholder={t("screens.auth.email")} 
                 onChangeText={setEmail} 
                 keyboardType="email-address"
                 autoCapitalize="none"
             />
             <TextInput 
                 style={styles.input} 
-                placeholder="Password" 
+                placeholder={t("screens.auth.password")} 
                 onChangeText={setPassword} 
                 secureTextEntry
             />
-            <Button style={styles.mainButton} mode="contained" onPress={handleLogin}>Log In</Button>
+            <Button style={styles.mainButton} mode="contained" onPress={handleLogin}>{t("screens.auth.loginButton")}</Button>
             <Text style={styles.link} onPress={() => navigation.navigate("Register")}>
-                No account yet? Register here.
+                {t("screens.auth.goToRegister")}
             </Text>
         </Surface>
     );
@@ -60,7 +63,6 @@ const styles = StyleSheet.create({
     },
     link: {
         marginTop: 10,
-        color: "blue",
         textDecorationLine: "underline",
     },
 
