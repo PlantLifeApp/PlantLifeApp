@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, collection } from "firebase/firestore";
 import { auth, db } from "./firebaseConfig";
 
 /**
@@ -11,13 +11,15 @@ const registerUser = async (email, password, username) => {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
+        const userRef = doc(db, "users", user.uid)
+
         // Luo käyttäjän tiedot Firestoreen
         await setDoc(doc(db, "users", user.uid), {
             username: username,
             email: email,
             createdAt: new Date().toISOString(),
-            plants: [] // Alustetaan tyhjä kasvilista
         });
+
 
         return user;
     } catch (error) {
