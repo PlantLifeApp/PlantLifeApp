@@ -12,7 +12,7 @@ const Tab = createBottomTabNavigator();
 export default function TabNavigator() {
     const { theme } = useContext(ThemeContext) // get the custom theme
     const paperTheme = useTheme() // get theme colors
-    const { t } = useTranslation(); // Lokalization usage
+    const { t } = useTranslation() // Localization usage
 
 
     return (
@@ -30,6 +30,7 @@ export default function TabNavigator() {
                 name="Home"
                 component={HomeScreen}
                 options={{
+                    title: t("tabs.home"),
                     tabBarLabel: t("tabs.home"),
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name="home" color={color} size={size} />
@@ -41,6 +42,7 @@ export default function TabNavigator() {
                 name="Options"
                 component={ProfileScreen}
                 options={{
+                    title: t("tabs.options"),
                     tabBarLabel: t("tabs.options"),
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name="cog" color={color} size={size} />

@@ -30,7 +30,7 @@ export default function ProfileScreen() {
                 <Text variant="bodyMedium">Signed in as:</Text>
                 <Text variant="bodyLarge" style={styles.sectionEnd}>{user?.email}</Text>
 
-                <Text variant="bodyMedium">Theme:</Text>
+                <Text variant="bodyMedium">{t("screens.options.themeHeader")}</Text>
                 <SegmentedButtons
                     value={useSystemTheme ? "system" : isDarkMode ? "dark" : "light"}
                     onValueChange={(value) => {
@@ -42,35 +42,32 @@ export default function ProfileScreen() {
                         }
                     }}
                     buttons={[
-                        { value: "system", label: "System" },
-                        { value: "light", label: "Light" },
-                        { value: "dark", label: "Dark" },
+                        { value: "system", label: t("screens.options.system") },
+                        { value: "light", label: t("screens.options.light") },
+                        { value: "dark", label: t("screens.options.dark") },
                     ]}
                 />
             </View>
 
             <View style={styles.languageContainer}>
-                <Text variant="bodyMedium">Language:</Text>
+                <Text variant="bodyMedium">{t("screens.options.languageHeader")}</Text>
                 <Dropdown
-                    label="Languages"
-                    placeholder="Select language"
+                    placeholder={t("screens.options.languagePlaceHolder")}
                     options={LANGUAGES}
                     value={language}
                     onSelect={(lng) => changeLanguage(lng)}
-                    style={styles.dropdown} // Lisätty tyylitys
+                    style={styles.dropdown}
                 />
             </View>
 
-
             <View style={styles.bottomContent}>
                 <Button style={styles.mainButton} mode="contained" onPress={() => signOut(auth)}>
-                    Log Out
+                    {t("screens.options.logoutButton")}
                 </Button>
 
                 <Button style={styles.mainButton} mode="contained">
-                    Delete Account
+                    {t("screens.options.deleteAccountButton")}
                 </Button>
-
             </View>
         </Surface>
     )
