@@ -27,7 +27,7 @@ export default function ProfileScreen() {
         <Surface style={styles.container}>
 
             <View style={styles.topContent}>
-                <Text variant="bodyMedium">Signed in as:</Text>
+                <Text variant="bodyMedium">{t("screens.options.signedInAs")}:</Text>
                 <Text variant="bodyLarge" style={styles.sectionEnd}>{user?.email}</Text>
 
                 <Text variant="bodyMedium">{t("screens.options.themeHeader")}</Text>
@@ -75,7 +75,7 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1, // Ensures the entire screen is used
+        flex: 1,
         padding: 20,
         height: "100%",
     },
