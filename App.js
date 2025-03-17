@@ -7,10 +7,15 @@ import { useContext } from 'react'
 import { ThemeContext, ThemeProvider } from './context/themeContext'
 import ThemeWrapper from './themes/ThemeWrapper'
 
+import { I18nextProvider } from 'react-i18next'
+import i18n from './localization/i18n'
+
 export default function App() {
   return (
+    <I18nextProvider>
       <ThemeProvider>
-          <ThemeWrapper />
+        <ThemeWrapper />
       </ThemeProvider>
+    </I18nextProvider>
   )
 }

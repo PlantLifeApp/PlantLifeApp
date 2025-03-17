@@ -1,54 +1,78 @@
-import React, { useContext } from "react"
+import React, { useContext, useState } from "react"
 import { Surface, Text, Button, SegmentedButtons } from "react-native-paper"
 import { StyleSheet, View } from "react-native"
 import { getAuth, signOut } from "firebase/auth"
 import { AuthContext } from "../context/authContext"
 import { ThemeContext } from "../context/themeContext"
+import { useTranslation } from "react-i18next"
+import AsyncStorage from "@react-native-async-storage/async-storage"
+import { Dropdown } from "react-native-paper-dropdown"
+import LANGUAGES from "../localization/languages"
 
 export default function ProfileScreen() {
     const { user } = useContext(AuthContext)
+    const { t, i18n } = useTranslation()
+    const [language, setLanguage] = useState(i18n.language)
     const auth = getAuth()
 
     const { useSystemTheme, setUseSystemTheme, isDarkMode, setIsDarkMode } = useContext(ThemeContext)
 
+    const changeLanguage = async (lng) => {
+        i18n.changeLanguage(lng)
+        setLanguage(lng)
+        await AsyncStorage.setItem("language", lng)
+    }
+
     return (
-            <Surface style={styles.container}>
+        <Surface style={styles.container}>
 
-                <View style={styles.topContent}>
-                    <Text variant="bodyMedium">Signed in as:</Text>
-                    <Text variant="bodyLarge" style={styles.sectionEnd}>{user?.email}</Text>
+            <View style={styles.topContent}>
+                <Text variant="bodyMedium">Signed in as:</Text>
+                <Text variant="bodyLarge" style={styles.sectionEnd}>{user?.email}</Text>
 
-                    <Text variant="bodyMedium">Theme:</Text>
-                    <SegmentedButtons
-                            value={useSystemTheme ? "system" : isDarkMode ? "dark" : "light"}
-                            onValueChange={(value) => {
-                                if (value === "system") {
-                                    setUseSystemTheme(true)
-                                } else {
-                                    setUseSystemTheme(false)
-                                    setIsDarkMode(value === "dark")
-                                }
-                            }}
-                            buttons={[
-                                { value: "system", label: "System" },
-                                { value: "light", label: "Light" },
-                                { value: "dark", label: "Dark" },
-                            ]}
-                        />
+                <Text variant="bodyMedium">Theme:</Text>
+                <SegmentedButtons
+                    value={useSystemTheme ? "system" : isDarkMode ? "dark" : "light"}
+                    onValueChange={(value) => {
+                        if (value === "system") {
+                            setUseSystemTheme(true)
+                        } else {
+                            setUseSystemTheme(false)
+                            setIsDarkMode(value === "dark")
+                        }
+                    }}
+                    buttons={[
+                        { value: "system", label: "System" },
+                        { value: "light", label: "Light" },
+                        { value: "dark", label: "Dark" },
+                    ]}
+                />
+            </View>
 
-                </View>
+            <View style={styles.languageContainer}>
+                <Text variant="bodyMedium">Language:</Text>
+                <Dropdown
+                    label="Languages"
+                    placeholder="Select language"
+                    options={LANGUAGES}
+                    value={language}
+                    onSelect={(lng) => changeLanguage(lng)}
+                    style={styles.dropdown} // Lisätty tyylitys
+                />
+            </View>
 
-                <View style={styles.bottomContent}>
-                    <Button style={styles.mainButton} mode="contained" onPress={() => signOut(auth)}>
-                        Log Out
-                    </Button>
 
-                    <Button style={styles.mainButton} mode="contained">
-                        Delete Account
-                    </Button>
-                    
-                </View>
-            </Surface>
+            <View style={styles.bottomContent}>
+                <Button style={styles.mainButton} mode="contained" onPress={() => signOut(auth)}>
+                    Log Out
+                </Button>
+
+                <Button style={styles.mainButton} mode="contained">
+                    Delete Account
+                </Button>
+
+            </View>
+        </Surface>
     )
 }
 
@@ -83,5 +107,19 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 10,
     },
-    
+
+    languageContainer: {
+        width: "80%",
+        marginTop: 10,
+        marginBottom: 20,
+        alignSelf: 'center',
+    },
+
+    dropdown: {
+        backgroundColor: "white",
+        borderRadius: 8,
+        paddingHorizontal: 10,
+        height: 40,
+    },
+
 })
