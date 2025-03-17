@@ -44,7 +44,10 @@ const resources = {
                     logoutButton: "Log Out",
                     deleteAccountButton: "Delete Account",
                     signedInAs: "Signed in as"
-                }
+                },
+                gallery: {
+
+                },
             },
             common: {
                 confirm: "Confirm",
@@ -76,6 +79,12 @@ const resources = {
                 home: {
                     
                 },
+                plant: {
+                    plantNotFound: "Kasvia ei löytynyt.",
+                },
+                editPlant: {
+                    plantNotFound: "Kasvia ei löytynyt.",
+                },
                 options: {
                     themeHeader: "Teema",
                     system: "Järjestelmä",
@@ -87,7 +96,10 @@ const resources = {
                     logoutButton: "Kirjaudu ulos",
                     deleteAccountButton: "Poista käyttäjätunnus",
                     signedInAs: "Kirjautuneena käyttäjänä"
-                }
+                },
+                gallery: {
+
+                },
             },
             common: {
                 confirm: "Vahvista",
@@ -136,8 +148,12 @@ const resources = {
                     logoutButton: "Logga ut",
                     deleteAccountButton: "Ta bort konto",
                     signedInAs: "Inloggad som",
-                }
+                },
+                gallery: {
+                
+                },
             },
+
             common: {
                 confirm: "Bekräfta",
                 cancel: "Avbryt",
