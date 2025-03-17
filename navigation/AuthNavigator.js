@@ -27,10 +27,8 @@ const AuthNavigator = () => {
         <NavigationContainer>
             <Stack.Navigator options={{ headerShown: false }} >
                 {user ? (
-                    // Jos käyttäjä on kirjautunut, näytetään vain HomeScreen
                     <Stack.Screen name="Main" component={TabNavigator} options={{headerShown: false}}/>
                 ) : (
-                    // Muuten näytetään kirjautumisnäkymät
                     <>
                         <Stack.Screen name="Login" component={LoginScreen} options={{title: t("screens.auth.loginTitle")}} />
                         <Stack.Screen name="Register" component={RegisterScreen} options={{title: t("screens.auth.registerTitle")}} />

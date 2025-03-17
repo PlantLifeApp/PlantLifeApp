@@ -15,7 +15,6 @@ export default function TabNavigator() {
     const paperTheme = useTheme() // get theme colors
     const { t } = useTranslation() // Localization usage
 
-
     return (
         <PlantsProvider>
             <Tab.Navigator
