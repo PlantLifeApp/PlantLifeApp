@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { StyleSheet, View, ToastAndroid } from 'react-native'   // ToastAndroid works only on Android
 import { Button, Modal, Surface, Text, TextInput, Menu } from 'react-native-paper'
 import { Picker } from 'react-native-web';
-import { addPlant } from '../services/plantService';
+import { addPlant } from '../../services/plantService';
 
 export default function AddPlantModal({ user, visible, onClose }) {
     const [menuVisible, setMenuVisible] = useState(false);
