@@ -1,82 +1,71 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { View, ScrollView, StyleSheet } from 'react-native'
-import { Text as RNText } from 'react-native'
 import { Text, ActivityIndicator, Surface, Button } from 'react-native-paper'
-import { getFirestore, doc, getDoc, collection, getDocs } from 'firebase/firestore'
 import { AuthContext } from '../context/authContext'
-import { useNavigation } from "@react-navigation/native"
 import { useTranslation } from "react-i18next"
-import PlantDetails from "../components/plant/PlantDetails"
+import { fetchPlantData, addCareEvent } from '../services/plantService'
+import PlantDetails from '../components/plant/PlantDetails'
+import CareHistory from '../components/plant/CareHistory'
+import Toast from 'react-native-toast-message'
 
-const db = getFirestore()
-
-const PlantScreen = ({ route, navigation }) => {
+const PlantScreen = ({ route }) => {
 
     const { plantId } = route.params
     const { user } = useContext(AuthContext)
-
-    const [plant, setPlant] = useState(null)
-    const [loading, setLoading] = useState(true)
-    const [careHistory, setCareHistory] = useState([])
-
     const { t } = useTranslation()
 
+    const [plant, setPlant] = useState(null)
+    const [careHistory, setCareHistory] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [saving, setSaving] = useState(false)
+
     useEffect(() => {
+        loadPlantData()
+    }, [plantId, user])
 
-        const fetchPlantData = async () => {
-            try {
-                if (!user) {
-                    console.error("User not found in AuthContext");
-                    return;
-                }
+    const loadPlantData = async () => {
+        try {
 
-                // Fetch the plant document
-                const plantRef = doc(db, "users", user.uid, "plants", plantId);
-                const plantSnap = await getDoc(plantRef);
+            const { plant, careHistory } = await fetchPlantData(user.uid, plantId)
+            setPlant(plant)
+            setCareHistory(careHistory)
 
-                if (plantSnap.exists()) {
-                    const plantData = { id: plantSnap.id, ...plantSnap.data() };
-                    setPlant(plantData);
-                } else {
-                    console.error("No such plant found!");
-                }
+        } catch (error) {
+            console.error("Error fetching plant data:", error)
+        } finally {
+            setLoading(false)
+        }
+    }
 
-                // Fetch care history subcollection
-                const careHistoryRef = collection(db, "users", user.uid, "plants", plantId, "careHistory");
-                const careHistorySnap = await getDocs(careHistoryRef);
-                const careEntries = careHistorySnap.docs.map(doc => ({
-                    id: doc.id,
-                    ...doc.data()
-                }));
-                // ✅ Sort by date (newest first)
-                careEntries.sort((a, b) => b.date.seconds - a.date.seconds)
-                
-            // ✅ Group events by date
-            const groupedHistory = {};
-            careEntries.forEach((entry) => {
-                const dateStr = new Date(entry.date.seconds * 1000).toLocaleDateString(); // Format date
+    const handleAddCareEvent = async (eventType) => {
+    
+        setSaving(true)
 
-                if (!groupedHistory[dateStr]) {
-                    groupedHistory[dateStr] = { date: dateStr, events: [] };
-                }
-                groupedHistory[dateStr].events.push(entry.type);
-            });
+        try {
 
-            // Convert object back to sorted array
-            const sortedGroupedHistory = Object.values(groupedHistory);
+            await addCareEvent(user.uid, plantId, eventType)
+            await loadPlantData() // refresh data after adding event
+    
+            Toast.show({
+                type: 'success',
+                text1: `Successfully added ${eventType}!`,
+                position: 'bottom',
+                visibilityTime: 1000,
+            })
 
-            setCareHistory(sortedGroupedHistory);
+        } catch (error) {
+            console.error(`Error adding ${eventType} event:`, error)
+            Toast.show({
+                type: 'error',
+                text1: `Failed to add ${eventType}. Please try again.`,
+                position: 'bottom',
+                visibilityTime: 2000
+            })
 
-            } catch (error) {
-                console.error("Error fetching plant or care history:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchPlantData();
-
-    }, [plantId, user]);
+        } finally {
+            setSaving(false)
+        }
+    }
 
     if (loading) {
         return (
@@ -91,31 +80,48 @@ const PlantScreen = ({ route, navigation }) => {
             <View style={styles.centered}>
                 <Text variant="headlineMedium">{t("screens.plant.plantNotFound")}.</Text>
             </View>
-        )
+        );
     }
 
     return (
-
         <ScrollView contentContainerStyle={styles.container}>
-            
             <Surface style={styles.surface}>
                 <Text variant="headlineMedium">{plant.givenName}</Text>
-                <Text variant="bodyLarge" style={{fontStyle: "italic"}}>{plant.scientificName}</Text>
-                {/* <RNText style={styles.italicised}>{plant.scientificName}</RNText> */}
+                <Text variant="bodyLarge" style={{ fontStyle: "italic" }}>{plant.scientificName}</Text>
             </Surface>
 
-            <PlantDetails plant={plant} careHistory={careHistory} />
+            <View style={styles.buttonContainer}>
+                <Button
+                    mode="contained"
+                    onPress={() => handleAddCareEvent("watering")}
+                    loading={saving}
+                    disabled={saving}
+                    style={styles.button}
+                >
+                    Just Watered!
+                </Button>
+                <Button
+                    mode="contained"
+                    onPress={() => handleAddCareEvent("fertilizing")}
+                    loading={saving}
+                    disabled={saving}
+                    style={styles.button}
+                >
+                    Just Fertilized!
+                </Button>
+            </View>
 
+            <PlantDetails plant={plant} careHistory={careHistory}/>
+            <CareHistory careHistory={careHistory} />
+            
         </ScrollView>
     )
 }
-
 
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
         padding: 16,
-        backgroundColor: '#f4f4f4',
         alignItems: 'center',
     },
     centered: {
@@ -127,11 +133,20 @@ const styles = StyleSheet.create({
         padding: 16,
         width: '100%',
         alignItems: 'center',
+        marginBottom: 8,
+        borderRadius: 8,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '100%',
+        marginTop: 8,
         marginBottom: 16,
     },
     button: {
-        marginTop: 16,
-    }
+        flex: 1,
+        marginHorizontal: 8,
+    },
 })
 
 export default PlantScreen
