@@ -3,7 +3,8 @@ import { AuthProvider } from '../context/authContext'
 import AuthNavigator from '../navigation/AuthNavigator'
 import { PaperProvider } from 'react-native-paper'
 import { ThemeContext } from '../context/themeContext'
-import { PlantsProvider } from '../context/plantsContext'
+import Toast from 'react-native-toast-message'
+
 export default function ThemeWrapper() {
     const { theme } = useContext(ThemeContext)
 
@@ -11,6 +12,7 @@ export default function ThemeWrapper() {
         <PaperProvider theme={theme}>
             <AuthProvider>
                 <AuthNavigator />
+                <Toast ref={Toast.setRef} />
             </AuthProvider>
         </PaperProvider>
     )
