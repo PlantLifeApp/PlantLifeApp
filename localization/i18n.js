@@ -20,12 +20,18 @@ const resources = {
                     username: "Username",
                     email: "Email address",
                     password: "Password",
-                    goToRegister: "No account yet? Register here",
-                    goToLogin: "Already have an account? Sign in here",
+                    goToRegister: "No account yet? Register here!",
+                    goToLogin: "Already have an account? Sign in here!",
                     registerHeader: "Sign up to PlantLife!"
                 },
                 home: {
-                    // Add HomeScreen content here
+                    
+                },
+                plant: {
+                    plantNotFound: "Plant not found.",
+                },
+                editPlant: {
+                    plantNotFound: "Plant not found.",
                 },
                 options: {
                     themeHeader: "Theme",
@@ -36,8 +42,12 @@ const resources = {
                     languages: "Languages",
                     languagePlaceholder: "Select language",
                     logoutButton: "Log Out",
-                    deleteAccountButton: "Delete Account"
-                }
+                    deleteAccountButton: "Delete Account",
+                    signedInAs: "Signed in as"
+                },
+                gallery: {
+
+                },
             },
             common: {
                 confirm: "Confirm",
@@ -62,12 +72,18 @@ const resources = {
                     username: "Käyttäjänimi",
                     email: "Sähköpostiosoite",
                     password: "Salasana",
-                    goToRegister: "Ei käyttäjätunnusta? Rekisteröidy täällä",
-                    goToLogin: "Oletko jo rekisteröitynyt? Kirjaudu täällä",
+                    goToRegister: "Ei käyttäjätunnusta? Rekisteröidy täällä!",
+                    goToLogin: "Oletko jo rekisteröitynyt? Kirjaudu täällä!",
                     registerHeader: "Rekisteröidy PlantLife sovellukseen!"
                 },
                 home: {
-                    // Add HomeScreen content here
+                    
+                },
+                plant: {
+                    plantNotFound: "Kasvia ei löytynyt.",
+                },
+                editPlant: {
+                    plantNotFound: "Kasvia ei löytynyt.",
                 },
                 options: {
                     themeHeader: "Teema",
@@ -77,14 +93,71 @@ const resources = {
                     languageHeader: "Kieli",
                     languages: "Kielet",
                     languagePlaceholder: "Valitse kieli",
-                    logoutButton: "Kirjaudu Ulos",
-                    deleteAccountButton: "Poista Käyttäjätunnus"
-                }
+                    logoutButton: "Kirjaudu ulos",
+                    deleteAccountButton: "Poista käyttäjätunnus",
+                    signedInAs: "Kirjautuneena käyttäjänä"
+                },
+                gallery: {
+
+                },
             },
             common: {
                 confirm: "Vahvista",
                 cancel: "Peruuta",
                 save: "Tallenna"
+            }
+        }
+    },
+    sv: {
+        translation: {
+            tabs: {
+                home: "Hem",
+                options: "Alternativ",
+                gallery: "Galleri"
+            },
+            screens: {
+                auth: {
+                    loginTitle: "Logga in",
+                    registerTitle: "Registrera",
+                    loginButton: "Logga in",
+                    registerButton: "Registrera",
+                    username: "Användarnamn",
+                    email: "E-postadress",
+                    password: "Lösenord",
+                    goToRegister: "Inget konto än? Registrera dig här!",
+                    goToLogin: "Har du redan ett konto? Logga in här!",
+                    registerHeader: "Registrera dig på PlantLife!"
+                },
+                home: {
+                    
+                },
+                plant: {
+                    plantNotFound: "Växten hittades inte.",
+                },
+                editPlant: {
+                    plantNotFound: "Växten hittades inte.",
+                },
+                options: {
+                    themeHeader: "Tema",
+                    system: "System",
+                    light: "Ljus",
+                    dark: "Mörk",
+                    languageHeader: "Språk",
+                    languages: "Språk",
+                    languagePlaceholder: "Välj språk",
+                    logoutButton: "Logga ut",
+                    deleteAccountButton: "Ta bort konto",
+                    signedInAs: "Inloggad som",
+                },
+                gallery: {
+                
+                },
+            },
+
+            common: {
+                confirm: "Bekräfta",
+                cancel: "Avbryt",
+                save: "Spara"
             }
         }
     }
