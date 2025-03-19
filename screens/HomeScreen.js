@@ -1,14 +1,19 @@
 import React, { useContext, useState, useEffect, use } from "react";
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { Text, Surface, Button } from "react-native-paper";
 import { AuthContext } from "../context/authContext";
-import AddPlantModal from "../components/AddPlantModal";
+import AddPlantModal from "../components/home/AddPlantModal";
 import { usePlants } from "../context/plantsContext";
+import { useNavigation } from "@react-navigation/native";
+import PlantScreen from "./PlantScreen";
+
 
 const HomeScreen = () => {
     const { user } = useContext(AuthContext);
     const [modalVisible, setModalVisible] = useState(false)
     const { plants } = usePlants();
+
+    const navigation = useNavigation()
 
     return (
         <Surface style={styles.container}>
@@ -17,9 +22,17 @@ const HomeScreen = () => {
 
             <FlatList
                 data={plants}
+                keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                    <Text>{item.givenName}</Text>
-                )} />
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate("PlantScreen", { plantId: item.id })}
+                    >
+                        <Text style={styles.plantLink}>{item.givenName}</Text>
+                    </TouchableOpacity>
+                )}
+            />
+
+
             <AddPlantModal user={user} visible={modalVisible} onClose={() => setModalVisible(false)} />
 
 

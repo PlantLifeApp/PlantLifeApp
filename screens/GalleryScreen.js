@@ -1,6 +1,6 @@
 import { View, Text, FlatList, Modal, TouchableOpacity, StyleSheet } from "react-native";
 import React, { useState, useCallback } from "react";
-import { Surface, Card, Portal } from "react-native-paper";
+import { Surface, Card } from "react-native-paper";
 import { useImages } from "../context/imageContext";
 import FloatingButton from "../components/FloatingButton";
 import { useFocusEffect } from "@react-navigation/native";
@@ -11,7 +11,7 @@ export default function GalleryScreen() {
   const [selectedImage, setSelectedImage] = useState(null)
   const [modalVisible, setModalVisible] = useState(false)
   const [fabVisible, setFabVisible] = useState(false)
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
 
   // Open picture 

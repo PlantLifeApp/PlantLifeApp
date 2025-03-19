@@ -9,7 +9,7 @@ export default function App() {
     <I18nextProvider i18n={i18n}>
       <ThemeProvider>
         <ImagesProvider>
-        <ThemeWrapper />
+          <ThemeWrapper />
         </ImagesProvider>
       </ThemeProvider>
     </I18nextProvider>

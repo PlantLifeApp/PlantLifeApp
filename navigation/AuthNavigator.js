@@ -8,6 +8,7 @@ import { ActivityIndicator, View } from "react-native";
 import { Surface } from "react-native-paper"
 import TabNavigator from "./TabNavigator";
 import { useTranslation } from "react-i18next";
+import PlantScreen from "../screens/PlantScreen";
 
 const Stack = createNativeStackNavigator();
 
