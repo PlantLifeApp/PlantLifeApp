@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next"
 import { PlantsProvider } from "../context/plantsContext"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import PlantScreen from "../screens/PlantScreen"
+import GalleryScreen from "../screens/GalleryScreen"
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator()
@@ -47,6 +48,17 @@ export default function TabNavigator() {
                             <Ionicons name="home" color={color} size={size} />
                         ),
                     headerShown: false // this hides extra header
+                    }}
+                />
+                   <Tab.Screen
+                    name="Gallery"
+                    component={GalleryScreen}
+                    options={{
+                        title: t("tabs.gallery"),
+                        tabBarLabel: t("tabs.gallery"),
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="image-outline" color={color} size={size} />
+                        ),
                     }}
                 />
 
