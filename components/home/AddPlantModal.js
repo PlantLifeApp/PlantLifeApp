@@ -3,11 +3,13 @@ import { StyleSheet, View } from 'react-native'
 import { Button, Modal, Surface, Text, TextInput, Portal } from 'react-native-paper'
 import { addPlant } from '../../services/plantService';
 import { Dropdown } from 'react-native-paper-dropdown';
+import { useTranslation } from 'react-i18next';
 
 export default function AddPlantModal({ user, visible, onClose }) {
     const [plantType, setPlantType] = useState("");
     const [plantNickname, setPlantNickname] = useState("");
     const [scientificName, setScientificName] = useState("");
+    const { t } = useTranslation()
 
     const onCloseFunction = () => {
         // Reset all values to default
@@ -39,30 +41,30 @@ export default function AddPlantModal({ user, visible, onClose }) {
                 style={styles.modalContainer}
             >
                 <Surface style={styles.modalSurface}>
-                    <Text variant="bodyLarge" style={styles.title}>Enter plant details:</Text>
+                    <Text variant="bodyLarge" style={styles.title}>{t("screens.addPlant.title")}</Text>
 
                     <View style={styles.inputContainer}>
-                        <Text variant="bodyMedium">Plant Nickname:</Text>
+                        <Text variant="bodyMedium">{t("screens.addPlant.nickname")}</Text>
                         <TextInput style={styles.textInput} onChangeText={(text) => setPlantNickname(text)}></TextInput>
                     </View>
 
                     <View style={styles.inputContainer}>
-                        <Text variant="bodyMedium">Scientific Name</Text>
+                        <Text variant="bodyMedium">{t("screens.addPlant.scientificName")}</Text>
                         <TextInput style={styles.textInput} onChangeText={(text) => setScientificName(text)}></TextInput>
                     </View>
 
                     <View style={styles.inputContainer}>
                         <Dropdown
-                            placeholder='Select Type'
+                            placeholder={t("screens.addPlant.selectType")}
                             options={TYPES}
                             value={plantType}
                             onSelect={setPlantType}
                             style={styles.dropdown}
                         />
                     </View>
-                    
-                    <Button style={styles.button} mode="contained" onPress={handleAddPlant} >Add plant</Button>
-                    <Button style={styles.button} mode="contained" onPress={onCloseFunction} >Close</Button>
+
+                    <Button style={styles.button} mode="contained" onPress={handleAddPlant} >{t("screens.addPlant.addButton")}</Button>
+                    <Button style={styles.button} mode="contained" onPress={onCloseFunction} >{t("screens.addPlant.cancelButton")}</Button>
 
                 </Surface>
             </Modal>

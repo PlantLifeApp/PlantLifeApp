@@ -27,6 +27,14 @@ const resources = {
                 home: {
                     
                 },
+                addPlant: {
+                    title: "Enter plant details",
+                    nickname: "Plant Nickname",
+                    scientificName: "Scientific Name",
+                    selectType: "Select Type",
+                    addButton: "Add Plant",
+                    cancelButton: "Cancel"
+                },
                 plant: {
                     plantNotFound: "Plant not found.",
                 },
@@ -79,6 +87,14 @@ const resources = {
                 home: {
                     
                 },
+                addPlant: {
+                    title: "Lisää kasvin tiedot",
+                    nickname: "Kasvin Lempinimi",
+                    scientificName: "Tieteellinen Nimi",
+                    selectType: "Valitse tyyppi",
+                    addButton: "Lisää Kasvi",
+                    cancelButton: "Peruuta"
+                },
                 plant: {
                     plantNotFound: "Kasvia ei löytynyt.",
                 },
@@ -130,6 +146,14 @@ const resources = {
                 },
                 home: {
                     
+                },
+                addPlant: {
+                    title: "Lisää kasvin tiedot",   //TRANSLATION ---->
+                    nickname: "Kasvin Lempinimi",
+                    scientificName: "Tieteellinen Nimi",
+                    selectType: "Valitse tyyppi",
+                    addButton: "Lisää Kasvi",
+                    cancelButton: "Ja but Nej"         //<------
                 },
                 plant: {
                     plantNotFound: "Växten hittades inte.",
