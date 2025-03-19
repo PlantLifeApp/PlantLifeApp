@@ -35,7 +35,7 @@ export default function AddPlantModal({ user, visible, onClose }) {
             animationType="slide"
             transparent={true}
             visible={visible}
-            onRequsetClose={onClose}
+            onRequestClose={onClose}
             style={styles.modalContainer}
         >
             <Surface style={styles.modalSurface}>
@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        height: '100%',
     },
     modalSurface: {
         width: '90%',

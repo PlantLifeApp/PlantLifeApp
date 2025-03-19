@@ -16,6 +16,7 @@ const PlantScreen = ({ route }) => {
 
     const [plant, setPlant] = useState(null)
     const [careHistory, setCareHistory] = useState([])
+    const [nextWatering, setNextWatering] = useState(null)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
 
@@ -26,9 +27,10 @@ const PlantScreen = ({ route }) => {
     const loadPlantData = async () => {
         try {
 
-            const { plant, careHistory } = await fetchPlantData(user.uid, plantId)
+            const { plant, careHistory, nextWatering } = await fetchPlantData(user.uid, plantId)
             setPlant(plant)
             setCareHistory(careHistory)
+            setNextWatering(nextWatering)
 
         } catch (error) {
             console.error("Error fetching plant data:", error)
@@ -48,16 +50,16 @@ const PlantScreen = ({ route }) => {
     
             Toast.show({
                 type: 'success',
-                text1: `Successfully added ${eventType}!`,
+                text1: t("screens.plant.successfullyAdded"),
                 position: 'bottom',
-                visibilityTime: 1000,
-            })
+                visibilityTime: 2000,
+            });
 
         } catch (error) {
             console.error(`Error adding ${eventType} event:`, error)
             Toast.show({
                 type: 'error',
-                text1: `Failed to add ${eventType}. Please try again.`,
+                text1: t("screens.plant.errorAdding"), 
                 position: 'bottom',
                 visibilityTime: 2000
             })
@@ -80,7 +82,7 @@ const PlantScreen = ({ route }) => {
             <View style={styles.centered}>
                 <Text variant="headlineMedium">{t("screens.plant.plantNotFound")}.</Text>
             </View>
-        );
+        )
     }
 
     return (
@@ -91,28 +93,51 @@ const PlantScreen = ({ route }) => {
             </Surface>
 
             <View style={styles.buttonContainer}>
-                <Button
-                    mode="contained"
-                    onPress={() => handleAddCareEvent("watering")}
-                    loading={saving}
-                    disabled={saving}
-                    style={styles.button}
-                >
-                    Just Watered!
-                </Button>
-                <Button
-                    mode="contained"
-                    onPress={() => handleAddCareEvent("fertilizing")}
-                    loading={saving}
-                    disabled={saving}
-                    style={styles.button}
-                >
-                    Just Fertilized!
-                </Button>
+                <View style={styles.singleButtonRow}>
+                    <Button
+                        mode="contained"
+                        onPress={() => handleAddCareEvent("watering")}
+                        loading={saving}
+                        disabled={saving}
+                        style={styles.button}
+                    >
+                        {t("screens.plant.justWatered")} 💦
+                    </Button>
+                </View>
+                <View style={styles.doubleButtonRow}>
+                    <Button
+                        mode="contained"
+                        onPress={() => handleAddCareEvent("fertilizing")}
+                        loading={saving}
+                        disabled={saving}
+                        style={styles.button}
+                    >
+                        {t("screens.plant.justFertilized")}
+                    </Button>
+                    <Button
+                        mode="contained"
+                        onPress={() => {}}
+                        loading={saving}
+                        disabled={saving}
+                        style={styles.button}
+                    >
+                        {t("screens.plant.justPruned")}
+                    </Button>
+                </View>
             </View>
 
-            <PlantDetails plant={plant} careHistory={careHistory}/>
+            <PlantDetails plant={plant} careHistory={careHistory} nextWatering={nextWatering}/>
             <CareHistory careHistory={careHistory} />
+
+            <View style={styles.singleButtonRow}>
+                <Button 
+                    mode='contained'
+                    onPress={() => {}}
+                    style={styles.button}
+                >
+                    {t("screens.plant.editHistory")}
+                </Button>
+            </View>
             
         </ScrollView>
     )
@@ -133,19 +158,36 @@ const styles = StyleSheet.create({
         padding: 16,
         width: '100%',
         alignItems: 'center',
-        marginBottom: 8,
+        marginTop: 16,
+        marginBottom: 16,
         borderRadius: 8,
     },
     buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
         width: '100%',
+        alignItems: 'center',
         marginTop: 8,
         marginBottom: 16,
+    },
+    singleButtonRow: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginBottom: 8,
+    },
+    doubleButtonRow: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 8,
     },
     button: {
         flex: 1,
         marginHorizontal: 8,
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.5,
+        shadowRadius: 2,
+        elevation: 4,
     },
 })
 
