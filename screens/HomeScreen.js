@@ -1,12 +1,10 @@
 import React, { useContext, useState, useEffect, use } from "react";
 import { StyleSheet, FlatList, TouchableOpacity } from "react-native";
-import { Text, Surface, Button } from "react-native-paper";
+import { Text, Surface, IconButton } from "react-native-paper";
 import { AuthContext } from "../context/authContext";
 import AddPlantModal from "../components/home/AddPlantModal";
 import { usePlants } from "../context/plantsContext";
 import { useNavigation } from "@react-navigation/native";
-import PlantScreen from "./PlantScreen";
-
 
 const HomeScreen = () => {
     const { user } = useContext(AuthContext);
@@ -18,7 +16,7 @@ const HomeScreen = () => {
     return (
         <Surface style={styles.container}>
             <Text variant="headlineLarge">Welcome to PlantLife, {user?.email}!</Text>
-            <Button icon="plus" title="Add plant" onPress={() => setModalVisible(true)} />
+            <IconButton icon="plus" size={50} onPress={() => setModalVisible(true)} />
 
             <FlatList
                 data={plants}
@@ -32,12 +30,7 @@ const HomeScreen = () => {
                 )}
             />
 
-
             <AddPlantModal user={user} visible={modalVisible} onClose={() => setModalVisible(false)} />
-
-
-
-
 
         </Surface>
     );
