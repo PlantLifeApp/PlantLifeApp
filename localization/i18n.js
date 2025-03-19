@@ -46,8 +46,15 @@ const resources = {
                     signedInAs: "Signed in as"
                 },
                 gallery: {
-
+                    listEmpty: "No Images Available",
                 },
+                fab: {
+                    camera: "Take photo",
+                    phoneGallery: "Choose photo",
+                    requestPermissionHeader: "Permission is needed",
+                    requestMediaPermission: "Allow access to photos",
+                    requestCameraPermission: "Allow access to camera",
+                }
             },
             common: {
                 confirm: "Confirm",
@@ -98,7 +105,14 @@ const resources = {
                     signedInAs: "Kirjautuneena käyttäjänä"
                 },
                 gallery: {
-
+                    listEmpty: "Ei kuvia saatavilla"
+                },
+                fab: {
+                    camera: "Ota kuva",
+                    phoneGallery: "Valitse kuva",
+                    requestPermissionHeader: "Lupa tarvitaan",
+                    requestMediaPermission: "Anna sovellukselle pääsy kuviin",
+                    requestCameraPermission: "Anna sovellukselle pääsy kameraan",
                 },
             },
             common: {
@@ -150,7 +164,14 @@ const resources = {
                     signedInAs: "Inloggad som",
                 },
                 gallery: {
-                
+                    // listEmpty: "No Images Available",
+                },
+                fab: {
+                    // camera: "Take photo",
+                    // phoneGallery: "Choose photo",
+                    // requestPermissionHeader: "Permission is needed",
+                    // requestMediaPermission: "Allow access to photos",
+                    // requestCameraPermission: "Allow access to camera",
                 },
             },
 
