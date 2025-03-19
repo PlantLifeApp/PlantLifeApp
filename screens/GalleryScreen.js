@@ -2,7 +2,7 @@ import { View, Text, FlatList, Modal, TouchableOpacity, StyleSheet } from "react
 import React, { useState, useCallback } from "react";
 import { Surface, Card } from "react-native-paper";
 import { useImages } from "../context/imageContext";
-import FloatingButton from "../components/FloatingButton";
+import FloatingButton from "../components/gallery/FloatingButton";
 import { useFocusEffect } from "@react-navigation/native";
 import { useTranslation } from "react-i18next"
 
@@ -12,7 +12,6 @@ export default function GalleryScreen() {
   const [modalVisible, setModalVisible] = useState(false)
   const [fabVisible, setFabVisible] = useState(false)
   const { t } = useTranslation()
-
 
   // Open picture 
   const handleImagePress = (uri) => {
