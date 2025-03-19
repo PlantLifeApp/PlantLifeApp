@@ -7,11 +7,13 @@ import { AuthContext } from "../context/authContext";
 import { ActivityIndicator, View } from "react-native";
 import { Surface } from "react-native-paper"
 import TabNavigator from "./TabNavigator";
+import { useTranslation } from "react-i18next";
 
 const Stack = createNativeStackNavigator();
 
 const AuthNavigator = () => {
     const { user, loading } = useContext(AuthContext)
+    const { t } = useTranslation()
 
     if (loading) {
         return (
@@ -25,13 +27,11 @@ const AuthNavigator = () => {
         <NavigationContainer>
             <Stack.Navigator options={{ headerShown: false }} >
                 {user ? (
-                    // Jos käyttäjä on kirjautunut, näytetään vain HomeScreen
                     <Stack.Screen name="Main" component={TabNavigator} options={{headerShown: false}}/>
                 ) : (
-                    // Muuten näytetään kirjautumisnäkymät
                     <>
-                        <Stack.Screen name="Login" component={LoginScreen} />
-                        <Stack.Screen name="Register" component={RegisterScreen} />
+                        <Stack.Screen name="Login" component={LoginScreen} options={{title: t("screens.auth.loginTitle")}} />
+                        <Stack.Screen name="Register" component={RegisterScreen} options={{title: t("screens.auth.registerTitle")}} />
                     </>
                 )}
             </Stack.Navigator>

@@ -5,43 +5,65 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { Ionicons } from "@expo/vector-icons"
 import { ThemeContext } from "../context/themeContext"
 import { useTheme } from "react-native-paper"
+import { useTranslation } from "react-i18next"
+import { PlantsProvider } from "../context/plantsContext"
+import GalleryScreen from "../screens/GalleryScreen"
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigator() {
     const { theme } = useContext(ThemeContext) // get the custom theme
     const paperTheme = useTheme() // get theme colors
+    const { t } = useTranslation() // Localization usage
 
     return (
-        <Tab.Navigator
-            screenOptions={{
-                headerShown: true,
-                headerStyle: { backgroundColor: paperTheme.colors.surface }, // set header background
-                headerTintColor: paperTheme.colors.onSurface, // set header text color
-                tabBarStyle: { backgroundColor: paperTheme.colors.surface }, // set tab bar background
-                tabBarActiveTintColor: paperTheme.colors.primary, // active tab color
-                tabBarInactiveTintColor: paperTheme.colors.onSurfaceVariant, // inactive tab color
-            }}
-        >
-            <Tab.Screen
-                name="Home"
-                component={HomeScreen}
-                options={{
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="home" color={color} size={size} />
-                    ),
+        <PlantsProvider>
+            <Tab.Navigator
+                screenOptions={{
+                    headerShown: true,
+                    headerStyle: { backgroundColor: paperTheme.colors.surface }, // set header background
+                    headerTintColor: paperTheme.colors.onSurface, // set header text color
+                    tabBarStyle: { backgroundColor: paperTheme.colors.surface }, // set tab bar background
+                    tabBarActiveTintColor: paperTheme.colors.primary, // active tab color
+                    tabBarInactiveTintColor: paperTheme.colors.onSurfaceVariant, // inactive tab color
                 }}
-            />
+            >
+                <Tab.Screen
+                    name="Home"
+                    component={HomeScreen}
+                    options={{
+                        title: t("tabs.home"),
+                        tabBarLabel: t("tabs.home"),
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="home" color={color} size={size} />
+                        ),
+                    }}
+                />
+                <Tab.Screen 
+                    name="Gallery"
+                    component={GalleryScreen}
+                    options={{
+                        title: t("tabs.gallery"),
+                        tabBarLabel: t("tabs.gallery"),
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="image-outline" color={color} size={size} />
+                        ),
+                    }}
+                
+                />
 
-            <Tab.Screen
-                name="Options"
-                component={ProfileScreen}
-                options={{
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="cog" color={color} size={size} />
-                    ),
-                }}
-            />
-        </Tab.Navigator>
+                <Tab.Screen
+                    name="Options"
+                    component={ProfileScreen}
+                    options={{
+                        title: t("tabs.options"),
+                        tabBarLabel: t("tabs.options"),
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="cog" color={color} size={size} />
+                        ),
+                    }}
+                />
+            </Tab.Navigator>
+        </PlantsProvider>
     );
 }

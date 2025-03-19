@@ -1,63 +1,66 @@
 import React, { useEffect, useState } from "react"
-import { Alert, Image, StyleSheet, View } from "react-native"
+import { Alert, StyleSheet, View } from "react-native"
 import { FAB, Portal } from "react-native-paper"
 import * as ImagePicker from 'expo-image-picker'
-
+import { useImages } from "../context/imageContext";
+import LANGUAGES from "../localization/languages";
+import { useTranslation } from "react-i18next"
 
 
 export default function FloatingButton() {
 
-  const [image, setImage] = useState(null); // kuvan näyttämiseen
+  const { addImage } = useImages() //openCamera, pickImage
 
-  const [fabState, setFabState] = useState({ open: false })
-  const onStateChange = ({ open }) => setFabState({ open })
-  const { open } = fabState 
+  const [fabState, setFabState] = useState({ open: false }) // fab
+  const onStateChange = ({ open }) => setFabState({ open }) // fab
+  const { open } = fabState  // fab
+  const { t, i18n } = useTranslation()
 
   useEffect(() => {
     (async () => {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
       if (status !== 'granted') {
-        Alert.alert('Permission is needed','Allow access to photos')
+        Alert.alert(t('screens.fab.requestPermissionHeader'),t('screens.fab.requestMediaPermission')) // saw this alert ONCE when first tried the program( delete cache to see it? )
       }
     })()
   }, [])
 
-    // take picture from your phone
-  const openCamera = async () => {
+
+  // Open camera
+  const handleOpenCamera = async () => {
     const permission = await ImagePicker.requestCameraPermissionsAsync()
-    if (permission.status !== 'granted') {
-      Alert.alert('Permission is needed', 'Allow acces to camera') // saw this alert ONCE when first tried the program( delete cache to see it? )
+    if (permission.status !== "granted") {
+      Alert.alert(t('screens.fab.requestPermissionHeader'), t('screens.fab.requestCameraPermission'))
       return
     }
+
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ['livePhotos'],
+      // allowsEditing: true,
+      quality: 1,
     })
+
     if (!result.canceled) {
-      setImage(result.assets[0].uri)
+      addImage(result.assets[0].uri)
     }
   }
 
-  // Pick image from phone gallery
-  const pickImage = async () => {
+  // Open phone gallery to select picture
+  const handlePickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images']
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      quality: 1,
     })
-    console.log(result)
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri)
+      addImage(result.assets[0].uri)
     }
   }
 
- //----------- RETURNISTA POISTAA PORTAL ----------
- //----------- KUN EI ENÄÄN TARVITSE --------
- // ---------- Ainakin yhden ohjeen mukaan ei tarvi Portal. View myös ?
  return (
 
     <View style={styles.container}>
-      {
-      image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} /> // TESTAUS tuleeko kuva
-      } 
       <Portal>
         <FAB.Group
           open={open}
@@ -66,13 +69,13 @@ export default function FloatingButton() {
           actions={[
             {
               icon: 'camera',
-              label: 'Camera',
-              onPress: openCamera
+              label: t('screens.fab.camera'),
+              onPress: handleOpenCamera
             },
             {
               icon: 'image',
-              label: 'Gallery',
-              onPress: pickImage
+              label: t('screens.fab.phoneGallery'),
+              onPress: handlePickImage
             }
           ]}
           onStateChange={onStateChange} //FAB tarvii tätä

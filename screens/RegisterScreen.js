@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native"
 import { Surface, Text, TextInput, Button } from "react-native-paper"
 import { registerUser } from "../services/authService"
 import { useNavigation } from "@react-navigation/native"
+import { useTranslation } from "react-i18next";
 
 const RegisterScreen = () => {
     const [email, setEmail] = useState("")
@@ -10,6 +11,7 @@ const RegisterScreen = () => {
     const [username, setUsername] = useState("")
 
     const navigation = useNavigation()
+    const { t } = useTranslation()
 
 
     const handleRegister = async () => {
@@ -23,13 +25,13 @@ const RegisterScreen = () => {
 
     return (
         <Surface style={styles.container}>
-            <Text style={styles.title}>Sign up to PlantLife!</Text>
-            <TextInput style={styles.input} placeholder="Username" onChangeText={setUsername} />
-            <TextInput style={styles.input} placeholder="E-mail address" onChangeText={setEmail} keyboardType="email-address" />
-            <TextInput style={styles.input} placeholder="Password" onChangeText={setPassword} secureTextEntry />
-            <Button style={styles.mainButton} mode="contained" onPress={handleRegister}>Sign up!</Button>
+            <Text style={styles.title}>{t("screens.auth.registerHeader")}</Text>
+            <TextInput style={styles.input} placeholder={t("screens.auth.username")} onChangeText={setUsername} />
+            <TextInput style={styles.input} placeholder={t("screens.auth.email")} onChangeText={setEmail} keyboardType="email-address" />
+            <TextInput style={styles.input} placeholder={t("screens.auth.password")} onChangeText={setPassword} secureTextEntry />
+            <Button style={styles.mainButton} mode="contained" onPress={handleRegister}>{t("screens.auth.registerButton")}</Button>
             <Text style={styles.link} onPress={() => navigation.navigate("Login")}>
-                Already have an account? Sign in here.
+                {t("screens.auth.goToLogin")}
             </Text>
         </Surface>
     )
@@ -59,7 +61,6 @@ const styles = StyleSheet.create({
     },
     link: {
         marginTop: 10,
-        color: "blue",
         textDecorationLine: "underline",
     },
     mainButton: {
