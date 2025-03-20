@@ -19,6 +19,7 @@ const PlantScreen = ({ route }) => {
     const [plant, setPlant] = useState(null)
     const [careHistory, setCareHistory] = useState([])
     const [nextWatering, setNextWatering] = useState(null)
+    const [nextFertilizing, setNextFertilizing] = useState(null)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
 
@@ -34,10 +35,11 @@ const PlantScreen = ({ route }) => {
     const loadPlantData = async () => {
         try {
 
-            const { plant, careHistory, nextWatering } = await fetchPlantData(user.uid, plantId)
+            const { plant, careHistory, nextWatering, nextFertilizing } = await fetchPlantData(user.uid, plantId)
             setPlant(plant)
             setCareHistory(careHistory)
             setNextWatering(nextWatering)
+            setNextFertilizing(nextFertilizing)
 
         } catch (error) {
             console.error("Error fetching plant data:", error)
@@ -134,7 +136,7 @@ const PlantScreen = ({ route }) => {
                     </View>
                 </View>
 
-                <PlantDetails plant={plant} careHistory={careHistory} nextWatering={nextWatering}/>
+                <PlantDetails plant={plant} careHistory={careHistory} nextWatering={nextWatering} nextFertilizing={nextFertilizing}/>
                 <CareHistory careHistory={careHistory} />
 
                 <View style={styles.singleButtonRow}>

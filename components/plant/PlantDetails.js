@@ -5,7 +5,7 @@ import { formatDate } from '../../utils/dateUtils'
 import { useTranslation } from "react-i18next"
 import { View } from 'react-native'
 
-const PlantDetails = ({ plant, careHistory, nextWatering }) => {
+const PlantDetails = ({ plant, careHistory, nextWatering, nextFertilizing }) => {
 
     console.log("nextWatering received in PlantDetails:", nextWatering);
 
@@ -47,8 +47,9 @@ const PlantDetails = ({ plant, careHistory, nextWatering }) => {
             </Text>
             <Text variant="bodyLarge">{"     "}{nextWatering ? formatDate(nextWatering) : t("screens.plant.needMoreEvents")}</Text>
             <Text variant="bodyMedium">
-                💥 {t("screens.plant.nextFertilizationEstimate")}:
+                💥 {t("screens.plant.nextFertilizationEstimate")}:{" "}
             </Text>
+            <Text variant="bodyLarge">{"     "}{nextFertilizing ? formatDate(nextFertilizing) : t("screens.plant.needMoreEvents")}</Text>
         </Surface>
     )
 }

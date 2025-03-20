@@ -49,3 +49,64 @@ export const calculateNextWatering = (careHistory) => {
     return predictedNextWateringDate
 
 }
+
+export const calculateNextFertilizing = (careHistory) => {
+
+    const fertilizingEvents = careHistory
+        .filter(entry => entry.events.includes("fertilizing"))
+        .map(entry => entry.date)
+        .sort((a,b) => b-a) // sort by date, newest first 
+
+    // at least two events are needed to calculate
+    if (fertilizingEvents.length < 2) {
+        console.log("Need at least 2 fertilizing events to calculate estimate")
+        return null
+    }
+
+    // use up to 5 most recent fertilizing events to avoid out-of-season statistics
+    const relevantFertilizings = fertilizingEvents.slice(0,5)
+    console.log("Relevant fertilizing events: ", relevantFertilizings)
+
+    // calculate intervals between consecutive fertilizing events
+    let intervals = []
+    for (let i = 0; i < relevantFertilizings.length - 1; i++) {
+        const prevDate = new Date(relevantFertilizings[i + 1])
+        const nextDate = new Date(relevantFertilizings[i])
+
+        // skip winter months when calculating intervals
+        let intervalDays = 0
+        while (prevDate < nextDate) {
+            prevDate.setDate(prevDate.getDate() + 1)
+            const month = prevDate.getMonth() + 1 // JS months are 0-based, so +1
+            if (month >= 3 && month <= 9) { // only count March-September
+                intervalDays++;
+            }
+        }
+        intervals.push(intervalDays);
+    }
+
+    console.log("Relevant fertilizing intervals: ", intervals)
+
+    // calculate average interval
+    const avgInterval = intervals.reduce((sum, val) => sum + val, 0) / intervals.length
+    console.log("Average fertilizing interval, excluding winter: ", avgInterval)
+
+    // predict next fertilizing
+    const lastFertilizingDate = new Date(relevantFertilizings[0])
+    const predictedNextFertilizingDate = new Date(lastFertilizingDate)
+
+    // add average interval but skip winter months
+    let daysAdded = 0
+    while (daysAdded < avgInterval) {
+        predictedNextFertilizingDate.setDate(predictedNextFertilizingDate.getDate() + 1)
+        const month = predictedNextFertilizingDate.getMonth() + 1
+        if (month >= 3 && month <= 9) {
+            daysAdded++
+        }
+    }
+
+    console.log("Predicted next fertilizing date: ", predictedNextFertilizingDate)
+
+    return predictedNextFertilizingDate
+
+}
