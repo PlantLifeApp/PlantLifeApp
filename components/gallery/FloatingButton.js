@@ -2,19 +2,15 @@ import React, { useEffect, useState } from "react"
 import { Alert, StyleSheet, View } from "react-native"
 import { FAB, Portal } from "react-native-paper"
 import * as ImagePicker from 'expo-image-picker'
-import { useImages } from "../context/imageContext";
-import LANGUAGES from "../localization/languages";
+import { useImages } from "../../context/imageContext";
 import { useTranslation } from "react-i18next"
 
-
 export default function FloatingButton() {
-
   const { addImage } = useImages() //openCamera, pickImage
-
   const [fabState, setFabState] = useState({ open: false }) // fab
   const onStateChange = ({ open }) => setFabState({ open }) // fab
   const { open } = fabState  // fab
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   useEffect(() => {
     (async () => {
