@@ -1,8 +1,6 @@
 import { db } from "./firebaseConfig";
 import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp } from "firebase/firestore"
-import { AuthContext } from "../context/authContext"
-import React, { useContext } from "react"
-import { calculateNextWatering } from "../utils/dateUtils"
+import { calculateNextWatering, calculateNextFertilizing } from "../utils/dateUtils"
 
 export const addPlant = async (givenName, scientificName, plantType, user) => {
 
@@ -80,8 +78,11 @@ export const fetchPlantData = async (userId, plantId) => {
 
         // calculate next predicted watering date
         const nextWatering = calculateNextWatering(sortedGroupedHistory)
+        // calculate next predicted fertilizing date
+        const nextFertilizing = calculateNextFertilizing(sortedGroupedHistory)
 
-        return { plant: plantData, careHistory: sortedGroupedHistory, nextWatering: nextWatering }
+        return { plant: plantData, careHistory: sortedGroupedHistory, nextWatering: nextWatering, nextFertilizing: nextFertilizing }
+        
     } catch (error) {
         console.error("Error fetching plant or care history:", error)
         throw error

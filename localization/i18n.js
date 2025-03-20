@@ -65,6 +65,8 @@ const resources = {
                     needMoreEvents: "Need more events to calculate!",
                     editHistory: "Edit Care History",
                     editPlant: "Edit Plant Info",
+                    infoTitle: "About Care Predictions",
+                    infoMessage: "Our watering and fertilizing estimates are based on your history, not rigid schedules. Your plant, your rules – trust your green thumb!"
                 },
                 editPlant: {
                     plantNotFound: "Plant not found",
@@ -95,7 +97,8 @@ const resources = {
             common: {
                 confirm: "Confirm",
                 cancel: "Cancel",
-                save: "Save"
+                save: "Save",
+                ok: "OK"
             }
         }
     },
@@ -160,6 +163,8 @@ const resources = {
                     needMoreEvents: "Tarvitaan lisää tapahtumia laskentaan!",
                     editHistory: "Muokkaa hoitohistoriaa",
                     editPlant: "Muokkaa kasvin tietoja",
+                    infoTitle: "Hoitoennusteista",
+                    infoMessage: "Kastelu- ja lannoitusarviot perustuvat hoitohistoriaasi, eivät tiukkoihin aikatauluihin. Sinä tunnet kasvisi parhaiten – luota vihreään peukaloosi!"
                 },
                 editPlant: {
                     plantNotFound: "Kasvia ei löytynyt",
@@ -190,7 +195,8 @@ const resources = {
             common: {
                 confirm: "Vahvista",
                 cancel: "Peruuta",
-                save: "Tallenna"
+                save: "Tallenna",
+                ok: "OK"
             }
         }
     },
@@ -255,6 +261,8 @@ const resources = {
                     needMoreEvents: "Behöver fler händelser för att beräkna!",
                     editHistory: "Redigera vårdhistorik",
                     editPlant: "Redigera växtinformation",
+                    infoTitle: "Om skötselprognoser",
+                    infoMessage: "Våra uppskattningar för vattning och gödsling baseras på din historik, inte fasta scheman. Du känner din växt bäst – lita på din gröna tumme!"
                 },
                 editPlant: {
                     plantNotFound: "Växten hittades inte",
