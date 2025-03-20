@@ -7,12 +7,14 @@ import { fetchPlantData, addCareEvent } from '../services/plantService'
 import PlantDetails from '../components/plant/PlantDetails'
 import CareHistory from '../components/plant/CareHistory'
 import Toast from 'react-native-toast-message'
+import { useTheme } from 'react-native-paper'
 
 const PlantScreen = ({ route }) => {
 
     const { plantId } = route.params
     const { user } = useContext(AuthContext)
     const { t } = useTranslation()
+    const theme = useTheme()
 
     const [plant, setPlant] = useState(null)
     const [careHistory, setCareHistory] = useState([])
@@ -86,64 +88,79 @@ const PlantScreen = ({ route }) => {
     }
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <Surface style={styles.surface}>
-                <Text variant="headlineMedium">{plant.givenName}</Text>
-                <Text variant="bodyLarge" style={{ fontStyle: "italic" }}>{plant.scientificName}</Text>
-            </Surface>
+        <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>
+            <ScrollView contentContainerStyle={[styles.container, {backgroundColor: theme.colors.background}]}>
+                <Surface style={styles.surface}>
+                    <Text variant="headlineMedium">{plant.givenName}</Text>
+                    <Text variant="bodyLarge" style={{ fontStyle: "italic" }}>{plant.scientificName}</Text>
+                </Surface>
 
-            <View style={styles.buttonContainer}>
+                <View style={styles.buttonContainer}>
+                    <View style={styles.singleButtonRow}>
+                        <Button
+                            mode="contained"
+                            onPress={() => handleAddCareEvent("watering")}
+                            loading={saving}
+                            disabled={saving}
+                            style={styles.button}
+                        >
+                            {t("screens.plant.justWatered")} 💦
+                        </Button>
+                    </View>
+                    <View style={styles.doubleButtonRow}>
+                        <Button
+                            mode="contained"
+                            onPress={() => handleAddCareEvent("fertilizing")}
+                            loading={saving}
+                            disabled={saving}
+                            style={styles.button}
+                        >
+                            {t("screens.plant.justFertilized")}
+                        </Button>
+                        <Button
+                            mode="contained"
+                            onPress={() => {}}
+                            loading={saving}
+                            disabled={saving}
+                            style={styles.button}
+                        >
+                            {t("screens.plant.justPruned")}
+                        </Button>
+                    </View>
+                </View>
+
+                <PlantDetails plant={plant} careHistory={careHistory} nextWatering={nextWatering}/>
+                <CareHistory careHistory={careHistory} />
+
                 <View style={styles.singleButtonRow}>
-                    <Button
-                        mode="contained"
-                        onPress={() => handleAddCareEvent("watering")}
-                        loading={saving}
-                        disabled={saving}
-                        style={styles.button}
-                    >
-                        {t("screens.plant.justWatered")} 💦
-                    </Button>
-                </View>
-                <View style={styles.doubleButtonRow}>
-                    <Button
-                        mode="contained"
-                        onPress={() => handleAddCareEvent("fertilizing")}
-                        loading={saving}
-                        disabled={saving}
-                        style={styles.button}
-                    >
-                        {t("screens.plant.justFertilized")}
-                    </Button>
-                    <Button
-                        mode="contained"
+                    <Button 
+                        mode='contained'
                         onPress={() => {}}
-                        loading={saving}
-                        disabled={saving}
                         style={styles.button}
                     >
-                        {t("screens.plant.justPruned")}
+                        {t("screens.plant.editHistory")}
                     </Button>
                 </View>
-            </View>
-
-            <PlantDetails plant={plant} careHistory={careHistory} nextWatering={nextWatering}/>
-            <CareHistory careHistory={careHistory} />
-
-            <View style={styles.singleButtonRow}>
-                <Button 
-                    mode='contained'
-                    onPress={() => {}}
-                    style={styles.button}
-                >
-                    {t("screens.plant.editHistory")}
-                </Button>
-            </View>
-            
-        </ScrollView>
+                <View style={styles.singleButtonRow}>
+                    <Button 
+                        mode='contained'
+                        onPress={() => {}}
+                        style={styles.button}
+                    >
+                        {t("screens.plant.editPlant")}
+                    </Button>
+                </View>
+                
+            </ScrollView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
+
+    fullScreen: {
+        flex: 1,
+    },
     container: {
         flexGrow: 1,
         padding: 16,
@@ -183,11 +200,6 @@ const styles = StyleSheet.create({
     button: {
         flex: 1,
         marginHorizontal: 8,
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.5,
-        shadowRadius: 2,
-        elevation: 4,
     },
 })
 

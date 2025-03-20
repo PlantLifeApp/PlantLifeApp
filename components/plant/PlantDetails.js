@@ -40,12 +40,14 @@ const PlantDetails = ({ plant, careHistory, nextWatering }) => {
                 ✂️ {t("screens.plant.lastPruned")}: {lastPruning ? formatDate(lastPruning.date) : t("screens.plant.noPrunings")}
             </Text>
             <View style={{ height: 8 }} />
+            <Text variant="bodyLarge">{t("screens.plant.basedOnHistory")}</Text>
+            <View style={{ height: 8 }} />
             <Text variant="bodyMedium">
-                {t("screens.plant.nextWateringEstimate")}:{" "}
-                {nextWatering ? formatDate(nextWatering) : t("screens.plant.needMoreEvents")}
+                💧 {t("screens.plant.nextWateringEstimate")}:{" "}
             </Text>
+            <Text variant="bodyLarge">{"     "}{nextWatering ? formatDate(nextWatering) : t("screens.plant.needMoreEvents")}</Text>
             <Text variant="bodyMedium">
-                {t("screens.plant.nextFertilizationEstimate")}:
+                💥 {t("screens.plant.nextFertilizationEstimate")}:
             </Text>
         </Surface>
     )

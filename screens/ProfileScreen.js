@@ -24,8 +24,8 @@ export default function ProfileScreen() {
     }
 
     return (
+        
         <Surface style={styles.container}>
-
             <View style={styles.topContent}>
                 <Text variant="bodyMedium">{t("screens.options.signedInAs")}:</Text>
                 <Text variant="bodyLarge" style={styles.sectionEnd}>{user?.email}</Text>
