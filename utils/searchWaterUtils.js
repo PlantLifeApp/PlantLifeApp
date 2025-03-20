@@ -2,11 +2,12 @@ import { formatDate } from "./dateUtils"
 
 
 export const searchMostRecentWatering = (careHistory) => {
-
+    console.log(careHistory)
     let mostRecentWatering = 0
     for (let i = 0; i < careHistory.length; i++) {
-
-        if (careHistory[i].events.includes("watering") && careHistory[i].date > mostRecentWatering) {
+        console.log(Date(careHistory[i]))
+        if (careHistory[i].type.includes("watering") && careHistory[i].date > mostRecentWatering) {
+            console.log(mostRecentWatering)
             mostRecentWatering = careHistory[i].date
         }
     }
@@ -14,6 +15,7 @@ export const searchMostRecentWatering = (careHistory) => {
         return 0
     }
     else {
-        return mostRecentWatering
+        const rawDate = new Date(mostRecentWatering.seconds * 1000) // convert Firestore timestamp to milliseconds
+        return rawDate
     }
 }

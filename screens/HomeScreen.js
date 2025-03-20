@@ -1,46 +1,53 @@
-import React, { useContext, useState, useMemo } from "react"
-import { StyleSheet, FlatList, TouchableOpacity, View, TextInput } from "react-native"
-import { Text, Button, Switch, IconButton, Menu } from "react-native-paper"
-import { AuthContext } from "../context/authContext"
-import AddPlantModal from "../components/home/AddPlantModal"
-import { usePlants } from "../context/plantsContext"
-import { useTranslation } from "react-i18next"
-import { useNavigation } from "@react-navigation/native"
-import CardComponent from '../components/home/CardComponent'
-import { ThemeContext } from "../context/themeContext"
-import { searchMostRecentWatering } from '../utils/searchWaterUtils'
+import React, { useContext, useState, useEffect, useMemo } from "react";
+import { StyleSheet, FlatList, TouchableOpacity, View, TextInput } from "react-native";
+import { Text, Button, Switch, IconButton, Menu } from "react-native-paper";
+import { AuthContext } from "../context/authContext";
+import AddPlantModal from "../components/home/AddPlantModal";
+import { usePlants } from "../context/plantsContext";
+import { useTranslation } from "react-i18next";
+import { useNavigation } from "@react-navigation/native";
+import CardComponent from '../components/home/CardComponent';
+import { ThemeContext } from "../context/themeContext";
+import { searchMostRecentWatering } from '../utils/searchWaterUtils';
+import { formatDate } from '../utils/dateUtils';
 
 const HomeScreen = () => {
-    const { theme } = useContext(ThemeContext)
-    const { user } = useContext(AuthContext)
-    const { t, i18n } = useTranslation()
-    const [modalVisible, setModalVisible] = useState(false)
-    const [isTwoColumns, setIsTwoColumns] = useState(true)
-    const [searchQuery, setSearchQuery] = useState("")
-    const [isSearchVisible, setIsSearchVisible] = useState(false)
-    const [sortOption, setSortOption] = useState("alphabetical")
-    const [menuVisible, setMenuVisible] = useState(false)
-    const { plants } = usePlants()
+    const { theme } = useContext(ThemeContext);
+    const { user } = useContext(AuthContext);
+    const { t, i18n } = useTranslation();
+    const [modalVisible, setModalVisible] = useState(false);
+    const [isTwoColumns, setIsTwoColumns] = useState(true);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [isSearchVisible, setIsSearchVisible] = useState(false);
+    const [sortOption, setSortOption] = useState("alphabetical");
+    const [menuVisible, setMenuVisible] = useState(false);
 
-    const navigation = useNavigation()
+    const { plants } = usePlants();
+    const navigation = useNavigation();
 
-    const filteredPlants = plants
-        .filter((item) =>
-            item.plant.givenName.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-        .sort((a, b) => {
-            if (sortOption === "alphabetical") {
-                return a.plant.givenName.localeCompare(b.plant.givenName);
-            } else if (sortOption === "latestCare") {
+    /*
+    const loaddata = async (id) => {
+        const returndata = await loadPlantDetails(id);
+        return returndata;
+    };
+    */
 
-                // Change this to be the next watering date instead of last one?
-                const dateA = a.careHistory.length > 0 ? searchMostRecentWatering(a.careHistory) : new Date(0);
-                const dateB = b.careHistory.length > 0 ? searchMostRecentWatering(b.careHistory) : new Date(0);
-                return dateB - dateA;
-            }
-            return 0;
-        });
-
+    const filteredPlants = useMemo(() => {
+        return plants
+            .filter((item) =>
+                item.givenName.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .sort((a, b) => {
+                if (sortOption === "alphabetical") {
+                    return a.givenName.localeCompare(b.givenName);
+                } else if (sortOption === "latestCare") {
+                    const dateA = a.careHistory.length > 0 ? new Date(formatDate(searchMostRecentWatering(a.careHistory))) : new Date(0);
+                    const dateB = b.careHistory.length > 0 ? new Date(formatDate(searchMostRecentWatering(b.careHistory))) : new Date(0);
+                    return dateB - dateA;
+                }
+                return 0;
+            });
+    }, [plants, searchQuery, sortOption]);
 
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -65,7 +72,7 @@ const HomeScreen = () => {
             </View>
             <FlatList
                 data={filteredPlants}
-                keyExtractor={(item) => item.plant.id}
+                keyExtractor={(item) => item.id}
                 key={isTwoColumns ? 'two-columns' : 'one-column'}
                 numColumns={isTwoColumns ? 2 : 1}
                 columnWrapperStyle={isTwoColumns ? styles.row : null}
@@ -73,7 +80,7 @@ const HomeScreen = () => {
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={isTwoColumns ? styles.itemContainerSimple : styles.itemContainerComplex}
-                        onPress={() => navigation.navigate("PlantScreen", { plantId: item.plant.id })}
+                        onPress={() => navigation.navigate("PlantScreen", { plantId: item.id })}
                     >
                         <CardComponent item={item} isTwoColumns={isTwoColumns} />
                     </TouchableOpacity>

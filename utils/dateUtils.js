@@ -1,7 +1,7 @@
 // format for ui display based on phone's language/region settings, 
 // e.g. 12/31/2022 in USA but 31.12.2025 in Germany
 export const formatDate = (date) => {
-    return date.toLocaleDateString() 
+    return date.toLocaleDateString()
 }
 
 export const calculateNextWatering = (careHistory) => {
@@ -10,20 +10,20 @@ export const calculateNextWatering = (careHistory) => {
     const wateringEvents = careHistory
         .filter(entry => entry.events.includes("watering"))
         .map(entry => entry.date)
-        .sort((a,b) => b-a) // sort by date, newest first
+        .sort((a, b) => b - a) // sort by date, newest first
 
-    console.log("All waterings:", wateringEvents)
+    //console.log("All waterings:", wateringEvents)
 
     // at least two watering events are needed to calculate an estimate
     if (wateringEvents.length < 2) {
-        console.log("Need at least 2 watering events to calculate estimate")
+        //console.log("Need at least 2 watering events to calculate estimate")
         return null
     }
 
     // use up to 5 most recent watering events to avoid out-of-season statistics
-    const relevantWaterings = wateringEvents.slice(0,5)
+    const relevantWaterings = wateringEvents.slice(0, 5)
 
-    console.log("Relevant waterings: ", relevantWaterings)
+    //console.log("Relevant waterings: ", relevantWaterings)
 
     // calculate intervals between consecutive waterings
     let intervals = []
@@ -32,19 +32,19 @@ export const calculateNextWatering = (careHistory) => {
         intervals.push(interval)
     }
 
-    console.log("Relevant watering intervals: ", intervals)
+    //console.log("Relevant watering intervals: ", intervals)
 
     // calculate average interval
     const avgInterval = intervals.reduce((sum, val) => sum + val, 0) / intervals.length // the reduce method is used to sum up all values in the array, 0 is the initial value
 
-    console.log("Average watering interval: ", avgInterval)
+    //console.log("Average watering interval: ", avgInterval)
 
     // predict next watering date based on last watering event
     const lastWateringDate = relevantWaterings[0]
     const predictedNextWateringDate = new Date(lastWateringDate)
     predictedNextWateringDate.setDate(predictedNextWateringDate.getDate() + avgInterval)
 
-    console.log("Predicted next watering date: ", predictedNextWateringDate)
+    //console.log("Predicted next watering date: ", predictedNextWateringDate)
 
     return predictedNextWateringDate
 
@@ -66,13 +66,13 @@ export const calculateNextFertilizing = (careHistory) => {
 
     // at least two events are needed to calculate
     if (fertilizingEvents.length < 2) {
-        console.log("Need at least 2 fertilizing events to calculate estimate")
+        //console.log("Need at least 2 fertilizing events to calculate estimate")
         return null
     }
 
     // use up to 5 most recent fertilizing events to avoid out-of-season statistics
-    const relevantFertilizings = fertilizingEvents.slice(0,5)
-    console.log("Relevant fertilizing events: ", relevantFertilizings)
+    const relevantFertilizings = fertilizingEvents.slice(0, 5)
+    //console.log("Relevant fertilizing events: ", relevantFertilizings)
 
     // calculate intervals between consecutive fertilizing events
     let intervals = []
@@ -92,11 +92,11 @@ export const calculateNextFertilizing = (careHistory) => {
         intervals.push(intervalDays);
     }
 
-    console.log("Relevant fertilizing intervals: ", intervals)
+    //onsole.log("Relevant fertilizing intervals: ", intervals)
 
     // calculate average interval
     const avgInterval = Math.round(intervals.reduce((sum, val) => sum + val, 0) / intervals.length)
-    console.log("Average fertilizing interval, excluding winter: ", avgInterval)
+    //console.log("Average fertilizing interval, excluding winter: ", avgInterval)
 
     // predict next fertilizing
     const lastFertilizingDate = new Date(relevantFertilizings[0])
@@ -112,7 +112,7 @@ export const calculateNextFertilizing = (careHistory) => {
         }
     }
 
-    console.log("Predicted next fertilizing date:", predictedNextFertilizingDate.toLocaleString())
+    //console.log("Predicted next fertilizing date:", predictedNextFertilizingDate.toLocaleString())
 
     return predictedNextFertilizingDate
 
