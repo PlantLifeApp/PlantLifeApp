@@ -54,8 +54,12 @@ export const calculateNextFertilizing = (careHistory) => {
 
     const fertilizingEvents = careHistory
         .filter(entry => entry.events.includes("fertilizing"))
-        .map(entry => entry.date)
-        .sort((a,b) => b-a) // sort by date, newest first 
+        .map(entry => new Date(entry.date))
+        .filter(date => {
+            const month = date.getMonth() + 1; // JS months are 0-based so +1
+            return month >= 3 && month <= 9; // only keep March-September fertilizations
+        })
+        .sort((a, b) => b - a); // Sort by date, newest first
 
     // at least two events are needed to calculate
     if (fertilizingEvents.length < 2) {
@@ -77,7 +81,7 @@ export const calculateNextFertilizing = (careHistory) => {
         let intervalDays = 0
         while (prevDate < nextDate) {
             prevDate.setDate(prevDate.getDate() + 1)
-            const month = prevDate.getMonth() + 1 // JS months are 0-based, so +1
+            const month = prevDate.getMonth() + 1
             if (month >= 3 && month <= 9) { // only count March-September
                 intervalDays++;
             }
@@ -88,7 +92,7 @@ export const calculateNextFertilizing = (careHistory) => {
     console.log("Relevant fertilizing intervals: ", intervals)
 
     // calculate average interval
-    const avgInterval = intervals.reduce((sum, val) => sum + val, 0) / intervals.length
+    const avgInterval = Math.round(intervals.reduce((sum, val) => sum + val, 0) / intervals.length)
     console.log("Average fertilizing interval, excluding winter: ", avgInterval)
 
     // predict next fertilizing
