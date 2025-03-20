@@ -1,8 +1,16 @@
+<<<<<<< Updated upstream
 import React, { createContext, useState, useEffect, useContext } from "react"
 import { onSnapshot, collection } from "firebase/firestore"
 import { AuthContext } from "./authContext"
 import { fetchPlantData } from "../services/plantService"
 import { db } from "../services/firebaseConfig"
+=======
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import { getFirestore, collection, getDocs, query, onSnapshot } from 'firebase/firestore';
+import { AuthContext } from './authContext';
+import { fetchPlantData } from '../services/plantService';
+const db = getFirestore();
+>>>>>>> Stashed changes
 
 // Create the context
 const PlantsContext = createContext()
