@@ -45,11 +45,11 @@ const PlantDetails = ({ plant, careHistory, nextWatering, nextFertilizing }) => 
             <Text variant="bodyMedium">
                 💧 {t("screens.plant.nextWateringEstimate")}:{" "}
             </Text>
-            <Text variant="bodyLarge">{"     "}{nextWatering ? formatDate(nextWatering) : t("screens.plant.needMoreEvents")}</Text>
+            <Text variant="bodyMedium">{"      "}{nextWatering ? formatDate(nextWatering) : t("screens.plant.needMoreEvents")}</Text>
             <Text variant="bodyMedium">
                 💥 {t("screens.plant.nextFertilizationEstimate")}:{" "}
             </Text>
-            <Text variant="bodyLarge">{"     "}{nextFertilizing ? formatDate(nextFertilizing) : t("screens.plant.needMoreEvents")}</Text>
+            <Text variant="bodyMedium">{"      "}{nextFertilizing ? formatDate(nextFertilizing) : t("screens.plant.needMoreEvents")}</Text>
         </Surface>
     )
 }

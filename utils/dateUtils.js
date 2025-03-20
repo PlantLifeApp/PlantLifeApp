@@ -54,7 +54,10 @@ export const calculateNextFertilizing = (careHistory) => {
 
     const fertilizingEvents = careHistory
         .filter(entry => entry.events.includes("fertilizing"))
-        .map(entry => new Date(entry.date))
+        .map(entry => {
+            const date = new Date(entry.date)
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate()) // remove time part to avoid daylight saving time issues
+        })
         .filter(date => {
             const month = date.getMonth() + 1; // JS months are 0-based so +1
             return month >= 3 && month <= 9; // only keep March-September fertilizations
@@ -109,7 +112,7 @@ export const calculateNextFertilizing = (careHistory) => {
         }
     }
 
-    console.log("Predicted next fertilizing date: ", predictedNextFertilizingDate)
+    console.log("Predicted next fertilizing date:", predictedNextFertilizingDate.toLocaleString())
 
     return predictedNextFertilizingDate
 
