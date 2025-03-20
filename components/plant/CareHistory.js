@@ -37,7 +37,7 @@ const CareHistory = ({ careHistory }) => {
                         <List.Item
                             key={index}
                             title={formatDate(entry.date)} //format for UI
-                            description={` ${t("screens.plant.event")}: ${entry.events
+                            description={`${t("screens.plant.event")}: ${entry.events
                                 .map(e => t(`screens.plant.${e === "fertilizing" ? "fertilization" : e}`, e))
                                 .join(", ")}`}
                             left={props => <List.Icon {...props} icon={getIconForEvents(entry.events)} />}

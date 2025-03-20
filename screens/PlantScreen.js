@@ -23,8 +23,13 @@ const PlantScreen = ({ route }) => {
     const [saving, setSaving] = useState(false)
 
     useEffect(() => {
-        loadPlantData()
-    }, [plantId, user])
+        if (user?.uid) {
+            console.log("User authenticated, fetching plant data...")
+            loadPlantData()
+        } else {
+            console.log("User is not authenticated yet, waiting...")
+        }
+    }, [plantId, user]) // Ensures it runs when user is available
 
     const loadPlantData = async () => {
         try {
