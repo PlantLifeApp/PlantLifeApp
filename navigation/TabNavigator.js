@@ -14,15 +14,25 @@ import GalleryScreen from "../screens/GalleryScreen"
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator()
 
-const HomeStackNavigator = () => (
-    <Stack.Navigator screenOptions={{ headerShown: true }}>
-        <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: "Home" }} />
-        <Stack.Screen name="PlantScreen" component={PlantScreen} options={{ title: "Plant Details" }} />
-    </Stack.Navigator>
-)
+const HomeStackNavigator = () => {
+    const paperTheme = useTheme(); // Get theme colors
+
+    return (
+        <Stack.Navigator
+            screenOptions={{
+                headerShown: true,
+                headerStyle: { backgroundColor: paperTheme.colors.surface }, // set header background
+                headerTintColor: paperTheme.colors.onSurface, // set header text color
+            }}
+        >
+            <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: "Home" }} />
+            <Stack.Screen name="PlantScreen" component={PlantScreen} options={{ title: "Plant Details" }} />
+        </Stack.Navigator>
+    );
+};
 
 export default function TabNavigator() {
-    const { theme } = useContext(ThemeContext) // get the custom theme
+    //const { theme } = useContext(ThemeContext) // get the custom theme
     const paperTheme = useTheme() // get theme colors
     const { t } = useTranslation() // Localization usage
 
