@@ -1,21 +1,18 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, ToastAndroid } from 'react-native'   // ToastAndroid works only on Android
-import { Button, Modal, Surface, Text, TextInput, Menu } from 'react-native-paper'
-import { Picker } from 'react-native-web';
+import { StyleSheet, View } from 'react-native'
+import { Button, Modal, Surface, Text, TextInput, Portal } from 'react-native-paper'
 import { addPlant } from '../../services/plantService';
+import { Dropdown } from 'react-native-paper-dropdown';
+import { useTranslation } from 'react-i18next';
 
 export default function AddPlantModal({ user, visible, onClose }) {
-    const [menuVisible, setMenuVisible] = useState(false);
-    const openMenu = () => setMenuVisible(true);
-    const closeMenu = () => setMenuVisible(false);
     const [plantType, setPlantType] = useState("");
     const [plantNickname, setPlantNickname] = useState("");
     const [scientificName, setScientificName] = useState("");
-
+    const { t } = useTranslation()
 
     const onCloseFunction = () => {
-        // Reseting all values to default
-        setMenuVisible(false);
+        // Reset all values to default
         onClose();
         setPlantType("");
         setPlantNickname("");
@@ -25,75 +22,95 @@ export default function AddPlantModal({ user, visible, onClose }) {
     const handleAddPlant = () => {
         addPlant(plantNickname, scientificName, plantType, user);
         onCloseFunction();
-        // Toimii vain androidilla
-        //ToastAndroid.show("Plant added successfully!", ToastAndroid.SHORT);
     }
 
+    const TYPES = [
+        { label: 'Cactus', value: 'cactus' },
+        { label: 'Succulent', value: 'succulent' },
+        { label: 'General', value: 'general' },
+        { label: 'Utilitarian', value: 'utilitarian' }
+    ]
 
     return (
-        <Modal
-            animationType="slide"
-            transparent={true}
-            visible={visible}
-            onRequestClose={onClose}
-            style={styles.modalContainer}
-        >
-            <Surface style={styles.modalSurface}>
-                <Text>Enter plant details:</Text>
-                <View style={styles.modalView}>
-                    <Text>Plant Nickname:</Text>
-                    <TextInput style={styles.textInput} onChangeText={(text) => setPlantNickname(text)}></TextInput>
-                </View>
-                <View style={styles.modalView}>
-                    <Text>Scientific Name</Text>
-                    <TextInput style={styles.textInput} onChangeText={(text) => setScientificName(text)}></TextInput>
+        <Portal>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={visible}
+                onRequsetClose={onClose}
+                style={styles.modalContainer}
+            >
+                <Surface style={styles.modalSurface}>
+                    <Text variant="bodyLarge" style={styles.title}>{t("screens.addPlant.title")}</Text>
 
-                </View>
-                <View style={styles.modalView}>
-                    <Text>Plant type</Text>
-                    <Menu
-                        visible={menuVisible}
-                        onDismiss={closeMenu}
-                        anchor={<Button onPress={openMenu} >{plantType == "" ? "Show Menu" : plantType}</Button>}>
-                        <Menu.Item onPress={() => { setPlantType("cactus"); closeMenu(); }} title="cactus" />
-                        <Menu.Item onPress={() => { setPlantType("succulent"); closeMenu(); }} title="succulent" />
-                        <Menu.Item onPress={() => { setPlantType("general"); closeMenu(); }} title="general" />
-                        <Menu.Item onPress={() => { setPlantType("utilitarian"); closeMenu(); }} title="utilitarian" />
-                    </Menu>
-                </View>
-                <Button mode="contained" title="Add plant" onPress={handleAddPlant} >Add plant</Button>
-                <Button mode="contained" title="Close" onPress={onCloseFunction} >Close</Button>
-                <Button mode="contained" title="Add picture" onPress={() => { }} >Add picture</Button>
+                    <View style={styles.inputContainer}>
+                        <Text variant="bodyMedium">{t("screens.addPlant.nickname")}</Text>
+                        <TextInput style={styles.textInput} onChangeText={(text) => setPlantNickname(text)}></TextInput>
+                    </View>
 
-            </Surface>
-        </Modal>
+                    <View style={styles.inputContainer}>
+                        <Text variant="bodyMedium">{t("screens.addPlant.scientificName")}</Text>
+                        <TextInput style={styles.textInput} onChangeText={(text) => setScientificName(text)}></TextInput>
+                    </View>
+
+                    <View style={styles.inputContainer}>
+                        <Dropdown
+                            placeholder={t("screens.addPlant.selectType")}
+                            options={TYPES}
+                            value={plantType}
+                            onSelect={setPlantType}
+                            style={styles.dropdown}
+                        />
+                    </View>
+
+                    <Button style={styles.button} mode="contained" onPress={handleAddPlant} >{t("screens.addPlant.addButton")}</Button>
+                    <Button style={styles.button} mode="contained" onPress={onCloseFunction} >{t("screens.addPlant.cancelButton")}</Button>
+
+                </Surface>
+            </Modal>
+        </Portal>
     );
 }
 
 const styles = StyleSheet.create({
     modalContainer: {
-        flex: 1,
+        //flexGrow: 1,
         justifyContent: "center",
-        alignItems: "center",
-        height: '100%',
+        padding: 20,
+        width: '100%',
     },
     modalSurface: {
-        width: '90%',
-        height: '70%',
-        padding: 20,
+        padding: 16,
         margin: 20,
         borderRadius: 10,
         elevation: 4,
         justifyContent: "center",
-        alignItems: "center",
     },
-    modalView: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+    inputContainer: {
+        width: "100%",
         marginBottom: 20,
     },
+    title: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 10,
+    },
     textInput: {
-        minWidth: 200,
+        width: "100%",
+        height: 40,
+        borderColor: "gray",
+        borderWidth: 1,
+        marginBottom: 10,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+    },
+    button: {
+        alignSelf: "stretch",
+        marginBottom: 20,
+    },
+    dropdown: {
+        width: '100%',
+        paddingHorizontal: 10,
+        height: 40,
     },
 })
