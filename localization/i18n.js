@@ -25,7 +25,7 @@ const resources = {
                     registerHeader: "Sign up to PlantLife!"
                 },
                 home: {
-                    
+                    noWateringHistory: "No watering history",
                 },
                 addPlant: {
                     title: "Enter plant details",
@@ -123,7 +123,7 @@ const resources = {
                     registerHeader: "Rekisteröidy PlantLife-sovellukseen!"
                 },
                 home: {
-                    
+                    noWateringHistory: "Ei kasteluhistoriaa",
                 },
                 addPlant: {
                     title: "Lisää kasvin tiedot",
@@ -221,7 +221,7 @@ const resources = {
                     registerHeader: "Registrera dig på PlantLife!"
                 },
                 home: {
-                    
+                    noWateringHistory: "" // Ei tietoa
                 },
                 addPlant: {
                     title: "Lisää kasvin tiedot",   //TRANSLATION ---->
@@ -288,6 +288,7 @@ const resources = {
                     // requestPermissionHeader: "Permission is needed",
                     // requestMediaPermission: "Allow access to photos",
                     // requestCameraPermission: "Allow access to camera",
+
                 },
             },
 

@@ -8,7 +8,7 @@ export const addPlant = async (givenName, scientificName, plantType, user) => {
     //const { user } = useContext(AuthContext)
 
     try {
-        
+
         const db = getFirestore();
 
         // Reference to the user's "plants" subcollection
@@ -109,7 +109,7 @@ export const addCareEvent = async (userId, plantId, eventType) => {
 
         console.log(`Added ${eventType} event for plant ${plantId}`)
         return true // Return success flag
-        
+
     } catch (error) {
         console.error(`Error adding ${eventType} event:`, error)
         throw error
