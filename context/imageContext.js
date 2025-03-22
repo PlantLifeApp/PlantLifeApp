@@ -1,12 +1,35 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ImagesContext = createContext();
 
 export const ImagesProvider = ({ children }) => {
   const [images, setImages] = useState([]);
 
-  const addImage = (uri) => {
-    setImages((prevImages) => [...prevImages, uri]);
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const storedImages = await AsyncStorage.getItem("plantImages")
+        if (storedImages) {
+          setImages(JSON.parse(storedImages))
+        }
+      } catch (error) {
+        console.error("Error loading images from storage: ", error)
+      }
+    }
+    loadImages()
+  }, [])
+
+  const addImage = async (plantId, uri) => {
+    try {
+      const updatedImages = { ...images, [plantId]: uri }
+      setImages(updatedImages)
+      console.log(updatedImages)
+      await AsyncStorage.setItem("plantImages", JSON.stringify(updatedImages))
+      //setImages((prevImages) => [...prevImages, uri]);
+    } catch (error) {
+      console.error("Error saving image: ", error)
+    }
   };
 
   return (

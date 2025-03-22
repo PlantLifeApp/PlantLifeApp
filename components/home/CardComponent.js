@@ -5,16 +5,20 @@ import { useTranslation } from "react-i18next"
 import { searchMostRecentWatering } from '../../utils/searchWaterUtils.js';
 import { formatDate } from '../../utils/dateUtils.js';
 import { usePlants } from '../../context/plantsContext.js';
+import { useImages } from '../../context/imageContext.js';
 
 const CardComponent = ({ item, isTwoColumns }) => {
 
-    const { t, i18n } = useTranslation()
+    const { t } = useTranslation()
+    const { images } = useImages()
+
+    const plantImage = images[item.id]
     //const { loadPlantDetails } = usePlants()
     return (
         <Card>
             {isTwoColumns ? (
                 <View style={styles.container}>
-                    <Card.Cover style={styles.image} source={{ uri: 'https://picsum.photos/700' }} />
+                    <Card.Cover style={styles.image} source={{ uri: plantImage }} />
                     <Card.Content style={styles.content}>
                         <Text style={{ alignSelf: "center" }} variant="titleLarge" numberOfLines={1} ellipsizeMode="tail">{item.givenName}</Text>
                         <Text variant="bodyMedium" numberOfLines={1} ellipsizeMode="tail">{item.scientificName}</Text>
@@ -23,7 +27,7 @@ const CardComponent = ({ item, isTwoColumns }) => {
                 </View>
             ) : (
                 <View style={styles.containerRow}>
-                    <Image style={styles.imageRow} source={{ uri: 'https://picsum.photos/700' }} />
+                    <Image style={styles.imageRow} source={{ uri: plantImage }} />
                     <Card.Content style={styles.contentRow}>
                         <Text style={{ alignSelf: "center" }} variant="titleLarge" numberOfLines={2} ellipsizeMode="tail">{item.givenName}</Text>
                         <Text variant="bodyMedium" numberOfLines={2} ellipsizeMode="tail">{item.scientificName}</Text>
@@ -49,6 +53,7 @@ const styles = StyleSheet.create({
         margin: 5,
         height: 100,
         width: 100,
+        resizeMode: 'cover'
     },
     imageRow: {
         margin: 5,

@@ -1,15 +1,20 @@
 import React, { useState } from 'react'
-import { StyleSheet, View } from 'react-native'
-import { Button, Modal, Surface, Text, TextInput, Portal } from 'react-native-paper'
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Button, Modal, Surface, Text, TextInput, Portal, Icon } from 'react-native-paper'
 import { addPlant } from '../../services/plantService';
 import { Dropdown } from 'react-native-paper-dropdown';
 import { useTranslation } from 'react-i18next';
+import * as ImagePicker from 'expo-image-picker'
+import { useImages } from '../../context/imageContext';
 
 export default function AddPlantModal({ user, visible, onClose }) {
     const [plantType, setPlantType] = useState("");
     const [plantNickname, setPlantNickname] = useState("");
     const [scientificName, setScientificName] = useState("");
+    const [plantImageUri, setPlantImageUri] = useState(null);
+
     const { t } = useTranslation()
+    const { addImage } = useImages()
 
     const onCloseFunction = () => {
         // Reset all values to default
@@ -17,10 +22,16 @@ export default function AddPlantModal({ user, visible, onClose }) {
         setPlantType("");
         setPlantNickname("");
         setScientificName("");
+        setPlantImageUri(null)
     }
 
-    const handleAddPlant = () => {
-        addPlant(plantNickname, scientificName, plantType, user);
+    const handleAddPlant = async () => {
+        const newPlantId =  await addPlant(plantNickname, scientificName, plantType, user);
+
+        if (newPlantId && plantImageUri) {
+            addImage(newPlantId, plantImageUri);
+        }
+
         onCloseFunction();
     }
 
@@ -30,6 +41,25 @@ export default function AddPlantModal({ user, visible, onClose }) {
         { label: 'General', value: 'general' },
         { label: 'Utilitarian', value: 'utilitarian' }
     ]
+
+    const handleOpenCamera = async () => {
+        const permission = await ImagePicker.requestCameraPermissionsAsync()
+        if (permission.status !== "granted") {
+            Alert.alert(t('screens.fab.requestPermissionHeader'), t('screens.fab.requestCameraPermission'))
+            return
+        }
+
+        const result = await ImagePicker.launchCameraAsync({
+            mediaTypes: ['livePhotos'],
+            allowsEditing: true,
+            aspect: [4, 4],
+            quality: 1,
+        })
+
+        if (!result.canceled) {
+            setPlantImageUri(result.assets[0].uri)
+        }
+    }
 
     return (
         <Portal>
@@ -42,6 +72,14 @@ export default function AddPlantModal({ user, visible, onClose }) {
             >
                 <Surface style={styles.modalSurface}>
                     <Text variant="bodyLarge" style={styles.title}>{t("screens.addPlant.title")}</Text>
+
+                    <TouchableOpacity onPress={handleOpenCamera} style={styles.imagePicker}>
+                        {plantImageUri ? (
+                            <Image source={{ uri: plantImageUri }} style={styles.imagePreview} />
+                        ) : (
+                            <Icon source='camera' size={48} color='gray'/>
+                        )}
+                    </TouchableOpacity>
 
                     <View style={styles.inputContainer}>
                         <Text variant="bodyMedium">{t("screens.addPlant.nickname")}</Text>
@@ -112,5 +150,23 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 10,
         height: 40,
+    },
+    imagePicker: {
+        width: "100%",
+        height: 200,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#eee",
+        borderRadius: 10,
+        marginBottom: 20,
+    },
+    imagePreview: {
+        width: "100%",
+        height: "100%",
+        borderRadius: 10,
+    },
+    imagePlaceholder: {
+        fontSize: 16,
+        color: "gray",
     },
 })
