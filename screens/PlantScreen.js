@@ -15,7 +15,7 @@ import { addCareEvent } from "../services/plantService"
 const PlantScreen = ({ route }) => {
     const { plantId } = route.params
     const { user } = useContext(AuthContext)
-    const { loadPlantDetails } = usePlants()
+    const { loadPlantDetails, refreshPlantInList } = usePlants()
     const { t } = useTranslation()
     const theme = useTheme()
 
@@ -37,15 +37,17 @@ const PlantScreen = ({ route }) => {
     }
 
     const handleAddCareEvent = async (eventType) => {
-
         setSaving(true)
     
         try {
             await addCareEvent(user.uid, plantId, eventType)
-            
-            // fetch updated plant data and update state immediately
+    
+            // Refresh detailed view
             const updatedData = await loadPlantDetails(plantId, true)
             setPlant(updatedData)
+    
+            // Refresh shared context plant list so home screen shows updated care history
+            await refreshPlantInList(plantId)
     
             Toast.show({
                 type: "success",
@@ -53,7 +55,6 @@ const PlantScreen = ({ route }) => {
                 position: "bottom",
                 visibilityTime: 2000,
             })
-
         } catch (error) {
             console.error(`Error adding ${eventType} event:`, error)
             Toast.show({

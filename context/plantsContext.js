@@ -1,74 +1,111 @@
 import React, { createContext, useState, useEffect, useContext } from "react"
-import { onSnapshot, collection, query, getDocs } from "firebase/firestore"
+import { onSnapshot, collection, getDocs, getDoc, doc } from "firebase/firestore"
 import { AuthContext } from "./authContext"
 import { fetchPlantData } from "../services/plantService"
 import { db } from "../services/firebaseConfig"
 
-// Create the context
 const PlantsContext = createContext()
 
-// Create a provider component
 export const PlantsProvider = ({ children }) => {
     const { user } = useContext(AuthContext)
+
     const [plants, setPlants] = useState([])
-    const [plantDetails, setPlantDetails] = useState({}) // Store detailed data per plant
+    const [plantDetails, setPlantDetails] = useState({}) 
 
     useEffect(() => {
-        const fetchPlants = async () => {
+        if (!user?.uid) return
+
+        const plantsRef = collection(db, "users", user.uid, "plants")
+
+        const unsubscribe = onSnapshot(plantsRef, async (querySnapshot) => {
             try {
-                const q = query(collection(db, "users", user.uid, "plants"));
-                const unsubscribe = onSnapshot(q, async (querySnapshot) => {
-                    const tempPlants = [];
-                    for (const doc of querySnapshot.docs) {
-                        const plantData = { ...doc.data(), id: doc.id };
+                const plantDocs = querySnapshot.docs
 
-                        // Fetch careHistory for each plant
-                        const careHistoryQuery = query(collection(db, "users", user.uid, "plants", doc.id, "careHistory"));
-                        const careHistorySnapshot = await getDocs(careHistoryQuery);
-                        const careHistory = careHistorySnapshot.docs.map(careDoc => ({ ...careDoc.data(), id: careDoc.id }));
+                // Fetch careHistory for all plants in parallel
+                const plantPromises = plantDocs.map(async (doc) => {
+                    const baseData = { ...doc.data(), id: doc.id }
 
-                        plantData.careHistory = careHistory;
-                        tempPlants.push(plantData);
+                    const careHistoryRef = collection(db, "users", user.uid, "plants", doc.id, "careHistory")
+                    const careHistorySnap = await getDocs(careHistoryRef)
+
+                    const careHistory = careHistorySnap.docs.map(careDoc => ({
+                        id: careDoc.id,
+                        ...careDoc.data(),
+                    }))
+
+                    return {
+                        ...baseData,
+                        careHistory,
                     }
-                    setPlants(tempPlants);
-                });
-                return () => unsubscribe();
+                })
+
+                const plantsWithCareHistory = await Promise.all(plantPromises)
+                setPlants(plantsWithCareHistory)
+
             } catch (error) {
-                console.error("Error fetching plants:", error);
+                console.error("Error fetching plant list with care history:", error)
             }
-        };
-        fetchPlants();
-    }, [user.uid]);
+        })
 
-    // function to fetch and cache individual plant details, to avoid unnecessary re-fetching
+        return () => unsubscribe()
+
+    }, [user?.uid])
+
+    // Fetch full detail for a single plant, including grouped history + predictions
     const loadPlantDetails = async (plantId, forceRefresh = false) => {
+        if (!user?.uid || !plantId) return null
 
-        if (!user) return
+        // If we already have it and don't want to re-fetch
+        if (!forceRefresh && plantDetails[plantId]) {
+            return plantDetails[plantId]
+        }
 
         try {
-            const plantData = await fetchPlantData(user.uid, plantId)
+            const fullPlantData = await fetchPlantData(user.uid, plantId)
 
-            // Force UI update by ensuring state always changes
-            setPlantDetails(prevDetails => ({
-                ...prevDetails,
-                [plantId]: plantData // Update with fresh data
+            setPlantDetails(prev => ({
+                ...prev,
+                [plantId]: fullPlantData
             }))
 
-            return plantData
+            return fullPlantData
+
         } catch (error) {
             console.error("Error loading plant details:", error)
             return null
         }
     }
 
+    const refreshPlantInList = async (plantId) => {
+        try {
+            const plantDocRef = doc(db, "users", user.uid, "plants", plantId);
+            const plantSnap = await getDoc(plantDocRef);
+    
+            const baseData = { ...plantSnap.data(), id: plantSnap.id }
+    
+            const careHistoryRef = collection(db, "users", user.uid, "plants", plantId, "careHistory")
+            const careHistorySnap = await getDocs(careHistoryRef)
+    
+            const careHistory = careHistorySnap.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+            }))
+    
+            const updatedPlant = { ...baseData, careHistory }
+    
+            setPlants(prev =>
+                prev.map(p => p.id === plantId ? updatedPlant : p)
+            )
+        } catch (error) {
+            console.error("Error refreshing plant in list:", error)
+        }
+    }
+
     return (
-        <PlantsContext.Provider value={{ plants, loadPlantDetails }}>
+        <PlantsContext.Provider value={{ plants, loadPlantDetails, refreshPlantInList }}>
             {children}
         </PlantsContext.Provider>
     )
 }
 
-// Custom hook to use the PlantsContext
-export const usePlants = () => {
-    return useContext(PlantsContext)
-}
+export const usePlants = () => useContext(PlantsContext)
