@@ -14,7 +14,7 @@ import { formatDate } from '../utils/dateUtils';
 const HomeScreen = () => {
     const { theme } = useContext(ThemeContext);
     const { user } = useContext(AuthContext);
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const [modalVisible, setModalVisible] = useState(false);
     const [isTwoColumns, setIsTwoColumns] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
@@ -24,13 +24,6 @@ const HomeScreen = () => {
 
     const { plants } = usePlants();
     const navigation = useNavigation();
-
-    /*
-    const loaddata = async (id) => {
-        const returndata = await loadPlantDetails(id);
-        return returndata;
-    };
-    */
 
     const filteredPlants = useMemo(() => {
         return plants
@@ -76,7 +69,7 @@ const HomeScreen = () => {
                 key={isTwoColumns ? 'two-columns' : 'one-column'}
                 numColumns={isTwoColumns ? 2 : 1}
                 columnWrapperStyle={isTwoColumns ? styles.row : null}
-                style={{ width: "96%" }}
+                style={{ width: "100%" }}
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={isTwoColumns ? styles.itemContainerSimple : styles.itemContainerComplex}
@@ -122,6 +115,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        margin: 10,
     },
     header: {
         flexDirection: "row",
