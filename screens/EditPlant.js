@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react"
-import { View, ScrollView, StyleSheet } from "react-native"
+import { View, ScrollView, StyleSheet, Alert } from "react-native"
 import { Text, ActivityIndicator, Surface, Button } from "react-native-paper"
 import { AuthContext } from "../context/authContext"
 import { useTranslation } from "react-i18next"
@@ -8,6 +8,7 @@ import { useTheme } from "react-native-paper"
 import { useNavigation } from "@react-navigation/native"
 import Toast from "react-native-toast-message"
 import { deletePlant } from "../services/plantService"
+import DeleteConfirmationModal from "../components/editPlant/DeleteConfirmationModal"
 
 export default function EditPlant({ route }) {
 
@@ -24,6 +25,7 @@ export default function EditPlant({ route }) {
 
     const [plantData, setPlantData] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false)
 
     const [givenName, setGivenName] = useState("")
     const [scientificName, setScientificName] = useState("")
@@ -50,14 +52,6 @@ export default function EditPlant({ route }) {
         )
     }
 
-    const handleDeletePlant = async () => {
-        try {
-            await deletePlant(user.uid, plantId)
-            //await refreshPlantInList(plantId)
-            navigation.navigate("HomeScreen")
-        } catch (error) {}
-    }
-
     return <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>
         <ScrollView contentContainerStyle={styles.container}>
             
@@ -69,11 +63,32 @@ export default function EditPlant({ route }) {
                 <Button
                     style={styles.button}
                     mode="contained"
-                    onPress={handleDeletePlant}
-                    >
-                    Delete This Plant
+                    onPress={() => setDeleteModalVisible(true)}
+                >
+                    {t("screens.editPlant.delete")}
                 </Button>
             </View>
+
+            <DeleteConfirmationModal
+                visible={deleteModalVisible}
+                onCancel={() => setDeleteModalVisible(false)}
+                onConfirm={async () => {
+                    try {
+
+                        setDeleteModalVisible(false)
+                        await deletePlant(user.uid, plantId)
+                        navigation.navigate("HomeScreen")
+
+                    } catch (error) {
+                        console.error("Error deleting plant:", error)
+                        Toast.show({
+                            type: "error",
+                            text1: t("screens.editPlant.errorDeleting"),
+                            position: "bottom",
+                        })
+                    }
+                }}
+            />
 
         </ScrollView>
     </View>

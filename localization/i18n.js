@@ -72,6 +72,10 @@ const resources = {
                 editPlant: {
                     title: "Edit Plant Info",
                     plantNotFound: "Plant not found",
+                    delete: "Delete This Plant",
+                    errorDeleting: "Error deleting plant!",
+                    confirmDeleteTitle: "Delete Plant",
+                    confirmDelete: "Are you sure you want to delete this plant? This action cannot be undone.",
                 },
                 options: {
                     themeHeader: "Theme",
@@ -100,7 +104,8 @@ const resources = {
                 confirm: "Confirm",
                 cancel: "Cancel",
                 save: "Save",
-                ok: "OK"
+                ok: "OK",
+                delete: "Delete"
             }
         }
     },
