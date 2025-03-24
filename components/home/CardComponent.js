@@ -4,7 +4,6 @@ import { View, Image, StyleSheet } from 'react-native';
 import { useTranslation } from "react-i18next"
 import { searchMostRecentWatering } from '../../utils/searchWaterUtils.js';
 import { formatDate } from '../../utils/dateUtils.js';
-import { usePlants } from '../../context/plantsContext.js';
 import { useImages } from '../../context/imageContext.js';
 
 const CardComponent = ({ item, isTwoColumns }) => {
@@ -12,8 +11,8 @@ const CardComponent = ({ item, isTwoColumns }) => {
     const { t } = useTranslation()
     const { images } = useImages()
 
-    const plantImage = images[item.id]
-    //const { loadPlantDetails } = usePlants()
+    const plantImage = images[item.id]  //Implement plant cover picture in database document. Now item.id = plantId
+
     return (
         <Card>
             {isTwoColumns ? (
@@ -61,6 +60,8 @@ const styles = StyleSheet.create({
         margin: 5,
         height: 100,
         width: 100,
+        borderRadius: 8,
+        padding: 10,
     },
     content: {
         flex: 1,
