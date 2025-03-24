@@ -1,5 +1,5 @@
 import { db } from "./firebaseConfig";
-import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp } from "firebase/firestore"
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp, deleteDoc } from "firebase/firestore"
 import { calculateNextWatering, calculateNextFertilizing } from "../utils/dateUtils"
 
 export const addPlant = async (givenName, scientificName, plantType, user) => {
@@ -112,6 +112,27 @@ export const addCareEvent = async (userId, plantId, eventType) => {
 
     } catch (error) {
         console.error(`Error adding ${eventType} event:`, error)
+        throw error
+    }
+}
+
+export const deletePlant = async(userId, plantId) => {
+    if (!userId || !plantId) {
+        throw new Error("Missing required parameters (userId, plantId).")
+    }
+
+    try {
+        // Reference to the plant document
+        const plantRef = doc(db, "users", userId, "plants", plantId)
+
+        // Delete the plant
+        await deleteDoc(plantRef)
+
+        console.log(`Deleted plant ${plantId}`)
+        return true // Return success flag
+
+    } catch (error) {
+        console.error(`Error deleting plant ${plantId}:`, error)
         throw error
     }
 }

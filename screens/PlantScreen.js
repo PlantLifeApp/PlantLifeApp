@@ -95,7 +95,7 @@ const PlantScreen = ({ route }) => {
                 <CareButtons onAddCareEvent={handleAddCareEvent} saving={saving} />
                 <PlantDetails plant={plant.plant} careHistory={plant.careHistory} nextWatering={plant.nextWatering} nextFertilizing={plant.nextFertilizing} />
                 <CareHistory careHistory={plant.careHistory} />
-                <EditButtons />
+                <EditButtons plant={plant.plant}/>
             </ScrollView>
         </View>
     )

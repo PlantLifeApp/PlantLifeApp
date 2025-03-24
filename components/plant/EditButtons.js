@@ -2,16 +2,19 @@ import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Button } from 'react-native-paper'
 import { useTranslation } from "react-i18next"
+import { useNavigation } from "@react-navigation/native"
 
-const EditButtons = ({ onEditHistory, onEditPlant }) => {
+
+const EditButtons = ({ plant }) => {
     const { t } = useTranslation()
+    const navigation = useNavigation()
 
     return (
         <View style={styles.buttonContainer}>
             <View style={styles.singleButtonRow}>
                 <Button 
                     mode='contained'
-                    onPress={onEditHistory}
+                    //onPress={ }
                     style={styles.button}
                 >
                     {t("screens.plant.editHistory")}
@@ -20,7 +23,7 @@ const EditButtons = ({ onEditHistory, onEditPlant }) => {
             <View style={styles.singleButtonRow}>
                 <Button 
                     mode='contained'
-                    onPress={onEditPlant}
+                    onPress={() => navigation.navigate("EditPlant", { plant })}
                     style={styles.button}
                 >
                     {t("screens.plant.editPlant")}

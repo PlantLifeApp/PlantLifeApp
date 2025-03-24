@@ -70,6 +70,7 @@ const resources = {
                     infoMessage: "Our watering and fertilizing estimates are based on your history, not rigid schedules. Your plant, your rules – trust your green thumb!"
                 },
                 editPlant: {
+                    title: "Edit Plant Info",
                     plantNotFound: "Plant not found",
                 },
                 options: {
