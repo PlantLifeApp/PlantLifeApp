@@ -1,16 +1,18 @@
-import React from 'react'
-import { Portal, Dialog, Button, Text } from 'react-native-paper'
+import React from "react"
+import { Portal, Dialog, Button, Text } from "react-native-paper"
 import { useTranslation } from "react-i18next"
 
-const DeleteConfirmationModal = ({ visible, onCancel, onConfirm }) => {
+const DeleteCareEventModal = ({ visible, onCancel, onConfirm }) => {
     const { t } = useTranslation()
 
     return (
         <Portal>
             <Dialog visible={visible} onDismiss={onCancel}>
-                <Dialog.Title>{t("screens.editPlant.confirmDeleteTitle")}</Dialog.Title>
+                <Dialog.Title>{t("screens.editCareHistory.confirmDeleteTitle")}</Dialog.Title>
                 <Dialog.Content>
-                    <Text variant="bodyMedium">{t("screens.editPlant.confirmDelete")}</Text>
+                    <Text variant="bodyMedium">
+                        {t("screens.editCareHistory.confirmDeleteMessage")}
+                    </Text>
                 </Dialog.Content>
                 <Dialog.Actions>
                     <Button onPress={onCancel}>{t("common.cancel")}</Button>
@@ -23,4 +25,4 @@ const DeleteConfirmationModal = ({ visible, onCancel, onConfirm }) => {
     )
 }
 
-export default DeleteConfirmationModal
+export default DeleteCareEventModal

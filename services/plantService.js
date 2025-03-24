@@ -81,7 +81,7 @@ export const fetchPlantData = async (userId, plantId) => {
         // calculate next predicted fertilizing date
         const nextFertilizing = calculateNextFertilizing(sortedGroupedHistory)
 
-        return { plant: plantData, careHistory: sortedGroupedHistory, nextWatering: nextWatering, nextFertilizing: nextFertilizing }
+        return { plant: plantData, careHistory: sortedGroupedHistory, ungroupedHistory: careEntries, nextWatering: nextWatering, nextFertilizing: nextFertilizing }
         
     } catch (error) {
         console.error("Error fetching plant or care history:", error)
@@ -151,4 +151,21 @@ export const updatePlant = async (userId, plantId, updatedData) => {
         console.error(`Error updating plant ${plantId}:`, error)
         throw error
     }
+}
+
+export const deleteCareEvent = async (userId, plantId, eventId) => {
+
+    try {
+
+        const careEventRef = doc(db, "users", userId, "plants", plantId, "careHistory", eventId)
+        await deleteDoc(careEventRef)
+
+        console.log(`Deleted event ${eventId} for plant ${plantId}`)
+        return true // Return success flag
+
+    } catch (error) {
+        console.error(`Error deleting event ${eventId} for plant ${plantId}:`, error)
+        throw error
+    }
+
 }

@@ -8,7 +8,7 @@ import { useTheme } from "react-native-paper"
 import { useNavigation } from "@react-navigation/native"
 import Toast from "react-native-toast-message"
 import { deletePlant, updatePlant } from "../services/plantService"
-import DeleteConfirmationModal from "../components/editPlant/DeleteConfirmationModal"
+import DeletePlantModal from "../components/editPlant/DeletePlantModal"
 import EditPlantDetails from "../components/editPlant/EditPlantDetails"
 
 export default function EditPlant({ route }) {
@@ -102,7 +102,7 @@ export default function EditPlant({ route }) {
                 </Button>
             </View>
 
-            <DeleteConfirmationModal
+            <DeletePlantModal
                 visible={deleteModalVisible}
                 onCancel={() => setDeleteModalVisible(false)}
                 onConfirm={async () => {

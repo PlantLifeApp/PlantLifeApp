@@ -14,7 +14,7 @@ const EditButtons = ({ plant }) => {
             <View style={styles.singleButtonRow}>
                 <Button 
                     mode='contained'
-                    //onPress={ }
+                    onPress={ () => navigation.navigate("EditCareHistory", { plant }) }
                     style={styles.button}
                 >
                     {t("screens.plant.editHistory")}
@@ -23,7 +23,7 @@ const EditButtons = ({ plant }) => {
             <View style={styles.singleButtonRow}>
                 <Button 
                     mode='contained'
-                    onPress={() => navigation.navigate("EditPlant", { plant })}
+                    onPress={ () => navigation.navigate("EditPlant", { plant }) }
                     style={styles.button}
                 >
                     {t("screens.plant.editPlant")}
