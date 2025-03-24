@@ -1,5 +1,5 @@
 import { db } from "./firebaseConfig";
-import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp, deleteDoc } from "firebase/firestore"
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp, deleteDoc, updateDoc } from "firebase/firestore"
 import { calculateNextWatering, calculateNextFertilizing } from "../utils/dateUtils"
 
 export const addPlant = async (givenName, scientificName, plantType, user) => {
@@ -133,6 +133,22 @@ export const deletePlant = async(userId, plantId) => {
 
     } catch (error) {
         console.error(`Error deleting plant ${plantId}:`, error)
+        throw error
+    }
+}
+
+export const updatePlant = async (userId, plantId, updatedData) => {
+
+    try {
+
+        const plantRef = doc(db, "users", userId, "plants", plantId)
+        await updateDoc(plantRef, updatedData)
+
+        console.log(`Updated plant ${plantId}`)
+        return true // Return success flag
+
+    } catch (error) {
+        console.error(`Error updating plant ${plantId}:`, error)
         throw error
     }
 }

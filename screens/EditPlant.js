@@ -7,8 +7,9 @@ import { usePlants } from "../context/plantsContext"
 import { useTheme } from "react-native-paper"
 import { useNavigation } from "@react-navigation/native"
 import Toast from "react-native-toast-message"
-import { deletePlant } from "../services/plantService"
+import { deletePlant, updatePlant } from "../services/plantService"
 import DeleteConfirmationModal from "../components/editPlant/DeleteConfirmationModal"
+import EditPlantDetails from "../components/editPlant/EditPlantDetails"
 
 export default function EditPlant({ route }) {
 
@@ -27,9 +28,11 @@ export default function EditPlant({ route }) {
     const [loading, setLoading] = useState(true)
     const [deleteModalVisible, setDeleteModalVisible] = useState(false)
 
-    const [givenName, setGivenName] = useState("")
-    const [scientificName, setScientificName] = useState("")
-    const [plantType, setPlantType] = useState("") 
+    const [editedPlant, setEditedPlant] = useState({
+        givenName: plant.givenName,
+        scientificName: plant.scientificName,
+        plantType: plant.plantType,
+    })
 
     useEffect(() => {
         if (user?.uid) {
@@ -52,12 +55,32 @@ export default function EditPlant({ route }) {
         )
     }
 
+    const handleSave = async () => {
+        try {
+
+            await updatePlant(user.uid, plantId, editedPlant)
+            await refreshPlantInList(plantId)
+            await loadPlantDetails(plantId, true)
+            navigation.navigate("PlantScreen", { plantId })
+
+        } catch (error) {
+            console.error("Error updating plant:", error)
+            Toast.show({
+                type: "error",
+                text1: t("screens.editPlant.errorSaving"),
+                position: "bottom",
+            })
+        }
+    }
+
     return <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>
         <ScrollView contentContainerStyle={styles.container}>
             
             <Surface style={styles.surface}>
-                <Text>Editing your plant: {plantData.plant.givenName}</Text>
+                <Text variant="bodyLarge">Editing {plantData.plant.givenName}</Text>
             </Surface>
+
+            <EditPlantDetails plant={plantData.plant} onChange={setEditedPlant} />
 
             <View style={styles.singleButtonRow}>
                 <Button
@@ -69,6 +92,16 @@ export default function EditPlant({ route }) {
                 </Button>
             </View>
 
+            <View style={styles.singleButtonRow}>
+                <Button
+                    mode="contained"
+                    style={styles.button}
+                    onPress={handleSave}
+                >
+                    {t("common.save")}
+                </Button>
+            </View>
+
             <DeleteConfirmationModal
                 visible={deleteModalVisible}
                 onCancel={() => setDeleteModalVisible(false)}
@@ -77,6 +110,7 @@ export default function EditPlant({ route }) {
 
                         setDeleteModalVisible(false)
                         await deletePlant(user.uid, plantId)
+                        await refreshPlantInList(plantId)
                         navigation.navigate("HomeScreen")
 
                     } catch (error) {

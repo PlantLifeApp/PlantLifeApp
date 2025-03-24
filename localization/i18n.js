@@ -71,6 +71,9 @@ const resources = {
                 },
                 editPlant: {
                     title: "Edit Plant Info",
+                    givenName: "Plant Nickname",
+                    scientificName: "Scientific Name",
+                    plantType: "Plant Type",
                     plantNotFound: "Plant not found",
                     delete: "Delete This Plant",
                     errorDeleting: "Error deleting plant!",
