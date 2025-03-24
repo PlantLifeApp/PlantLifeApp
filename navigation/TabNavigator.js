@@ -14,9 +14,11 @@ import GalleryScreen from "../screens/GalleryScreen"
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator()
 
+
 const HomeStackNavigator = () => {
     const paperTheme = useTheme(); // Get theme colors
-
+    const {t} = useTranslation()
+    
     return (
         <Stack.Navigator
             screenOptions={{
@@ -25,8 +27,8 @@ const HomeStackNavigator = () => {
                 headerTintColor: paperTheme.colors.onSurface, // set header text color
             }}
         >
-            <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: "Home" }} />
-            <Stack.Screen name="PlantScreen" component={PlantScreen} options={{ title: "Plant Details" }} />
+            <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: t("tabs.home") }} />
+            <Stack.Screen name="PlantScreen" component={PlantScreen} options={{ title: t("screens.plant.title") }} />
         </Stack.Navigator>
     );
 };

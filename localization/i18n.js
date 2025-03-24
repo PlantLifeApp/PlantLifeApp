@@ -36,6 +36,7 @@ const resources = {
                     cancelButton: "Cancel"
                 },
                 plant: {
+                    title: "Plant Info",
                     succulent: "Succulent",
                     cactus: "Cactus",
                     general: "General",
@@ -87,11 +88,11 @@ const resources = {
                     listEmpty: "No Images Available",
                 },
                 fab: {
-                    camera: "Take photo",
-                    phoneGallery: "Choose photo",
-                    requestPermissionHeader: "Permission is needed",
-                    requestMediaPermission: "Allow access to photos",
-                    requestCameraPermission: "Allow access to camera",
+                    camera: "Take Photo",
+                    phoneGallery: "Choose Photo",
+                    requestPermissionHeader: "Permission Needed",
+                    requestMediaPermission: "Allow Access to Photos",
+                    requestCameraPermission: "Allow Access to Camera",
                 }
             },
             common: {
@@ -134,6 +135,7 @@ const resources = {
                     cancelButton: "Peruuta"
                 },
                 plant: {
+                    title: "Kasvin tiedot",
                     succulent: "mehikasvi",
                     cactus: "kaktus",
                     general: "yleinen",
@@ -221,17 +223,18 @@ const resources = {
                     registerHeader: "Registrera dig på PlantLife!"
                 },
                 home: {
-                    noWateringHistory: "" // Ei tietoa
+                    noWateringHistory: "Ingen vattningshistorik",
                 },
                 addPlant: {
-                    title: "Lisää kasvin tiedot",   //TRANSLATION ---->
-                    nickname: "Kasvin Lempinimi",
-                    scientificName: "Tieteellinen Nimi",
-                    selectType: "Valitse tyyppi",
-                    addButton: "Lisää Kasvi",
-                    cancelButton: "Ja but Nej"         //<------
+                    title: "Lägg till växtinformation",
+                    nickname: "Växtens smeknamn",
+                    scientificName: "Vetenskapligt namn",
+                    selectType: "Välj typ",
+                    addButton: "Lägg till växt",
+                    cancelButton: "Avbryt",
                 },
                 plant: {
+                    title: "Växtinfo",
                     succulent: "suckulent",
                     cactus: "kaktus",
                     general: "allmän",
@@ -280,14 +283,14 @@ const resources = {
                     signedInAs: "Inloggad som",
                 },
                 gallery: {
-                    // listEmpty: "No Images Available",
+                    listEmpty: "Inga bilder tillgängliga",
                 },
                 fab: {
-                    // camera: "Take photo",
-                    // phoneGallery: "Choose photo",
-                    // requestPermissionHeader: "Permission is needed",
-                    // requestMediaPermission: "Allow access to photos",
-                    // requestCameraPermission: "Allow access to camera",
+                    camera: "Ta foto",
+                    phoneGallery: "Välj foto",
+                    requestPermissionHeader: "Behörighet krävs",
+                    requestMediaPermission: "Tillåt åtkomst till bilder",
+                    requestCameraPermission: "Tillåt åtkomst till kamera",
 
                 },
             },
@@ -295,7 +298,8 @@ const resources = {
             common: {
                 confirm: "Bekräfta",
                 cancel: "Avbryt",
-                save: "Spara"
+                save: "Spara",
+                ok: "OK"
             }
         }
     }
