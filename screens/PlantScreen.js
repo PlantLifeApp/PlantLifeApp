@@ -11,6 +11,8 @@ import EditButtons from "../components/plant/EditButtons"
 import Toast from "react-native-toast-message"
 import { useTheme } from "react-native-paper"
 import { addCareEvent } from "../services/plantService"
+import { useFocusEffect } from "@react-navigation/native"
+import { useCallback } from "react"
 
 const PlantScreen = ({ route }) => {
     const { plantId } = route.params
@@ -24,31 +26,38 @@ const PlantScreen = ({ route }) => {
     const [saving, setSaving] = useState(false)
 
     useEffect(() => {
-        if (user?.uid) {
-            loadData()
+        const fetchInitialData = async () => {
+            if (user?.uid) {
+                const data = await loadPlantDetails(plantId)
+                setPlant(data)
+                setLoading(false)
+            }
         }
+        fetchInitialData()
     }, [plantId, user])
 
-    const loadData = async () => {
-        setLoading(true)
-        const data = await loadPlantDetails(plantId)
-        setPlant(data)
-        setLoading(false)
-    }
+    // this hook will refresh the plant data when the screen is focused, no full reload spinner
+    useFocusEffect(
+        useCallback(() => {
+            const refreshPlant = async () => {
+                if (user?.uid) {
+                    const updatedData = await loadPlantDetails(plantId, true)
+                    setPlant(updatedData)
+                }
+            }
+            refreshPlant()
+        }, [plantId, user])
+    )
 
     const handleAddCareEvent = async (eventType) => {
         setSaving(true)
-    
+
         try {
             await addCareEvent(user.uid, plantId, eventType)
-    
-            // Refresh detailed view
             const updatedData = await loadPlantDetails(plantId, true)
             setPlant(updatedData)
-    
-            // Refresh shared context plant list so home screen shows updated care history
             await refreshPlantInList(plantId)
-    
+
             Toast.show({
                 type: "success",
                 text1: t("screens.plant.successfullyAdded"),
@@ -85,9 +94,9 @@ const PlantScreen = ({ route }) => {
     }
 
     return (
-        <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>
-            <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}>
-                <Surface style={styles.surface}>
+        <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}> 
+            <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}> 
+                <Surface style={styles.surface}> 
                     <Text variant="headlineMedium">{plant.plant.givenName}</Text>
                     <Text variant="bodyLarge" style={{ fontStyle: "italic" }}>{plant.plant.scientificName}</Text>
                 </Surface>

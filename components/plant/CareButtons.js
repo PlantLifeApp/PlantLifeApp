@@ -19,7 +19,7 @@ const CareButtons = ({ onAddCareEvent, saving }) => {
                     {t("screens.plant.justWatered")} 💦
                 </Button>
             </View>
-            <View style={styles.doubleButtonRow}>
+            <View style={styles.singleButtonRow}>
                 <Button
                     mode="contained"
                     onPress={() => onAddCareEvent("fertilizing")}
@@ -27,8 +27,10 @@ const CareButtons = ({ onAddCareEvent, saving }) => {
                     disabled={saving}
                     style={styles.button}
                 >
-                    {t("screens.plant.justFertilized")}
+                    {t("screens.plant.justFertilized")} 💥
                 </Button>
+            </View>
+            <View style={styles.doubleButtonRow}>
                 <Button
                     mode="contained"
                     onPress={() => onAddCareEvent("pruning")}
@@ -36,7 +38,16 @@ const CareButtons = ({ onAddCareEvent, saving }) => {
                     disabled={saving}
                     style={styles.button}
                 >
-                    {t("screens.plant.justPruned")}
+                    {t("screens.plant.justPruned")} ✂️
+                </Button>
+                <Button
+                    mode="contained"
+                    onPress={() => onAddCareEvent("repotting")}
+                    loading={saving}
+                    disabled={saving}
+                    style={styles.button}
+                >
+                    {t("screens.plant.justRepotted")} 🪴
                 </Button>
             </View>
         </View>
@@ -64,7 +75,7 @@ const styles = StyleSheet.create({
     },
     button: {
         flex: 1,
-        marginHorizontal: 8,
+        marginHorizontal: 4,
     },
 })
 

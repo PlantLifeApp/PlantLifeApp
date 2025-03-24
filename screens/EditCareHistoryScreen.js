@@ -10,9 +10,6 @@ import DeleteCareEventModal from "../components/editPlant/DeleteCareEventModal"
 import EditCareHistoryDetails from "../components/editPlant/EditCareHistoryDetails"
 
 export default function EditCareHistory({ route }) {
-
-    //console.log(route)
-
     const { plant } = route.params
     const plantId = plant.id
     const { user } = useContext(AuthContext)
@@ -21,7 +18,6 @@ export default function EditCareHistory({ route }) {
 
     const [careHistory, setCareHistory] = useState([])
     const [loading, setLoading] = useState(true)
-
     const [deleteModalVisible, setDeleteModalVisible] = useState(false)
     const [selectedCareId, setSelectedCareId] = useState(null)
 
@@ -33,13 +29,12 @@ export default function EditCareHistory({ route }) {
 
     const loadHistory = async () => {
         try {
-
             setLoading(true)
             const data = await loadPlantDetails(plantId, true)
-    
+
             if (!data || !data.ungroupedHistory) {
                 console.log("No careHistory found for plant:", plantId)
-                setCareHistory([]) // fallback to empty list
+                setCareHistory([])
             } else {
                 setCareHistory(data.ungroupedHistory)
             }
@@ -56,17 +51,40 @@ export default function EditCareHistory({ route }) {
         }
     }
 
+    const handleDelete = (careId) => {
+        setSelectedCareId(careId)
+        setDeleteModalVisible(true)
+    }
+
+    const handleConfirmDelete = async () => {
+        try {
+            await deleteCareEvent(user.uid, plantId, selectedCareId)
+            setDeleteModalVisible(false)
+
+            // optimistically update local state to avoid waiting for server response and re-fetching
+            setCareHistory(prev => prev.filter(entry => entry.id !== selectedCareId))
+
+            Toast.show({
+                type: "success",
+                text1: t("screens.editCareHistory.successDeleting"),
+                position: "bottom",
+            })
+        } catch (error) {
+            console.error("Error deleting care entry:", error)
+            Toast.show({
+                type: "error",
+                text1: t("screens.editCareHistory.errorDeleting"),
+                position: "bottom",
+            })
+        }
+    }
+
     if (loading) {
         return (
             <View style={styles.centered}>
                 <ActivityIndicator animating={true} size="large" />
             </View>
         )
-    }
-
-    const handleDelete = (careId) => {
-        setSelectedCareId(careId)
-        setDeleteModalVisible(true)
     }
 
     return (
@@ -82,29 +100,10 @@ export default function EditCareHistory({ route }) {
                 />
 
                 <DeleteCareEventModal
-                visible={deleteModalVisible}
-                onCancel={() => setDeleteModalVisible(false)}
-                onConfirm={async () => {
-                    try {
-                    await deleteCareEvent(user.uid, plantId, selectedCareId)
-                    setDeleteModalVisible(false)
-                    Toast.show({
-                        type: "success",
-                        text1: t("screens.editCareHistory.successDeleting"),
-                        position: "bottom",
-                    })
-                    loadHistory()
-                    } catch (error) {
-                    console.error("Error deleting care entry:", error)
-                    Toast.show({
-                        type: "error",
-                        text1: t("screens.editCareHistory.errorDeleting"),
-                        position: "bottom",
-                    })
-                    }
-                }}
+                    visible={deleteModalVisible}
+                    onCancel={() => setDeleteModalVisible(false)}
+                    onConfirm={handleConfirmDelete}
                 />
-
             </ScrollView>
         </View>
     )
@@ -136,7 +135,6 @@ const styles = StyleSheet.create({
         padding: 8,
         width: "100%",
         borderRadius: 8,
-        marginBottom: 12,
     },
     itemRow: {
         flexDirection: "row",

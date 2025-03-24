@@ -35,10 +35,10 @@ const EditCareHistoryDetails = ({ careHistory, onDelete }) => {
   
             {grouped[dateKey].map((entry) => (
               <View key={entry.id} style={styles.entryRow}>
-                <Text style={styles.entryText}>
+                <Text variant="bodyLarge" style={styles.entryText}>
                   {typeEmoji[entry.type] || "❓"} {t(`screens.editCareHistory.${entry.type}`)}
                 </Text>
-                <IconButton icon="delete" onPress={() => onDelete(entry.id)} />
+                <IconButton icon="delete" style={{margin:0}} onPress={() => onDelete(entry.id)} />
               </View>
             ))}
           </Surface>
@@ -64,9 +64,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 0,
   },
-  entryText: {
-    fontSize: 16,
-  },
+
 })
