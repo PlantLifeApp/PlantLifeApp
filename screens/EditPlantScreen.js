@@ -84,21 +84,21 @@ export default function EditPlant({ route }) {
 
             <View style={styles.singleButtonRow}>
                 <Button
-                    style={styles.button}
-                    mode="contained"
-                    onPress={() => setDeleteModalVisible(true)}
-                >
-                    {t("screens.editPlant.delete")}
-                </Button>
-            </View>
-
-            <View style={styles.singleButtonRow}>
-                <Button
                     mode="contained"
                     style={styles.button}
                     onPress={handleSave}
                 >
                     {t("common.save")}
+                </Button>
+            </View>
+
+            <View style={styles.singleButtonRow}>
+                <Button
+                    style={styles.button}
+                    mode="contained"
+                    onPress={() => setDeleteModalVisible(true)}
+                >
+                    {t("screens.editPlant.delete")}
                 </Button>
             </View>
 
