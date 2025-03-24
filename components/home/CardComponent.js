@@ -18,7 +18,7 @@ const CardComponent = ({ item, isTwoColumns }) => {
         <Card>
             {isTwoColumns ? (
                 <View style={styles.container}>
-                    <Card.Cover style={styles.image} source={{ uri: plantImage }} />
+                    <Image style={styles.image} source={{ uri: plantImage }} />
                     <Card.Content style={styles.content}>
                         <Text style={{ alignSelf: "center" }} variant="titleLarge" numberOfLines={1} ellipsizeMode="tail">{item.givenName}</Text>
                         <Text variant="bodyMedium" numberOfLines={1} ellipsizeMode="tail">{item.scientificName}</Text>
@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'column',
         alignItems: "left",
+        padding: 5,
     },
     containerRow: {
         flexDirection: 'row',
@@ -50,10 +51,11 @@ const styles = StyleSheet.create({
     },
     image: {
         alignSelf: 'center',
-        margin: 5,
         height: 100,
         width: 100,
-        resizeMode: 'cover'
+        resizeMode: 'cover',
+        borderRadius: 8,
+        marginBottom: 5,
     },
     imageRow: {
         margin: 5,
