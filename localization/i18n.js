@@ -91,6 +91,7 @@ const resources = {
                     successDeleting: "Care entry deleted!",
                     watering: "Watering",
                     fertilizing: "Fertilizing",
+                    fertilization: "Fertilizing",
                     pruning: "Pruning",
                 },
                 options: {
