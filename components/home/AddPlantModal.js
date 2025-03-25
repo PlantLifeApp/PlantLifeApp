@@ -26,7 +26,7 @@ export default function AddPlantModal({ user, visible, onClose }) {
     }
 
     const handleAddPlant = async () => {
-        const newPlantId =  await addPlant(plantNickname, scientificName, plantType, plantImageUri, user.uid);
+        const newPlantId =  await addPlant(plantNickname, scientificName, plantType, user.uid);
 
         if (newPlantId && plantImageUri) {
             const imageUrl = await uploadPlantImage(user.uid, newPlantId, plantImageUri, true)  // Upload image to Firestorage

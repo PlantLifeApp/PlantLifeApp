@@ -3,7 +3,7 @@ import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { calculateNextWatering, calculateNextFertilizing } from "../utils/dateUtils"
 
-export const addPlant = async (givenName, scientificName, plantType, imageUri, userId) => {
+export const addPlant = async (givenName, scientificName, plantType, userId) => {
 
     try {
         const db = getFirestore();
@@ -76,7 +76,7 @@ export const getUserPlantImages = async (userId) => {
           fetchedImages[doc.id] = plantData.images;
         }
       });
-  
+      
       return fetchedImages;
     } catch (error) {
       console.error("Error fetching images from Firestore: ", error);
