@@ -89,7 +89,7 @@ const resources = {
                     date: "Date",
                     type: "Type",
                     confirmDeleteTitle: "Delete Entry",
-                    confirmDelete: "Are you sure you want to delete this entry?",
+                    confirmDeleteMessage: "Are you sure you want to delete this entry?",
                     errorDeleting: "Error deleting entry",
                     successDeleting: "Care entry deleted!",
                     watering: "Watering",
@@ -172,8 +172,8 @@ const resources = {
                     pruning: "leikkaus",
                     lastRepotted: "Viimeksi istutettu uudelleen",
                     neverRepotted: "Ei vielä uudelleenistutuksia!",
-                    justRepotted: "Mullat vaihdettu!",
-                    repotting: "Uudelleenistutus",
+                    justRepotted: "Repotettu!",
+                    repotting: "uudelleenistutus",
                     type: "Kasvityyppi",
                     justWatered: "Kasteltu!",
                     justFertilized: "Lannoitettu!",
@@ -216,7 +216,7 @@ const resources = {
                     date: "Päivämäärä",
                     type: "Tyyppi",
                     confirmDeleteTitle: "Poista tapahtuma",
-                    confirmDelete: "Oletko varma, että haluat poistaa tämän tapahtuman?",
+                    confirmDeleteMessage: "Oletko varma, että haluat poistaa tämän tapahtuman?",
                     errorDeleting: "Virhe poistaessa tapahtumaa",
                     successDeleting: "Hoitotapahtuma poistettu!",
                     watering: "kastelu",
@@ -252,7 +252,8 @@ const resources = {
                 confirm: "Vahvista",
                 cancel: "Peruuta",
                 save: "Tallenna",
-                ok: "OK"
+                ok: "OK",
+                delete: "Poista"
             }
         }
     },
@@ -330,7 +331,7 @@ const resources = {
                     delete: "Ta bort denna växt",
                     errorDeleting: "Fel vid borttagning av växt",
                     confirmDeleteTitle: "Ta bort växt",
-                    confirmDelete: "Är du säker på att du vill ta bort denna växt? Denna åtgärd kan inte ångras.",
+                    confirmDeleteMessage: "Är du säker på att du vill ta bort denna växt? Denna åtgärd kan inte ångras.",
                 },
                 editCareHistory: {
                     title: "Redigera vårdhistorik",
@@ -376,7 +377,8 @@ const resources = {
                 confirm: "Bekräfta",
                 cancel: "Avbryt",
                 save: "Spara",
-                ok: "OK"
+                ok: "OK",
+                delete: "Ta bort",
             }
         }
     }
