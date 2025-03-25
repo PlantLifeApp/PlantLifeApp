@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Button, Modal, Surface, Text, TextInput, Portal, Icon } from 'react-native-paper'
-import { addPlant } from '../../services/plantService';
+import { addPlant, uploadPlantImage } from '../../services/plantService';
 import { Dropdown } from 'react-native-paper-dropdown';
 import { useTranslation } from 'react-i18next';
 import * as ImagePicker from 'expo-image-picker'
@@ -26,10 +26,14 @@ export default function AddPlantModal({ user, visible, onClose }) {
     }
 
     const handleAddPlant = async () => {
-        const newPlantId =  await addPlant(plantNickname, scientificName, plantType, user);
+        const newPlantId =  await addPlant(plantNickname, scientificName, plantType, plantImageUri, user.uid);
 
         if (newPlantId && plantImageUri) {
-            addImage(newPlantId, plantImageUri);
+            const imageUrl = await uploadPlantImage(user.uid, newPlantId, plantImageUri, true)  // Upload image to Firestorage
+
+            if (imageUrl) {
+                await addImage(newPlantId, imageUrl)    // Add image to asyncstorage
+            }
         }
 
         onCloseFunction();
@@ -112,7 +116,6 @@ export default function AddPlantModal({ user, visible, onClose }) {
 
 const styles = StyleSheet.create({
     modalContainer: {
-        //flexGrow: 1,
         justifyContent: "center",
         padding: 20,
         width: '100%',
