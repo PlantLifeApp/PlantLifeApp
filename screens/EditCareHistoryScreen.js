@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next"
 import { AuthContext } from "../context/authContext"
 import { usePlants } from "../context/plantsContext"
 import Toast from "react-native-toast-message"
-import { deleteCareEvent } from "../services/plantService"
+import { deleteCareEvent, updateCareEventDate } from "../services/plantService"
 import DeleteCareEventModal from "../components/editPlant/DeleteCareEventModal"
 import EditCareHistoryDetails from "../components/editPlant/EditCareHistoryDetails"
 
@@ -13,7 +13,7 @@ export default function EditCareHistory({ route }) {
     const { plant } = route.params
     const plantId = plant.id
     const { user } = useContext(AuthContext)
-    const { loadPlantDetails } = usePlants()
+    const { loadPlantDetails, refreshPlantInList } = usePlants()
     const { t } = useTranslation()
 
     const [careHistory, setCareHistory] = useState([])
@@ -78,6 +78,31 @@ export default function EditCareHistory({ route }) {
         }
     }
 
+    const handleEditDate = async (careId, newDate) => {
+        try {
+            await updateCareEventDate(user.uid, plantId, careId, newDate)
+    
+            // Use the fresh ungrouped history from Firestore
+            const updated = await loadPlantDetails(plantId, true)
+            setCareHistory(updated?.ungroupedHistory ?? [])
+
+            await refreshPlantInList(plantId)
+    
+            Toast.show({
+                type: "success",
+                text1: t("screens.editCareHistory.successEditing"),
+                position: "bottom",
+            })
+        } catch (error) {
+            console.error("Error updating care date:", error)
+            Toast.show({
+                type: "error",
+                text1: t("screens.editCareHistory.errorEditing"),
+                position: "bottom",
+            })
+        }
+    }
+
     return (
         <View style={styles.fullScreen}>
             <ScrollView contentContainerStyle={styles.container}>
@@ -95,6 +120,7 @@ export default function EditCareHistory({ route }) {
                     <EditCareHistoryDetails
                         careHistory={careHistory}
                         onDelete={handleDelete}
+                        onEditDate={handleEditDate}
                     />
                 )}
 
