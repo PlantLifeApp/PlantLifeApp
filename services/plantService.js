@@ -1,5 +1,5 @@
 import { db } from "./firebaseConfig";
-import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp, updateDoc, arrayUnion } from "firebase/firestore"
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp, deleteDoc, updateDoc, arrayUnion } from "firebase/firestore"
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { calculateNextWatering, calculateNextFertilizing } from "../utils/dateUtils"
 
@@ -133,8 +133,8 @@ export const fetchPlantData = async (userId, plantId) => {
         // calculate next predicted fertilizing date
         const nextFertilizing = calculateNextFertilizing(sortedGroupedHistory)
 
-        return { plant: plantData, careHistory: sortedGroupedHistory, nextWatering: nextWatering, nextFertilizing: nextFertilizing }
-
+        return { plant: plantData, careHistory: sortedGroupedHistory, ungroupedHistory: careEntries, nextWatering: nextWatering, nextFertilizing: nextFertilizing }
+        
     } catch (error) {
         console.error("Error fetching plant or care history:", error)
         throw error
@@ -166,4 +166,58 @@ export const addCareEvent = async (userId, plantId, eventType) => {
         console.error(`Error adding ${eventType} event:`, error)
         throw error
     }
+}
+
+export const deletePlant = async(userId, plantId) => {
+    if (!userId || !plantId) {
+        throw new Error("Missing required parameters (userId, plantId).")
+    }
+
+    try {
+        // Reference to the plant document
+        const plantRef = doc(db, "users", userId, "plants", plantId)
+
+        // Delete the plant
+        await deleteDoc(plantRef)
+
+        console.log(`Deleted plant ${plantId}`)
+        return true // Return success flag
+
+    } catch (error) {
+        console.error(`Error deleting plant ${plantId}:`, error)
+        throw error
+    }
+}
+
+export const updatePlant = async (userId, plantId, updatedData) => {
+
+    try {
+
+        const plantRef = doc(db, "users", userId, "plants", plantId)
+        await updateDoc(plantRef, updatedData)
+
+        console.log(`Updated plant ${plantId}`)
+        return true // Return success flag
+
+    } catch (error) {
+        console.error(`Error updating plant ${plantId}:`, error)
+        throw error
+    }
+}
+
+export const deleteCareEvent = async (userId, plantId, eventId) => {
+
+    try {
+
+        const careEventRef = doc(db, "users", userId, "plants", plantId, "careHistory", eventId)
+        await deleteDoc(careEventRef)
+
+        console.log(`Deleted event ${eventId} for plant ${plantId}`)
+        return true // Return success flag
+
+    } catch (error) {
+        console.error(`Error deleting event ${eventId} for plant ${plantId}:`, error)
+        throw error
+    }
+
 }

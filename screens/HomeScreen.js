@@ -93,7 +93,14 @@ const HomeScreen = () => {
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={isTwoColumns ? styles.itemContainerSimple : styles.itemContainerComplex}
-                        onPress={() => navigation.navigate("PlantScreen", { plantId: item.id })}
+                        onPress={() => navigation.navigate("PlantScreen", {
+                            plantId: item.id,
+                            plantPreview: {
+                              givenName: item.givenName,
+                              scientificName: item.scientificName,
+                            }
+                          })
+                        }
                     >
                         <CardComponent item={item} isTwoColumns={isTwoColumns} />
                     </TouchableOpacity>

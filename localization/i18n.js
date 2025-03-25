@@ -36,6 +36,7 @@ const resources = {
                     cancelButton: "Cancel"
                 },
                 plant: {
+                    title: "Plant Info",
                     succulent: "Succulent",
                     cactus: "Cactus",
                     general: "General",
@@ -44,18 +45,21 @@ const resources = {
                     fertilization: "Fertilizing",
                     pruning: "Pruning",
                     type: "Plant Type",
-                    justWatered: "Just Watered!",
-                    justFertilized: "Fertilized!",
-                    justPruned: "Pruned!",
+                    justWatered: "Just Watered",
+                    justFertilized: "Just Fertilized",
+                    justPruned: "Pruned",
+                    justRepotted: "Repotted",
                     careHistory: "Care History",
                     lastWatered: "Last watered",
                     lastFertilized: "Last fertilized",
                     lastPruned: "Last pruned",
+                    lastRepotted: "Last repotted",
                     plantNotFound: "Plant not found",
                     noCareHistory: "No care history yet",
-                    noWaterings: "No waterings yet!",
-                    noFertilizations: "No fertilizations yet!",
-                    noPrunings: "No prunings yet!",
+                    neverWatered: "No waterings yet!",
+                    neverFertilized: "No fertilizations yet!",
+                    neverPruned: "No prunings yet!",
+                    neverRepotted: "No repottings recorded!",
                     basedOnHistory: "Based on your recent care history...",
                     nextWateringEstimate: "Your plant might need water around",
                     nextFertilizationEstimate: "Consider fertilizing again around",
@@ -69,7 +73,30 @@ const resources = {
                     infoMessage: "Our watering and fertilizing estimates are based on your history, not rigid schedules. Your plant, your rules – trust your green thumb!"
                 },
                 editPlant: {
+                    title: "Edit Plant Info",
+                    givenName: "Plant Nickname",
+                    scientificName: "Scientific Name",
+                    plantType: "Plant Type",
                     plantNotFound: "Plant not found",
+                    delete: "Delete This Plant",
+                    errorDeleting: "Error deleting plant!",
+                    confirmDeleteTitle: "Delete Plant",
+                    confirmDelete: "Are you sure you want to delete this plant? This action cannot be undone.",
+                },
+                editCareHistory: {
+                    title: "Edit Care History",
+                    editCareHistory: "Edit Care History",
+                    date: "Date",
+                    type: "Type",
+                    confirmDeleteTitle: "Delete Entry",
+                    confirmDelete: "Are you sure you want to delete this entry?",
+                    errorDeleting: "Error deleting entry",
+                    successDeleting: "Care entry deleted!",
+                    watering: "Watering",
+                    fertilizing: "Fertilizing",
+                    fertilization: "Fertilizing",
+                    pruning: "Pruning",
+                    repotting: "Repotting",
                 },
                 options: {
                     themeHeader: "Theme",
@@ -87,18 +114,19 @@ const resources = {
                     listEmpty: "No Images Available",
                 },
                 fab: {
-                    camera: "Take photo",
-                    phoneGallery: "Choose photo",
-                    requestPermissionHeader: "Permission is needed",
-                    requestMediaPermission: "Allow access to photos",
-                    requestCameraPermission: "Allow access to camera",
+                    camera: "Take Photo",
+                    phoneGallery: "Choose Photo",
+                    requestPermissionHeader: "Permission Needed",
+                    requestMediaPermission: "Allow Access to Photos",
+                    requestCameraPermission: "Allow Access to Camera",
                 }
             },
             common: {
                 confirm: "Confirm",
                 cancel: "Cancel",
                 save: "Save",
-                ok: "OK"
+                ok: "OK",
+                delete: "Delete"
             }
         }
     },
@@ -127,13 +155,14 @@ const resources = {
                 },
                 addPlant: {
                     title: "Lisää kasvin tiedot",
-                    nickname: "Kasvin Lempinimi",
-                    scientificName: "Tieteellinen Nimi",
+                    nickname: "Kasvin lempinimi",
+                    scientificName: "Tieteellinen nimi",
                     selectType: "Valitse tyyppi",
-                    addButton: "Lisää Kasvi",
+                    addButton: "Lisää kasvi",
                     cancelButton: "Peruuta"
                 },
                 plant: {
+                    title: "Kasvin tiedot",
                     succulent: "mehikasvi",
                     cactus: "kaktus",
                     general: "yleinen",
@@ -141,6 +170,10 @@ const resources = {
                     watering: "kastelu",
                     fertilization: "lannoitus",
                     pruning: "leikkaus",
+                    lastRepotted: "Viimeksi istutettu uudelleen",
+                    neverRepotted: "Ei vielä uudelleenistutuksia!",
+                    justRepotted: "Mullat vaihdettu!",
+                    repotting: "Uudelleenistutus",
                     type: "Kasvityyppi",
                     justWatered: "Kasteltu!",
                     justFertilized: "Lannoitettu!",
@@ -167,7 +200,30 @@ const resources = {
                     infoMessage: "Kastelu- ja lannoitusarviot perustuvat hoitohistoriaasi, eivät tiukkoihin aikatauluihin. Sinä tunnet kasvisi parhaiten – luota vihreään peukaloosi!"
                 },
                 editPlant: {
+                    title: "Muokkaa kasvin tietoja",
+                    givenName: "Lempinimi",
+                    scientificName: "Tieteellinen nimi",
+                    plantType: "Kasvityyppi",
                     plantNotFound: "Kasvia ei löytynyt",
+                    delete: "Poista kasvi",
+                    errorDeleting: "Virhe poistaessa kasvia",
+                    confirmDeleteTitle: "Poista kasvi",
+                    confirmDelete: "Oletko varma, että haluat poistaa kasvin? Tätä toimintoa ei voi peruuttaa.",
+                },
+                editCareHistory: {
+                    title: "Muokkaa hoitohistoriaa",
+                    editCareHistory: "Muokkaa hoitohistoriaa",
+                    date: "Päivämäärä",
+                    type: "Tyyppi",
+                    confirmDeleteTitle: "Poista tapahtuma",
+                    confirmDelete: "Oletko varma, että haluat poistaa tämän tapahtuman?",
+                    errorDeleting: "Virhe poistaessa tapahtumaa",
+                    successDeleting: "Hoitotapahtuma poistettu!",
+                    watering: "kastelu",
+                    fertilizing: "lannoitus",
+                    fertilization: "lannoitus",
+                    pruning: "hoitoleikkaus",
+                    repotting: "multien uusiminen",
                 },
                 options: {
                     themeHeader: "Teema",
@@ -221,17 +277,18 @@ const resources = {
                     registerHeader: "Registrera dig på PlantLife!"
                 },
                 home: {
-                    noWateringHistory: "" // Ei tietoa
+                    noWateringHistory: "Ingen vattningshistorik",
                 },
                 addPlant: {
-                    title: "Lisää kasvin tiedot",   //TRANSLATION ---->
-                    nickname: "Kasvin Lempinimi",
-                    scientificName: "Tieteellinen Nimi",
-                    selectType: "Valitse tyyppi",
-                    addButton: "Lisää Kasvi",
-                    cancelButton: "Ja but Nej"         //<------
+                    title: "Lägg till växtinformation",
+                    nickname: "Växtens smeknamn",
+                    scientificName: "Vetenskapligt namn",
+                    selectType: "Välj typ",
+                    addButton: "Lägg till växt",
+                    cancelButton: "Avbryt",
                 },
                 plant: {
+                    title: "Växtinfo",
                     succulent: "suckulent",
                     cactus: "kaktus",
                     general: "allmän",
@@ -265,7 +322,30 @@ const resources = {
                     infoMessage: "Våra uppskattningar för vattning och gödsling baseras på din historik, inte fasta scheman. Du känner din växt bäst – lita på din gröna tumme!"
                 },
                 editPlant: {
+                    title: "Redigera växtinformation",
+                    givenName: "Smeknamn",
+                    scientificName: "Vetenskapligt namn",
+                    plantType: "Växttyp",
                     plantNotFound: "Växten hittades inte",
+                    delete: "Ta bort denna växt",
+                    errorDeleting: "Fel vid borttagning av växt",
+                    confirmDeleteTitle: "Ta bort växt",
+                    confirmDelete: "Är du säker på att du vill ta bort denna växt? Denna åtgärd kan inte ångras.",
+                },
+                editCareHistory: {
+                    title: "Redigera vårdhistorik",
+                    editCareHistory: "Redigera vårdhistorik",
+                    date: "Datum",
+                    type: "Typ",
+                    confirmDeleteTitle: "Ta bort post",
+                    confirmDelete: "Är du säker på att du vill ta bort denna post?",
+                    errorDeleting: "Fel vid borttagning av post",
+                    successDeleting: "Vårdpost borttagen!",
+                    watering: "vattning",
+                    fertilizing: "gödsling",
+                    fertilization: "gödsling",
+                    pruning: "beskärning",
+                    repotting: "ompotning",
                 },
                 options: {
                     themeHeader: "Tema",
@@ -280,14 +360,14 @@ const resources = {
                     signedInAs: "Inloggad som",
                 },
                 gallery: {
-                    // listEmpty: "No Images Available",
+                    listEmpty: "Inga bilder tillgängliga",
                 },
                 fab: {
-                    // camera: "Take photo",
-                    // phoneGallery: "Choose photo",
-                    // requestPermissionHeader: "Permission is needed",
-                    // requestMediaPermission: "Allow access to photos",
-                    // requestCameraPermission: "Allow access to camera",
+                    camera: "Ta foto",
+                    phoneGallery: "Välj foto",
+                    requestPermissionHeader: "Behörighet krävs",
+                    requestMediaPermission: "Tillåt åtkomst till bilder",
+                    requestCameraPermission: "Tillåt åtkomst till kamera",
 
                 },
             },
@@ -295,7 +375,8 @@ const resources = {
             common: {
                 confirm: "Bekräfta",
                 cancel: "Avbryt",
-                save: "Spara"
+                save: "Spara",
+                ok: "OK"
             }
         }
     }

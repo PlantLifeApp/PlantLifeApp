@@ -16,6 +16,7 @@ const PlantDetails = ({ plant, careHistory, nextWatering, nextFertilizing }) => 
     const lastWatering = careHistory.find(entry => entry.events.includes("watering"))
     const lastFertilization = careHistory.find(entry => entry.events.includes("fertilizing"))
     const lastPruning = careHistory.find(entry => entry.events.includes("pruning"))
+    const lastRepotting = careHistory.find(entry => entry.events.includes("repotting"))
 
     const getPlantEmoji = (plantType) => {
         switch (plantType) {
@@ -27,10 +28,33 @@ const PlantDetails = ({ plant, careHistory, nextWatering, nextFertilizing }) => 
     }
 
     return (
+        <>
 
         <Surface style={styles.detailsContainer}>
 
-            <TouchableOpacity 
+            <Text variant="bodyLarge">
+                {t("screens.plant.type")}: {t(`screens.plant.${plant.plantType}`)} {getPlantEmoji(plant.plantType)}
+            </Text>
+
+            <View style={{ height: 8 }} />
+
+            <Text variant="bodyMedium">
+                💧 {t("screens.plant.lastWatered")}: {lastWatering ? formatDate(lastWatering.date) : t("screens.plant.neverWatered")}
+            </Text>
+            <Text variant="bodyMedium">
+                💥 {t("screens.plant.lastFertilized")}: {lastFertilization ? formatDate(lastFertilization.date) : t("screens.plant.neverFertilized")}
+            </Text>
+            <Text variant="bodyMedium">
+                ✂️ {t("screens.plant.lastPruned")}: {lastPruning ? formatDate(lastPruning.date) : t("screens.plant.neverPruned")}
+            </Text>
+            <Text variant="bodyMedium">
+                🪴 {t("screens.plant.lastRepotted")}: {lastRepotting ? formatDate(lastRepotting.date) : t("screens.plant.neverRepotted")}            </Text>
+        
+        </Surface>
+
+        <Surface style={styles.detailsContainer}>
+
+        <TouchableOpacity 
                 onPress={() => setInfoVisible(true)} 
                 style={styles.infoButton}
                 hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }} // expands invisible touchable area
@@ -40,24 +64,6 @@ const PlantDetails = ({ plant, careHistory, nextWatering, nextFertilizing }) => 
                     size={20}  
                 />
             </TouchableOpacity>
-
-            <Text variant="bodyLarge">
-                {t("screens.plant.type")}: {t(`screens.plant.${plant.plantType}`)} {getPlantEmoji(plant.plantType)}
-            </Text>
-
-            <View style={{ height: 8 }} />
-
-            <Text variant="bodyMedium">
-                💧 {t("screens.plant.lastWatered")}: {lastWatering ? formatDate(lastWatering.date) : t("screens.plant.noWaterings")}
-            </Text>
-            <Text variant="bodyMedium">
-                💥 {t("screens.plant.lastFertilized")}: {lastFertilization ? formatDate(lastFertilization.date) : t("screens.plant.noFertilizations")}
-            </Text>
-            <Text variant="bodyMedium">
-                ✂️ {t("screens.plant.lastPruned")}: {lastPruning ? formatDate(lastPruning.date) : t("screens.plant.noPrunings")}
-            </Text>
-
-            <View style={{ height: 8 }} />
 
             <Text variant="bodyLarge">{t("screens.plant.basedOnHistory")}</Text>
             <View style={{ height: 8 }} />
@@ -73,6 +79,8 @@ const PlantDetails = ({ plant, careHistory, nextWatering, nextFertilizing }) => 
             <PlantInfoModal visible={infoVisible} onClose={() => setInfoVisible(false)} />
 
         </Surface>
+
+</>
     )
 }
 

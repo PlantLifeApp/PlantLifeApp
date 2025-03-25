@@ -11,13 +11,17 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import PlantScreen from "../screens/PlantScreen"
 import GalleryScreen from "../screens/GalleryScreen"
 import { ImagesProvider } from "../context/imageContext"
+import EditPlantScreen from "../screens/EditPlantScreen"
+import EditCareHistory from "../screens/EditCareHistoryScreen"
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator()
 
+
 const HomeStackNavigator = () => {
     const paperTheme = useTheme(); // Get theme colors
-
+    const {t} = useTranslation()
+    
     return (
         <Stack.Navigator
             screenOptions={{
@@ -26,8 +30,10 @@ const HomeStackNavigator = () => {
                 headerTintColor: paperTheme.colors.onSurface, // set header text color
             }}
         >
-            <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: "Home" }} />
-            <Stack.Screen name="PlantScreen" component={PlantScreen} options={{ title: "Plant Details" }} />
+            <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: t("tabs.home") }} />
+            <Stack.Screen name="PlantScreen" component={PlantScreen} options={{ title: t("screens.plant.title") }} />
+            <Stack.Screen name="EditPlant" component={EditPlantScreen} options={{ title: t("screens.editPlant.title") }} />
+            <Stack.Screen name="EditCareHistory" component={EditCareHistory} options={{ title: t("screens.editCareHistory.title") }} />
         </Stack.Navigator>
     );
 };

@@ -12,6 +12,8 @@ export const PlantsProvider = ({ children }) => {
     const [plants, setPlants] = useState([])
     const [plantDetails, setPlantDetails] = useState({}) 
 
+
+    // this full fetch is only done automatically once on app start (or user login)
     useEffect(() => {
         if (!user?.uid) return
 
@@ -22,6 +24,7 @@ export const PlantsProvider = ({ children }) => {
                 const plantDocs = querySnapshot.docs
 
                 // Fetch careHistory for all plants in parallel
+
                 const plantPromises = plantDocs.map(async (doc) => {
                     const baseData = { ...doc.data(), id: doc.id }
 
@@ -39,7 +42,7 @@ export const PlantsProvider = ({ children }) => {
                     }
                 })
 
-                const plantsWithCareHistory = await Promise.all(plantPromises)
+                const plantsWithCareHistory = await Promise.all(plantPromises) // wait for all promises to resolve
                 setPlants(plantsWithCareHistory)
 
             } catch (error) {
@@ -51,7 +54,8 @@ export const PlantsProvider = ({ children }) => {
 
     }, [user?.uid])
 
-    // Fetch full detail for a single plant, including grouped history + predictions
+    // fetch full detail for a single plant, including grouped history + predictions
+    // this is called manually after adding a new care event
     const loadPlantDetails = async (plantId, forceRefresh = false) => {
         if (!user?.uid || !plantId) return null
 
