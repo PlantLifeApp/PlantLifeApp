@@ -1,7 +1,9 @@
 // format for ui display based on phone's language/region settings, 
 // e.g. 12/31/2022 in USA but 31.12.2025 in Germany
 export const formatDate = (date) => {
-    return date.toLocaleDateString()
+    if (!date) return ""
+    const d = date instanceof Date ? date : new Date(date)
+    return d.toLocaleDateString()
 }
 
 export const calculateNextWatering = (careHistory) => {
