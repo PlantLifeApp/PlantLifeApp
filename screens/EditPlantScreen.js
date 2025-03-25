@@ -11,7 +11,7 @@ import { deletePlant, updatePlant } from "../services/plantService"
 import DeletePlantModal from "../components/editPlant/DeletePlantModal"
 import EditPlantDetails from "../components/editPlant/EditPlantDetails"
 
-export default function EditPlant({ route }) {
+export default function EditPlantScreen({ route }) {
 
     //console.log(route)
     
@@ -34,6 +34,7 @@ export default function EditPlant({ route }) {
         plantType: plant.plantType,
     })
 
+    // full load of plant data with care history happens only once
     useEffect(() => {
         if (user?.uid) {
             loadData()
@@ -58,9 +59,9 @@ export default function EditPlant({ route }) {
     const handleSave = async () => {
         try {
 
-            await updatePlant(user.uid, plantId, editedPlant)
-            await refreshPlantInList(plantId)
-            await loadPlantDetails(plantId, true)
+            await updatePlant(user.uid, plantId, editedPlant) // update plant data
+            await refreshPlantInList(plantId) // refresh the plant list on front page
+            await loadPlantDetails(plantId, true)   // reload the plant data
             navigation.navigate("PlantScreen", { plantId })
 
         } catch (error) {

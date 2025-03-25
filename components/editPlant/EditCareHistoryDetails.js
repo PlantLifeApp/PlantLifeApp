@@ -15,15 +15,17 @@ const EditCareHistoryDetails = ({ careHistory, onDelete }) => {
 
   const { t } = useTranslation()
 
-    // Group by date string
+    // group by date string: { "2021-08-01": [entry1, entry2], "2021-08-02": [entry3, entry4] }
+    // this separate function is needed instead of the groupedHistory array in PlantDetails because the individual care events need to be deletable aka have a unique id
+
     const grouped = careHistory.reduce((acc, entry) => {
       const dateKey = entry.date.toISOString().split("T")[0]
-      if (!acc[dateKey]) acc[dateKey] = []
+      if (!acc[dateKey]) acc[dateKey] = [] // acc is the accumulator, aka the object we are building
       acc[dateKey].push(entry)
       return acc
     }, {})
 
-     // Sort dates descending
+     // sort dates descending
      const sortedDates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a))
 
 

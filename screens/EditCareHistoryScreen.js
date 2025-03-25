@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 import { View, ScrollView, StyleSheet } from "react-native"
-import { Text, ActivityIndicator, Surface, IconButton } from "react-native-paper"
+import { Text, ActivityIndicator, Surface } from "react-native-paper"
 import { useTranslation } from "react-i18next"
 import { AuthContext } from "../context/authContext"
 import { usePlants } from "../context/plantsContext"
@@ -21,6 +21,7 @@ export default function EditCareHistory({ route }) {
     const [deleteModalVisible, setDeleteModalVisible] = useState(false)
     const [selectedCareId, setSelectedCareId] = useState(null)
 
+    // full load of plant data with care history happens only once
     useEffect(() => {
         if (user?.uid) {
             loadHistory()
@@ -31,7 +32,6 @@ export default function EditCareHistory({ route }) {
         try {
             setLoading(true)
             const data = await loadPlantDetails(plantId, true)
-
             if (!data || !data.ungroupedHistory) {
                 console.log("No careHistory found for plant:", plantId)
                 setCareHistory([])
@@ -61,7 +61,6 @@ export default function EditCareHistory({ route }) {
             await deleteCareEvent(user.uid, plantId, selectedCareId)
             setDeleteModalVisible(false)
 
-            // optimistically update local state to avoid waiting for server response and re-fetching
             setCareHistory(prev => prev.filter(entry => entry.id !== selectedCareId))
 
             Toast.show({
@@ -79,25 +78,25 @@ export default function EditCareHistory({ route }) {
         }
     }
 
-    if (loading) {
-        return (
-            <View style={styles.centered}>
-                <ActivityIndicator animating={true} size="large" />
-            </View>
-        )
-    }
-
     return (
-        <View style={[styles.fullScreen]}>
+        <View style={styles.fullScreen}>
             <ScrollView contentContainerStyle={styles.container}>
                 <Surface style={styles.surface}>
-                    <Text variant="bodyLarge">{t("screens.editCareHistory.title")}</Text>
+                    <Text variant="headlineSmall">
+                        {plant?.givenName ? `${plant.givenName}` : ""}
+                    </Text>
                 </Surface>
 
-                <EditCareHistoryDetails
-                    careHistory={careHistory}
-                    onDelete={handleDelete}
-                />
+                {loading ? (
+                    <View style={styles.inlineSpinner}>
+                        <ActivityIndicator animating size="medium" />
+                    </View>
+                ) : (
+                    <EditCareHistoryDetails
+                        careHistory={careHistory}
+                        onDelete={handleDelete}
+                    />
+                )}
 
                 <DeleteCareEventModal
                     visible={deleteModalVisible}
@@ -123,6 +122,10 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    inlineSpinner: {
+        marginTop: 16,
+        alignItems: "center",
+    },
     surface: {
         padding: 16,
         width: "100%",
@@ -130,16 +133,5 @@ const styles = StyleSheet.create({
         marginTop: 16,
         marginBottom: 8,
         borderRadius: 8,
-    },
-    itemSurface: {
-        padding: 8,
-        width: "100%",
-        borderRadius: 8,
-    },
-    itemRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: 4,
     },
 })

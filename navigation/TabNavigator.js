@@ -10,7 +10,7 @@ import { PlantsProvider } from "../context/plantsContext"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import PlantScreen from "../screens/PlantScreen"
 import GalleryScreen from "../screens/GalleryScreen"
-import EditPlant from "../screens/EditPlantScreen"
+import EditPlantScreen from "../screens/EditPlantScreen"
 import EditCareHistory from "../screens/EditCareHistoryScreen"
 
 const Tab = createBottomTabNavigator();
@@ -31,7 +31,7 @@ const HomeStackNavigator = () => {
         >
             <Stack.Screen name="HomeScreen" component={HomeScreen} options={{ title: t("tabs.home") }} />
             <Stack.Screen name="PlantScreen" component={PlantScreen} options={{ title: t("screens.plant.title") }} />
-            <Stack.Screen name="EditPlant" component={EditPlant} options={{ title: t("screens.editPlant.title") }} />
+            <Stack.Screen name="EditPlant" component={EditPlantScreen} options={{ title: t("screens.editPlant.title") }} />
             <Stack.Screen name="EditCareHistory" component={EditCareHistory} options={{ title: t("screens.editCareHistory.title") }} />
         </Stack.Navigator>
     );

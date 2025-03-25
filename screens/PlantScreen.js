@@ -11,11 +11,10 @@ import EditButtons from "../components/plant/EditButtons"
 import Toast from "react-native-toast-message"
 import { useTheme } from "react-native-paper"
 import { addCareEvent } from "../services/plantService"
-import { useFocusEffect } from "@react-navigation/native"
-import { useCallback } from "react"
 
 const PlantScreen = ({ route }) => {
-    const { plantId } = route.params
+
+    const { plantId, plantPreview } = route.params 
     const { user } = useContext(AuthContext)
     const { loadPlantDetails, refreshPlantInList } = usePlants()
     const { t } = useTranslation()
@@ -25,10 +24,13 @@ const PlantScreen = ({ route }) => {
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
 
+    console.log("initialPlantData received in PlantScreen:", plantPreview);
+
+    // initial load using cached data (if available)
     useEffect(() => {
         const fetchInitialData = async () => {
             if (user?.uid) {
-                const data = await loadPlantDetails(plantId)
+                const data = await loadPlantDetails(plantId, false) // cached version
                 setPlant(data)
                 setLoading(false)
             }
@@ -36,24 +38,13 @@ const PlantScreen = ({ route }) => {
         fetchInitialData()
     }, [plantId, user])
 
-    // this hook will refresh the plant data when the screen is focused, no full reload spinner
-    useFocusEffect(
-        useCallback(() => {
-            const refreshPlant = async () => {
-                if (user?.uid) {
-                    const updatedData = await loadPlantDetails(plantId, true)
-                    setPlant(updatedData)
-                }
-            }
-            refreshPlant()
-        }, [plantId, user])
-    )
-
     const handleAddCareEvent = async (eventType) => {
         setSaving(true)
 
         try {
             await addCareEvent(user.uid, plantId, eventType)
+
+            // full refresh of plant data only after mutation
             const updatedData = await loadPlantDetails(plantId, true)
             setPlant(updatedData)
             await refreshPlantInList(plantId)
@@ -77,34 +68,43 @@ const PlantScreen = ({ route }) => {
         }
     }
 
-    if (loading) {
-        return (
-            <View style={styles.centered}>
-                <ActivityIndicator animating={true} size="large" />
-            </View>
-        )
-    }
-
-    if (!plant) {
-        return (
-            <View style={styles.centered}>
-                <Text variant="headlineMedium">{t("screens.plant.plantNotFound")}.</Text>
-            </View>
-        )
-    }
+    const displayName = plant?.plant.givenName || plantPreview?.givenName || ""
+    const displayScientific = plant?.plant.scientificName || plantPreview?.scientificName || ""
 
     return (
-        <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}> 
-            <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}> 
-                <Surface style={styles.surface}> 
-                    <Text variant="headlineMedium">{plant.plant.givenName}</Text>
-                    <Text variant="bodyLarge" style={{ fontStyle: "italic" }}>{plant.plant.scientificName}</Text>
+        <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>
+            <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}>
+
+                <Surface style={styles.surface}>
+                    <Text variant="headlineMedium">{displayName}</Text>
+                    <Text variant="bodyLarge" style={{ fontStyle: "italic" }}>{displayScientific}</Text>
                 </Surface>
 
-                <CareButtons onAddCareEvent={handleAddCareEvent} saving={saving} />
-                <PlantDetails plant={plant.plant} careHistory={plant.careHistory} nextWatering={plant.nextWatering} nextFertilizing={plant.nextFertilizing} />
-                <CareHistory careHistory={plant.careHistory} />
-                <EditButtons plant={plant.plant}/>
+                {loading && (
+                    <View style={styles.centered}>
+                        <ActivityIndicator animating size="large" />
+                    </View>
+                )}
+
+                {!loading && plant && (
+                    <>
+                        <CareButtons onAddCareEvent={handleAddCareEvent} saving={saving} />
+                        <PlantDetails
+                            plant={plant.plant}
+                            careHistory={plant.careHistory}
+                            nextWatering={plant.nextWatering}
+                            nextFertilizing={plant.nextFertilizing}
+                        />
+                        <CareHistory careHistory={plant.careHistory} />
+                        <EditButtons plant={plant.plant} />
+                    </>
+                )}
+
+                {!loading && !plant && (
+                    <View style={styles.centered}>
+                        <Text variant="headlineMedium">{t("screens.plant.plantNotFound")}.</Text>
+                    </View>
+                )}
             </ScrollView>
         </View>
     )
@@ -120,8 +120,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     centered: {
-        flex: 1,
-        justifyContent: "center",
+        paddingTop: 24,
         alignItems: "center",
     },
     surface: {

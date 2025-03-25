@@ -20,16 +20,16 @@ const EditPlantDetails = ({ plant, onChange }) => {
     const [menuVisible, setMenuVisible] = useState(false)
     const selectedLabel = plantTypeOptions.find(opt => opt.value === plantType)?.label || ""
 
+
+    // onChange receives an object with the new values to pass back to the parent
     const handleGivenNameChange = (value) => {
         setGivenName(value)
         onChange({ givenName: value, scientificName, plantType })
     }
-    
     const handleScientificNameChange = (value) => {
         setScientificName(value)
         onChange({ givenName, scientificName: value, plantType })
     }
-    
     const handlePlantTypeChange = (value) => {
         setPlantType(value)
         onChange({ givenName, scientificName, plantType: value })
