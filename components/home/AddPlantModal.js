@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
-import { Button, Modal, Surface, Text, TextInput, Portal, Icon } from 'react-native-paper'
+import { Button, Modal, Surface, Text, TextInput, Portal, Icon, Snackbar } from 'react-native-paper'
 import { addPlant, uploadPlantImage } from '../../services/plantService';
 import { Dropdown } from 'react-native-paper-dropdown';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,8 @@ export default function AddPlantModal({ user, visible, onClose }) {
     const [plantNickname, setPlantNickname] = useState("");
     const [scientificName, setScientificName] = useState("");
     const [plantImageUri, setPlantImageUri] = useState(null);
+    const [errorMessage, setErrorMessage] = useState("")
+    const [showSnackbar, setShowSnackbar] = useState(null)
 
     const { t } = useTranslation()
     const { addImage } = useImages()
@@ -26,7 +28,13 @@ export default function AddPlantModal({ user, visible, onClose }) {
     }
 
     const handleAddPlant = async () => {
-        const newPlantId =  await addPlant(plantNickname, scientificName, plantType, user.uid);
+        if (!plantNickname || !plantType) {
+            setErrorMessage("Nickname and Plant Type are required!");
+            setShowSnackbar(true);
+            return;
+        }
+        
+        const newPlantId = await addPlant(plantNickname, scientificName, plantType, user.uid);
 
         if (newPlantId && plantImageUri) {
             const imageUrl = await uploadPlantImage(user.uid, newPlantId, plantImageUri, true)  // Upload image to Firestorage
@@ -81,7 +89,7 @@ export default function AddPlantModal({ user, visible, onClose }) {
                         {plantImageUri ? (
                             <Image source={{ uri: plantImageUri }} style={styles.imagePreview} />
                         ) : (
-                            <Icon source='camera' size={48} color='gray'/>
+                            <Icon source='camera' size={48} color='gray' />
                         )}
                     </TouchableOpacity>
 
@@ -108,6 +116,20 @@ export default function AddPlantModal({ user, visible, onClose }) {
                     <Button style={styles.button} mode="contained" onPress={handleAddPlant} >{t("screens.addPlant.addButton")}</Button>
                     <Button style={styles.button} mode="contained" onPress={onCloseFunction} >{t("screens.addPlant.cancelButton")}</Button>
 
+                    <Snackbar
+                        visible={showSnackbar}
+                        onDismiss={() => setShowSnackbar(false)}
+                        action={{
+                            label: "OK",
+                            onPress: () => setShowSnackbar(false),
+                        }}
+                        style={{
+                            backgroundColor: "#ff6b6b",
+                            borderRadius: 10,
+                            margin: 10,
+                        }}>
+                        {errorMessage}
+                    </Snackbar>
                 </Surface>
             </Modal>
         </Portal>
