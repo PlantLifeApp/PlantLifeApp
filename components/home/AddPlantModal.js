@@ -18,6 +18,13 @@ export default function AddPlantModal({ user, visible, onClose }) {
     const { t } = useTranslation()
     const { addImage } = useImages()
 
+    const TYPES = [
+        { label: t("screens.plant.cactus"), value: 'cactus' },
+        { label: t("screens.plant.succulent"), value: 'succulent' },
+        { label: t("screens.plant.general"), value: 'general' },
+        { label: t("screens.plant.utilitarian"), value: 'utilitarian' }
+    ]
+
     const onCloseFunction = () => {
         // Reset all values to default
         onClose();
@@ -46,13 +53,6 @@ export default function AddPlantModal({ user, visible, onClose }) {
 
         onCloseFunction();
     }
-
-    const TYPES = [
-        { label: 'Cactus', value: 'cactus' },
-        { label: 'Succulent', value: 'succulent' },
-        { label: 'General', value: 'general' },
-        { label: 'Utilitarian', value: 'utilitarian' }
-    ]
 
     const handleOpenCamera = async () => {
         const permission = await ImagePicker.requestCameraPermissionsAsync()

@@ -68,12 +68,12 @@ const HomeScreen = () => {
                     onDismiss={() => setMenuVisible(false)}
                     anchor={
                         <Button onPress={() => setMenuVisible(true)}>
-                            Sort By
+                            {t("common.sort")}
                         </Button>
                     }
                 >
-                    <Menu.Item onPress={() => { setSortOption("alphabetical"), setMenuVisible(false) }} title="Alphabetical" />
-                    <Menu.Item onPress={() => { setSortOption("latestCare"), setMenuVisible(false) }} title="Latest Care" />
+                    <Menu.Item onPress={() => { setSortOption("alphabetical"), setMenuVisible(false) }} title={t("common.alphabetical")} />
+                    <Menu.Item onPress={() => { setSortOption("latestCare"), setMenuVisible(false) }} title={t("common.latestCare")} />
                 </Menu>
 
                 <IconButton
@@ -89,7 +89,7 @@ const HomeScreen = () => {
                 key={isTwoColumns ? 'two-columns' : 'one-column'}
                 numColumns={isTwoColumns ? 2 : 1}
                 columnWrapperStyle={isTwoColumns ? styles.row : null}
-                style={{ width: "100%" }}
+                style={{ width: "100%", paddingTop: 10 }}
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={isTwoColumns ? styles.itemContainerSimple : styles.itemContainerComplex}
@@ -107,7 +107,7 @@ const HomeScreen = () => {
                 )}
             />
 
-            <View style={styles.searchBar}>
+            <View style={styles.addPlantButtonContainer}>
                 <IconButton
                     icon="plus"
                     size={24}
@@ -135,6 +135,8 @@ const styles = StyleSheet.create({
         width: '100%',
         paddingHorizontal: 16,
         marginVertical: 4,
+        borderBottomColor: "black",
+        borderBottomWidth: 1,
     },
     itemContainerSimple: {
         flex: 1,
@@ -158,7 +160,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         width: "100%",
     },
-    searchBar: {
+    addPlantButtonContainer: {
         width: "100%",
         bottom: 20,
         flexDirection: "row",

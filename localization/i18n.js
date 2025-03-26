@@ -126,7 +126,10 @@ const resources = {
                 cancel: "Cancel",
                 save: "Save",
                 ok: "OK",
-                delete: "Delete"
+                delete: "Delete",
+                sort: "Sort By",
+                alphabetical: "By Name",
+                latestCare: "Latest Care"
             }
         }
     },
@@ -254,7 +257,10 @@ const resources = {
                 cancel: "Peruuta",
                 save: "Tallenna",
                 ok: "OK",
-                delete: "Poista"
+                delete: "Poista",
+                sort: "Järjestä",
+                alphabetical: "Nimi",
+                latestCare: "Viimeisin toimenpide",
             }
         }
     },
@@ -374,13 +380,15 @@ const resources = {
 
                 },
             },
-
             common: {
                 confirm: "Bekräfta",
                 cancel: "Avbryt",
                 save: "Spara",
                 ok: "OK",
                 delete: "Ta bort",
+                sort: "Ordna",
+                alphabetical: "På Namn",
+                latestCare: "Sista action"
             }
         }
     }
