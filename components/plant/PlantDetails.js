@@ -65,7 +65,7 @@ const PlantDetails = ({ plant, careHistory, nextWatering, nextFertilizing }) => 
                 />
             </TouchableOpacity>
 
-            <Text variant="bodyLarge">{t("screens.plant.basedOnHistory")}</Text>
+            <Text variant="bodyMedium">{t("screens.plant.basedOnHistory")}</Text>
             <View style={{ height: 8 }} />
             <Text variant="bodyMedium">
                 💧 {t("screens.plant.nextWateringEstimate")}:{" "}

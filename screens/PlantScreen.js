@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react"
+import React, { useEffect, useState, useContext, useCallback } from "react"
 import { View, ScrollView, StyleSheet } from "react-native"
 import { Text, ActivityIndicator, Surface } from "react-native-paper"
 import { AuthContext } from "../context/authContext"
@@ -11,6 +11,7 @@ import EditButtons from "../components/plant/EditButtons"
 import Toast from "react-native-toast-message"
 import { useTheme } from "react-native-paper"
 import { addCareEvent } from "../services/plantService"
+import { useFocusEffect } from "@react-navigation/native"
 
 const PlantScreen = ({ route }) => {
 
@@ -37,6 +38,19 @@ const PlantScreen = ({ route }) => {
         }
         fetchInitialData()
     }, [plantId, user])
+
+    // silent refresh of plant data when returning to screen
+    useFocusEffect(
+        useCallback(() => {
+            const refreshPlant = async () => {
+                if (user?.uid) {
+                    const updated = await loadPlantDetails(plantId, true) // force refresh
+                    setPlant(updated)
+                }
+            }
+            refreshPlant()
+        }, [plantId, user])
+    )
 
     const handleAddCareEvent = async (eventType) => {
         setSaving(true)
