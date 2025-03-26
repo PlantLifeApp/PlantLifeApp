@@ -1,25 +1,23 @@
 import React, { useState } from 'react'
 import { StyleSheet } from 'react-native'
-import { Text, Surface, List } from 'react-native-paper'
+import { Surface, List } from 'react-native-paper'
 import { formatDate } from '../../utils/dateUtils'
 import { useTranslation } from "react-i18next"
 
 const CareHistory = ({ careHistory }) => {
 
     const { t } = useTranslation()
-
     const [expanded, setExpanded] = useState(false)
 
     const getIconForEvents = (events) => {
-        if (events.includes("watering") && events.includes("fertilization")) {
-            return "leaf"
-        } else if (events.includes("watering")) {
-            return "water"
-        } else if (events.includes("fertilization")) {
-            return "bottle-tonic"
-        } else if (events.includes("pruning")) {
-            return "content-cut"
-        }
+
+        const has = (type) => events.includes(type)
+    
+        if (has("repotting")) return "shovel"
+        if (has("pruning")) return "content-cut"
+        if (has("fertilizing")) return "bottle-tonic"
+        if (has("watering")) return "water"
+        
         return "help-circle"
     }
 

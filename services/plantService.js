@@ -1,6 +1,6 @@
 import { db } from "./firebaseConfig";
-import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp, deleteDoc, updateDoc, arrayUnion } from "firebase/firestore"
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp, deleteDoc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore"
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { calculateNextWatering, calculateNextFertilizing } from "../utils/dateUtils"
 
 export const addPlant = async (givenName, scientificName, plantType, userId) => {
@@ -220,4 +220,19 @@ export const deleteCareEvent = async (userId, plantId, eventId) => {
         throw error
     }
 
+}
+
+export const updateCareEventDate = async (userId, plantId, careId, newDate) => {
+    try {
+        const careEventRef = doc(db, "users", userId, "plants", plantId, "careHistory", careId)
+        await updateDoc(careEventRef, {
+            date: Timestamp.fromDate(newDate),
+        })
+
+        console.log(`Updated date of event ${careId} for plant ${plantId}`)
+        return true
+    } catch (error) {
+        console.error(`Error updating date for event ${careId} of plant ${plantId}:`, error)
+        throw error
+    }
 }
