@@ -18,10 +18,12 @@ const CardComponent = ({ item, isTwoColumns }) => {
                     <Card.Content style={styles.content}>
                         <Text style={{ alignSelf: "center" }} variant="titleMedium" numberOfLines={1} ellipsizeMode="tail">{item.givenName}</Text>
                         <Text style={{ alignSelf: "center" }} variant="bodySmall" numberOfLines={1} ellipsizeMode="tail">{item.scientificName}</Text>
-                        <Text style={{ alignSelf: "center" }} variant="bodySmall">
+                        <View style={{ flexDirection: "row", alignItems: "center", alignSelf: 'center' }}>
+                            <Text style={{ alignSelf: "center" }} variant="bodySmall">
+                                {item.careHistory.length == 0 ? t("screens.home.noWateringHistory") : formatDate(searchMostRecentWatering(item.careHistory))}
+                            </Text>
                             <Icon source="water" size={15} color="blue" />
-                            {item.careHistory.length == 0 ? t("screens.home.noWateringHistory") : formatDate(searchMostRecentWatering(item.careHistory))}
-                        </Text>
+                        </View>
                     </Card.Content>
                 </View>
             ) : (
@@ -30,10 +32,12 @@ const CardComponent = ({ item, isTwoColumns }) => {
                     <Card.Content style={styles.contentRow}>
                         <Text style={{ alignSelf: "left", fontWeight: 'bold' }} variant="titleLarge" numberOfLines={2} ellipsizeMode="tail">{item.givenName}</Text>
                         <Text variant="bodyMedium" numberOfLines={2} ellipsizeMode="tail">{item.scientificName}</Text>
-                        <Text variant="bodyMedium">
-                            <Icon source="water" size={15} />
-                            {item.careHistory.length == 0 ? t("screens.home.noWateringHistory") : formatDate(searchMostRecentWatering(item.careHistory))}
-                        </Text>
+                        <View style={{ flexDirection: "row", alignItems: "center"}}>
+                            <Text variant="bodySmall">
+                                {item.careHistory.length == 0 ? t("screens.home.noWateringHistory") : formatDate(searchMostRecentWatering(item.careHistory))}
+                            </Text>
+                            <Icon source="water" size={15} color="blue" />
+                        </View>
                     </Card.Content>
                 </View>
             )}
