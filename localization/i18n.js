@@ -172,7 +172,7 @@ const resources = {
                     pruning: "leikkaus",
                     lastRepotted: "Viimeksi istutettu uudelleen",
                     neverRepotted: "Ei vielä uudelleenistutuksia!",
-                    justRepotted: "Repotettu!",
+                    justRepotted: "Ruukutettu!", // repotettu vaihdettu
                     repotting: "uudelleenistutus",
                     type: "Kasvityyppi",
                     justWatered: "Kasteltu!",
