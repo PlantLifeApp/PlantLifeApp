@@ -2,6 +2,7 @@ import { db } from "./firebaseConfig";
 import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp, deleteDoc, updateDoc, arrayUnion } from "firebase/firestore"
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { calculateNextWatering, calculateNextFertilizing } from "../utils/dateUtils"
+import { compressImage } from "../utils/compressImage";
 
 export const addPlant = async (givenName, scientificName, plantType, userId) => {
 
@@ -36,10 +37,20 @@ export const uploadPlantImage = async (userId, plantId, imageUri, setAsCover = f
         const storage = getStorage();
         const db = getFirestore();
 
+        // Compress image
+        const compressedUri = await compressImage(imageUri);
+        if (!compressedUri) {
+            throw new Error("Compressed image URI is undefined.");
+        }
+
         const imageRef = ref(storage, `plants/${userId}/${plantId}/${Date.now()}.jpg`);
 
         // Convert image to blob
-        const response = await fetch(imageUri);
+        const response = await fetch(compressedUri);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch image: ${response.statusText}`);
+        }
+
         const blob = await response.blob();
 
         // Upload image to FireStorage
