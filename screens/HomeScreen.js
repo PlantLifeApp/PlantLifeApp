@@ -1,6 +1,6 @@
 import React, { useContext, useState, useMemo } from "react";
 import { StyleSheet, FlatList, TouchableOpacity, View } from "react-native";
-import { Button, IconButton, Menu, TextInput } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import { AuthContext } from "../context/authContext";
 import AddPlantModal from "../components/home/AddPlantModal";
 import { usePlants } from "../context/plantsContext";
@@ -10,20 +10,19 @@ import CardComponent from '../components/home/CardComponent';
 import { ThemeContext } from "../context/themeContext";
 import { searchMostRecentWatering } from '../utils/searchWaterUtils';
 import { formatDate } from '../utils/dateUtils';
+import ActionBar from "../components/home/ActionBar";
 
 const HomeScreen = () => {
     const { theme } = useContext(ThemeContext);
     const { user } = useContext(AuthContext);
     const { t } = useTranslation();
+    const { plants } = usePlants();
+    const navigation = useNavigation();
+
     const [modalVisible, setModalVisible] = useState(false);
     const [isTwoColumns, setIsTwoColumns] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
-    const [isSearchVisible, setIsSearchVisible] = useState(false);
     const [sortOption, setSortOption] = useState("alphabetical");
-    const [menuVisible, setMenuVisible] = useState(false);
-
-    const { plants } = usePlants();
-    const navigation = useNavigation();
 
     const filteredPlants = useMemo(() => {
         return plants
@@ -34,8 +33,13 @@ const HomeScreen = () => {
                 if (sortOption === "alphabetical") {
                     return a.givenName.localeCompare(b.givenName);
                 } else if (sortOption === "latestCare") {
-                    const dateA = a.careHistory.length > 0 ? new Date(formatDate(searchMostRecentWatering(a.careHistory))) : new Date(0);
-                    const dateB = b.careHistory.length > 0 ? new Date(formatDate(searchMostRecentWatering(b.careHistory))) : new Date(0);
+                    const dateA = a.careHistory.length > 0 ? searchMostRecentWatering(a.careHistory) : null;
+                    const dateB = b.careHistory.length > 0 ? searchMostRecentWatering(b.careHistory) : null;
+
+                    if (!dateA && !dateB) return 0;
+                    if (!dateA) return 1;
+                    if (!dateB) return -1;
+
                     return dateB - dateA;
                 }
                 return 0;
@@ -44,44 +48,13 @@ const HomeScreen = () => {
 
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            <View style={styles.switchContainer}>
-                <IconButton
-                    icon="magnify"
-                    size={24}
-                    style={styles.searchIcon}
-                    onPress={() => setIsSearchVisible(!isSearchVisible)}
-                />
-
-                {isSearchVisible && (
-                    <View style={styles.searchContainer}>
-                        <TextInput
-                            style={styles.searchInput}
-                            placeholder=""
-                            value={searchQuery}
-                            onChangeText={setSearchQuery}
-                        />
-                    </View>
-                )}
-
-                <Menu
-                    visible={menuVisible}
-                    onDismiss={() => setMenuVisible(false)}
-                    anchor={
-                        <Button onPress={() => setMenuVisible(true)}>
-                            {t("common.sort")}
-                        </Button>
-                    }
-                >
-                    <Menu.Item onPress={() => { setSortOption("alphabetical"), setMenuVisible(false) }} title={t("common.alphabetical")} />
-                    <Menu.Item onPress={() => { setSortOption("latestCare"), setMenuVisible(false) }} title={t("common.latestCare")} />
-                </Menu>
-
-                <IconButton
-                    icon={isTwoColumns ? "view-grid" : "view-agenda"}
-                    size={24}
-                    onPress={() => setIsTwoColumns(!isTwoColumns)}
-                />
-            </View>
+            <ActionBar
+                isTwoColumns={isTwoColumns}
+                setIsTwoColumns={setIsTwoColumns}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                setSortOption={setSortOption}
+            />
 
             <FlatList
                 data={filteredPlants}
@@ -96,10 +69,10 @@ const HomeScreen = () => {
                         onPress={() => navigation.navigate("PlantScreen", {
                             plantId: item.id,
                             plantPreview: {
-                              givenName: item.givenName,
-                              scientificName: item.scientificName,
+                                givenName: item.givenName,
+                                scientificName: item.scientificName,
                             }
-                          })
+                        })
                         }
                     >
                         <CardComponent item={item} isTwoColumns={isTwoColumns} />
@@ -128,16 +101,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         margin: 10,
     },
-    switchContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: '100%',
-        paddingHorizontal: 16,
-        marginVertical: 4,
-        borderBottomColor: "black",
-        borderBottomWidth: 1,
-    },
     itemContainerSimple: {
         flex: 1,
         padding: 10,
@@ -153,13 +116,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "flex-start",
     },
-    searchContainer: {
-        flexDirection: "row",
-        flex: 1,
-        alignItems: "center",
-        marginVertical: 10,
-        width: "100%",
-    },
     addPlantButtonContainer: {
         width: "100%",
         bottom: 20,
@@ -167,18 +123,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         height: 0,
-    },
-    searchInput: {
-        flex: 1,
-        height: 40,
-        borderColor: "gray",
-        borderWidth: 1,
-        borderRadius: 5,
-        paddingHorizontal: 10,
-    },
-    searchIcon: {
-        borderRadius: 50,
-        elevation: 5,
     },
     addIcon: {
         borderRadius: 50,
