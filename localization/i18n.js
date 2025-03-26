@@ -25,7 +25,7 @@ const resources = {
                     registerHeader: "Sign up to PlantLife!"
                 },
                 home: {
-                    noWateringHistory: "No watering history",
+                    noWateringHistory: "Not watered yet",
                 },
                 addPlant: {
                     title: "Enter plant details",
@@ -151,7 +151,7 @@ const resources = {
                     registerHeader: "Rekisteröidy PlantLife-sovellukseen!"
                 },
                 home: {
-                    noWateringHistory: "Ei kasteluhistoriaa",
+                    noWateringHistory: "ei vielä kasteltu",
                 },
                 addPlant: {
                     title: "Lisää kasvin tiedot",
@@ -279,7 +279,7 @@ const resources = {
                     registerHeader: "Registrera dig på PlantLife!"
                 },
                 home: {
-                    noWateringHistory: "Ingen vattningshistorik",
+                    noWateringHistory: "inga vattningar",
                 },
                 addPlant: {
                     title: "Lägg till växtinformation",

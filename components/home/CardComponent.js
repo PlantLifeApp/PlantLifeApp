@@ -16,24 +16,24 @@ const CardComponent = ({ item, isTwoColumns }) => {
                 <View style={styles.container}>
                     <Image style={styles.image} source={{ uri: plantImageUrl }} />
                     <Card.Content style={styles.content}>
-                        <Text style={{ alignSelf: "center", fontWeight: 'bold' }} variant="titleLarge" numberOfLines={1} ellipsizeMode="tail">{item.givenName}</Text>
-                        <Text variant="bodyMedium" numberOfLines={1} ellipsizeMode="tail">{item.scientificName}</Text>
-                        <Text variant="bodyMedium">{item.careHistory.length == 0 ? t("screens.home.noWateringHistory") : formatDate(searchMostRecentWatering(item.careHistory))}</Text>
+                        <Text style={{ alignSelf: "center" }} variant="titleMedium" numberOfLines={1} ellipsizeMode="tail">{item.givenName}</Text>
+                        <Text style={{ alignSelf: "center" }} variant="bodySmall" numberOfLines={1} ellipsizeMode="tail">{item.scientificName}</Text>
+                        <Text style={{ alignSelf: "center" }} variant="bodySmall">💧{item.careHistory.length == 0 ? t("screens.home.noWateringHistory") : formatDate(searchMostRecentWatering(item.careHistory))}</Text>
                     </Card.Content>
                 </View>
             ) : (
                 <View style={styles.containerRow}>
                     <Image style={styles.imageRow} source={{ uri: plantImageUrl }} />
                     <Card.Content style={styles.contentRow}>
-                        <Text style={{ alignSelf: "center", fontWeight: 'bold'  }} variant="titleLarge" numberOfLines={2} ellipsizeMode="tail">{item.givenName}</Text>
+                        <Text style={{ alignSelf: "left", fontWeight: 'bold'  }} variant="titleLarge" numberOfLines={2} ellipsizeMode="tail">{item.givenName}</Text>
                         <Text variant="bodyMedium" numberOfLines={2} ellipsizeMode="tail">{item.scientificName}</Text>
-                        <Text variant="bodyMedium">{item.careHistory.length == 0 ? t("screens.home.noWateringHistory") : formatDate(searchMostRecentWatering(item.careHistory))}</Text>
+                        <Text variant="bodyMedium">💧 {item.careHistory.length == 0 ? t("screens.home.noWateringHistory") : formatDate(searchMostRecentWatering(item.careHistory))}</Text>
                     </Card.Content>
                 </View>
             )}
         </Card>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
