@@ -1,12 +1,67 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "./authContext";
+import { getUserPlantImages } from "../services/plantService";
 
 const ImagesContext = createContext();
 
 export const ImagesProvider = ({ children }) => {
   const [images, setImages] = useState([]);
+  const { user } = useContext(AuthContext)
 
-  const addImage = (uri) => {
-    setImages((prevImages) => [...prevImages, uri]);
+  useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const storedImages = await AsyncStorage.getItem("plantImages")
+        if (storedImages) {
+          setImages(JSON.parse(storedImages))
+        }
+      } catch (error) {
+        console.error("Error loading images from storage: ", error)
+      }
+    }
+    loadImages()
+  }, [])
+
+  // Synkronoi kuvat Firestoresta AsyncStorageen sovelluksen käynnistyessä
+  useEffect(() => {
+    if (user?.uid) {
+      syncImagesWithFirestore(user.uid);
+    }
+  }, [user]);
+
+  const syncImagesWithFirestore = async (userId) => {
+    try {
+      const fetchedImages = await getUserPlantImages(userId);
+      setImages(fetchedImages);
+      await AsyncStorage.setItem("plantImages", JSON.stringify(fetchedImages));
+
+    } catch (error) {
+      console.error("Error syncing images from Firestore: ", error);
+    }
+  };
+
+  const addImage = async (plantId, imageUrl) => {
+    try {
+
+      // Haetaan nykyiset kuvat AsyncStoragesta
+      const storedImages = await AsyncStorage.getItem("plantImages");
+      const images = storedImages ? JSON.parse(storedImages) : {};
+
+      // Päivitetään kasvin kuvalista
+      const updatedImages = {
+        ...images,
+        [plantId]: [...(images[plantId] || []), imageUrl]
+      };
+
+      // Tallennetaan muutos
+      setImages(updatedImages);
+      await AsyncStorage.setItem("plantImages", JSON.stringify(updatedImages));
+
+      console.log("✅ Image saved to AsyncStorage:", updatedImages);
+    } catch (error) {
+      console.error("Error saving image: ", error)
+    }
   };
 
   return (

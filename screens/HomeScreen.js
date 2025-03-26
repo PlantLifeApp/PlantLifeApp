@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect, useMemo } from "react";
-import { StyleSheet, FlatList, TouchableOpacity, View, TextInput } from "react-native";
-import { Text, Button, Switch, IconButton, Menu } from "react-native-paper";
+import React, { useContext, useState, useMemo } from "react";
+import { StyleSheet, FlatList, TouchableOpacity, View } from "react-native";
+import { Button, IconButton, Menu, TextInput } from "react-native-paper";
 import { AuthContext } from "../context/authContext";
 import AddPlantModal from "../components/home/AddPlantModal";
 import { usePlants } from "../context/plantsContext";
@@ -14,7 +14,7 @@ import { formatDate } from '../utils/dateUtils';
 const HomeScreen = () => {
     const { theme } = useContext(ThemeContext);
     const { user } = useContext(AuthContext);
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     const [modalVisible, setModalVisible] = useState(false);
     const [isTwoColumns, setIsTwoColumns] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
@@ -24,13 +24,6 @@ const HomeScreen = () => {
 
     const { plants } = usePlants();
     const navigation = useNavigation();
-
-    /*
-    const loaddata = async (id) => {
-        const returndata = await loadPlantDetails(id);
-        return returndata;
-    };
-    */
 
     const filteredPlants = useMemo(() => {
         return plants
@@ -52,11 +45,24 @@ const HomeScreen = () => {
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <View style={styles.switchContainer}>
-                <Text>Two Columns</Text>
-                <Switch
-                    value={isTwoColumns}
-                    onValueChange={() => setIsTwoColumns(!isTwoColumns)}
+                <IconButton
+                    icon="magnify"
+                    size={24}
+                    style={styles.searchIcon}
+                    onPress={() => setIsSearchVisible(!isSearchVisible)}
                 />
+
+                {isSearchVisible && (
+                    <View style={styles.searchContainer}>
+                        <TextInput
+                            style={styles.searchInput}
+                            placeholder=""
+                            value={searchQuery}
+                            onChangeText={setSearchQuery}
+                        />
+                    </View>
+                )}
+
                 <Menu
                     visible={menuVisible}
                     onDismiss={() => setMenuVisible(false)}
@@ -69,14 +75,21 @@ const HomeScreen = () => {
                     <Menu.Item onPress={() => { setSortOption("alphabetical"), setMenuVisible(false) }} title="Alphabetical" />
                     <Menu.Item onPress={() => { setSortOption("latestCare"), setMenuVisible(false) }} title="Latest Care" />
                 </Menu>
+
+                <IconButton
+                    icon={isTwoColumns ? "view-grid" : "view-agenda"}
+                    size={24}
+                    onPress={() => setIsTwoColumns(!isTwoColumns)}
+                />
             </View>
+
             <FlatList
                 data={filteredPlants}
                 keyExtractor={(item) => item.id}
                 key={isTwoColumns ? 'two-columns' : 'one-column'}
                 numColumns={isTwoColumns ? 2 : 1}
                 columnWrapperStyle={isTwoColumns ? styles.row : null}
-                style={{ width: "96%" }}
+                style={{ width: "100%" }}
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={isTwoColumns ? styles.itemContainerSimple : styles.itemContainerComplex}
@@ -98,24 +111,8 @@ const HomeScreen = () => {
                 <IconButton
                     icon="plus"
                     size={24}
-                    style={styles.addIcon}
+                    style={[styles.addIcon, { backgroundColor: theme.colors.primaryContainer }]}
                     onPress={() => setModalVisible(true)}
-                />
-                {isSearchVisible && (
-                    <View style={styles.searchContainer}>
-                        <TextInput
-                            style={styles.searchInput}
-                            placeholder=""
-                            value={searchQuery}
-                            onChangeText={setSearchQuery}
-                        />
-                    </View>
-                )}
-                <IconButton
-                    icon="magnify"
-                    size={24}
-                    style={styles.searchIcon}
-                    onPress={() => setIsSearchVisible(!isSearchVisible)}
                 />
             </View>
 
@@ -129,67 +126,59 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-    },
-    header: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        width: "96%",
-        marginVertical: 10,
+        margin: 10,
     },
     switchContainer: {
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "space-between",
+        width: '100%',
+        paddingHorizontal: 16,
         marginVertical: 4,
     },
-    surface: {
-        padding: 16,
-        width: '100%',
-        alignItems: 'center',
-        marginBottom: 8,
-        borderRadius: 8,
-    },
     itemContainerSimple: {
-        width: "48%",
-        marginBottom: 16,
+        flex: 1,
+        padding: 10,
+        maxWidth: '50%',
+        alignSelf: 'stretch',
     },
     itemContainerComplex: {
-        width: "100%",
+        flex: 1,
         marginBottom: 16,
+        paddingHorizontal: 10,
     },
     row: {
         flex: 1,
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
     },
     searchContainer: {
         flexDirection: "row",
+        flex: 1,
         alignItems: "center",
         marginVertical: 10,
-        width: "60%",
+        width: "100%",
     },
     searchBar: {
         width: "100%",
         bottom: 20,
         flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "space-between",
+        justifyContent: "center",
+        alignItems: "center",
         height: 0,
     },
     searchInput: {
         flex: 1,
-        borderColor: "#ccc",
-        backgroundColor: "#fff",
         height: 40,
+        borderColor: "gray",
         borderWidth: 1,
         borderRadius: 5,
+        paddingHorizontal: 10,
     },
     searchIcon: {
-        backgroundColor: "#fff",
         borderRadius: 50,
         elevation: 5,
     },
     addIcon: {
-        backgroundColor: "#fff",
         borderRadius: 50,
         elevation: 5,
     },
