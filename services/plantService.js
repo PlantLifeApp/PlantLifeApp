@@ -1,36 +1,88 @@
 import { db } from "./firebaseConfig";
-import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp, deleteDoc, updateDoc, Timestamp } from "firebase/firestore"
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp, deleteDoc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore"
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { calculateNextWatering, calculateNextFertilizing } from "../utils/dateUtils"
 
-export const addPlant = async (givenName, scientificName, plantType, user) => {
-
-    //console.log(user)
-    //const { user } = useContext(AuthContext)
+export const addPlant = async (givenName, scientificName, plantType, userId) => {
 
     try {
-
         const db = getFirestore();
 
         // Reference to the user's "plants" subcollection
-        const plantRef = doc(collection(db, "users", user.uid, "plants"))
+        const plantRef = doc(collection(db, "users", userId, "plants"))
 
         // Define plant data
         const plantData = {
             givenName: givenName,
             scientificName: scientificName,
             plantType: plantType,
+            coverImageUrl: null,
+            images: []
         }
 
         // Add plant data to Firestore
         await setDoc(plantRef, plantData)
-
         console.log("Plant added successfully with ID:", plantRef.id)
+
         return plantRef.id // Return generated plant ID if needed
 
     } catch (error) {
         console.error("Error adding plant:", error)
     }
 }
+
+export const uploadPlantImage = async (userId, plantId, imageUri, setAsCover = false) => {
+    try {
+        const storage = getStorage();
+        const db = getFirestore();
+
+        const imageRef = ref(storage, `plants/${userId}/${plantId}/${Date.now()}.jpg`);
+
+        // Convert image to blob
+        const response = await fetch(imageUri);
+        const blob = await response.blob();
+
+        // Upload image to FireStorage
+        await uploadBytes(imageRef, blob);
+
+        // Get image URL
+        const downloadURL = await getDownloadURL(imageRef);
+
+        // Update Firestore
+        const plantRef = doc(db, "users", userId, "plants", plantId);
+        await updateDoc(plantRef, {
+            images: arrayUnion(downloadURL), // Add image to images Array
+            ...(setAsCover && { coverImageUrl: downloadURL }) // Set cover image only if true
+        });
+
+        console.log("Image uploaded successfully:", downloadURL);
+        return downloadURL;
+    } catch (error) {
+        console.error("Error uploading image:", error);
+    }
+};
+
+export const getUserPlantImages = async (userId) => {
+    try {
+      const db = getFirestore();
+      const plantsCollection = collection(db, "users", userId, "plants");
+      const querySnapshot = await getDocs(plantsCollection);
+  
+      let fetchedImages = {};
+  
+      querySnapshot.forEach((doc) => {
+        const plantData = doc.data();
+        if (plantData.images) {
+          fetchedImages[doc.id] = plantData.images;
+        }
+      });
+      
+      return fetchedImages;
+    } catch (error) {
+      console.error("Error fetching images from Firestore: ", error);
+      return {};
+    }
+  };
 
 export const fetchPlantData = async (userId, plantId) => {
 

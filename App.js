@@ -8,9 +8,9 @@ export default function App() {
   return (
     <I18nextProvider i18n={i18n}>
       <ThemeProvider>
-        <ImagesProvider>
-          <ThemeWrapper />
-        </ImagesProvider>
+
+        <ThemeWrapper />
+
       </ThemeProvider>
     </I18nextProvider>
   )
