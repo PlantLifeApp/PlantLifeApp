@@ -1,21 +1,24 @@
 import { View, Text, FlatList, Modal, TouchableOpacity, StyleSheet } from "react-native";
 import React, { useState, useCallback } from "react";
-import { Surface, Card } from "react-native-paper";
+import { Surface, Card, useTheme } from "react-native-paper";
 import { useImages } from "../context/imageContext";
 import FloatingButton from "../components/gallery/FloatingButton";
 import { useFocusEffect } from "@react-navigation/native";
 import { useTranslation } from "react-i18next"
 
 export default function GalleryScreen() {
-  const { images = [] } = useImages()
+  const { images } = useImages()
   const [selectedImage, setSelectedImage] = useState(null)
   const [modalVisible, setModalVisible] = useState(false)
   const [fabVisible, setFabVisible] = useState(false)
   const { t } = useTranslation()
+  const theme = useTheme()
 
   // Open picture 
-  const handleImagePress = (uri) => {
-    setSelectedImage(uri)
+  const handleImagePress = (item) => {
+
+    setSelectedImage(item) // Avaa valittu kuva
+    console.log("GalleryScreen: Selected image Uri:", item)
     setModalVisible(true)
   }
 
@@ -28,14 +31,14 @@ export default function GalleryScreen() {
   )
 
   return (
-    <Surface style={styles.container}>
+    <Surface style={[styles.container, { backgroundColor: theme.colors.background }]}>
       {/* List of pictures, 2colums, touchable pictures*/}
       <FlatList
-        data={images}
-        keyExtractor={(item) => item.toString()}
+        data={Object.values(images).flat()}
+        keyExtractor={(item, index) => index.toString()}
         numColumns={2}
         columnWrapperStyle={styles.row}
-        ListEmptyComponent={() =><Text style={styles.noImagesText}>{t("screens.gallery.listEmpty")}</Text>}
+        ListEmptyComponent={() => <Text style={styles.noImagesText}>{t("screens.gallery.listEmpty")}</Text>}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => handleImagePress(item)}>
             <Card style={styles.card}>
@@ -44,11 +47,13 @@ export default function GalleryScreen() {
           </TouchableOpacity>
         )}
       />
-  {/* Opens full picture*/ }
-      <Modal visible={modalVisible} transparent={true} animationType="fade">
+      {/* Opens full picture*/}
+      <Modal visible={modalVisible} transparent={true} animationType='fade'>
         <View style={styles.modalContainer}>
-          <TouchableOpacity onPress={() => setModalVisible(false)}>
-            <Card>
+          <TouchableOpacity
+            onPress={() => { setTimeout(() => setModalVisible(false), 100) }}
+          >
+            <Card style={styles.modalCard}>
               <Card.Cover source={{ uri: selectedImage }} style={styles.fullscreenImage} />
             </Card>
           </TouchableOpacity>
@@ -56,7 +61,7 @@ export default function GalleryScreen() {
       </Modal>
 
       {/* set fab*/}
-   {fabVisible && <FloatingButton />}
+      {fabVisible && <FloatingButton />}
     </Surface>
   );
 }
@@ -82,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 5,
     elevation: 4,
-    borderRadius: 10, 
+    borderRadius: 10,
   },
   cardImage: {
     height: 150,
@@ -91,9 +96,21 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalCard: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    height: '100%',
+    padding: 4,
   },
   fullscreenImage: {
     width: "100%",
-    height: "100%",
+    height: 'auto',
+    aspectRatio: 1,
   },
 });
