@@ -78,10 +78,15 @@ const resources = {
                     scientificName: "Scientific Name",
                     plantType: "Plant Type",
                     plantNotFound: "Plant not found",
-                    delete: "Delete This Plant",
+                    delete: "Delete Plant",
                     errorDeleting: "Error deleting plant!",
                     confirmDeleteTitle: "Delete Plant",
                     confirmDelete: "Are you sure you want to delete this plant? This action cannot be undone.",
+                    killedPlant: "Plant Died",
+                    confirmGraveyardTitle: "Move to Graveyard",
+                    confirmGraveyard: "This action will mark your plant as dead and move it to the Graveyard, which you can access from the Options menu. This action cannot be undone.",
+                    errorKilling: "Error marking plant as dead",
+                    plantKilled: "RIP, Plant!"
                 },
                 editCareHistory: {
                     title: "Edit Care History",
@@ -210,6 +215,11 @@ const resources = {
                     errorDeleting: "Virhe poistaessa kasvia",
                     confirmDeleteTitle: "Poista kasvi",
                     confirmDelete: "Oletko varma, että haluat poistaa kasvin? Tätä toimintoa ei voi peruuttaa.",
+                    killedPlant: "Kasvi kuoli",
+                    confirmGraveyardTitle: "Siirrä hautausmaalle",
+                    confirmGraveyard: "Tämä toiminto merkitsee kasvisi kuolleeksi ja siirtää sen hautausmaalle, johon pääset Valinnat-valikosta. Tätä toimintoa ei voi peruuttaa.",
+                    errorKilling: "Virhe merkitessä kasvia kuolleeksi",
+                    plantKilled: "RIP, kasvi!"
                 },
                 editCareHistory: {
                     title: "Muokkaa hoitohistoriaa",
@@ -334,6 +344,11 @@ const resources = {
                     errorDeleting: "Fel vid borttagning av växt",
                     confirmDeleteTitle: "Ta bort växt",
                     confirmDeleteMessage: "Är du säker på att du vill ta bort denna växt? Denna åtgärd kan inte ångras.",
+                    killedPlant: "Växten dog",
+                    confirmGraveyardTitle: "Flytta till kyrkogården",
+                    confirmGraveyard: "Denna åtgärd markerar din växt som död och flyttar den till kyrkogården, som du kan komma åt från alternativmenyn. Denna åtgärd kan inte ångras.",
+                    errorKilling: "Fel vid markering av växt som död",
+                    plantKilled: "RIP, växt!"
                 },
                 editCareHistory: {
                     title: "Redigera vårdhistorik",
