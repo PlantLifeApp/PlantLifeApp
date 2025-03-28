@@ -113,7 +113,18 @@ const resources = {
                     languagePlaceholder: "Select language",
                     logoutButton: "Log Out",
                     deleteAccountButton: "Delete Account",
-                    signedInAs: "Signed in as"
+                    signedInAs: "Signed in as",
+                    visitGraveyard: "Visit Graveyard",
+                    confirmDeleteTitle: "Delete Account",
+                    confirmDelete: "Are you sure you want to delete your account? This action cannot be undone.",
+                    errorDeleting: "Error deleting account",
+                },
+                graveyard: {
+                    title: "Plant Graveyard",
+                    noPlants: "No plants in the graveyard yet",
+                    plantListEmpty: "No plants in the graveyard yet",
+                    plantListEmptyDescription: "When a plant dies, it will be moved here. You can view its history and details, but you can't bring it back to life.",
+                    
                 },
                 gallery: {
                     listEmpty: "No Images Available",

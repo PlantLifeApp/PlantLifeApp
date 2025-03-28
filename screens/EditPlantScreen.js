@@ -7,7 +7,7 @@ import { usePlants } from "../context/plantsContext"
 import { useTheme } from "react-native-paper"
 import { useNavigation } from "@react-navigation/native"
 import Toast from "react-native-toast-message"
-import { deletePlant, updatePlant } from "../services/plantService"
+import { deletePlant, fetchPlantData, updatePlant } from "../services/plantService"
 import DeletePlantModal from "../components/editPlant/DeletePlantModal"
 import PlantKilledModal from "../components/editPlant/PlantKilledModal"
 import EditPlantDetails from "../components/editPlant/EditPlantDetails"
@@ -140,6 +140,7 @@ export default function EditPlantScreen({ route }) {
                     try {
 
                         await updatePlant(user.uid, plantId, { isDead: true })
+                        await fetchPlantData(user.uid, plantId)
                         await refreshPlantInList(plantId)
                         navigation.navigate("HomeScreen")
                         setGraveyardModalVisible(false)
