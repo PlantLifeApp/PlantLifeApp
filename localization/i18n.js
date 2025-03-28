@@ -119,6 +119,7 @@ const resources = {
                     requestPermissionHeader: "Permission Needed",
                     requestMediaPermission: "Allow Access to Photos",
                     requestCameraPermission: "Allow Access to Camera",
+                    choosePlantName: "Choose plant",
                 }
             },
             common: {
@@ -247,6 +248,7 @@ const resources = {
                     requestPermissionHeader: "Lupa tarvitaan",
                     requestMediaPermission: "Anna sovellukselle pääsy kuviin",
                     requestCameraPermission: "Anna sovellukselle pääsy kameraan",
+                    choosePlantName: "Valitse kasvi",
                 },
             },
             common: {
@@ -371,6 +373,7 @@ const resources = {
                     requestPermissionHeader: "Behörighet krävs",
                     requestMediaPermission: "Tillåt åtkomst till bilder",
                     requestCameraPermission: "Tillåt åtkomst till kamera",
+                    choosePlantName: "Välj en växt",
 
                 },
             },
