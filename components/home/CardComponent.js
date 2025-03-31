@@ -9,12 +9,27 @@ const CardComponent = ({ item, isTwoColumns }) => {
 
     const { t } = useTranslation()
 
-    const plantImageUrl = item.coverImageUrl
+    let plantImageUrl
+
+    if (!item.coverImageUrl || item.coverImageUrl.length <= 0) {
+        if (item.plantType === "cactus") {
+            plantImageUrl = require("../../assets/plants/cactus-preview.png")
+        } else if (item.plantType === "general") {
+            plantImageUrl = require("../../assets/plants/general-preview.png")
+        } else if (item.plantType === "succulent") {
+            plantImageUrl = require("../../assets/plants/succulent-preview.png")
+        } else if (item.plantType === "utilitarian") {
+            plantImageUrl = require("../../assets/plants/utilitarian-preview.png")
+        }
+    } else {
+        plantImageUrl = { uri: item.coverImageUrl }
+    }
+
     return (
         <Card>
             {isTwoColumns ? (
                 <View style={styles.container}>
-                    <Image style={styles.image} source={{ uri: plantImageUrl }} />
+                    <Image style={styles.image} source={plantImageUrl} />
                     <Card.Content style={styles.content}>
                         <Text style={{ alignSelf: "center" }} variant="titleMedium" numberOfLines={1} ellipsizeMode="tail">{item.givenName}</Text>
                         <Text style={{ alignSelf: "center" }} variant="bodySmall" numberOfLines={1} ellipsizeMode="tail">{item.scientificName}</Text>
@@ -32,7 +47,7 @@ const CardComponent = ({ item, isTwoColumns }) => {
                     <Card.Content style={styles.contentRow}>
                         <Text style={{ alignSelf: "left", fontWeight: 'bold' }} variant="titleLarge" numberOfLines={2} ellipsizeMode="tail">{item.givenName}</Text>
                         <Text variant="bodyMedium" numberOfLines={2} ellipsizeMode="tail">{item.scientificName}</Text>
-                        <View style={{ flexDirection: "row", alignItems: "center"}}>
+                        <View style={{ flexDirection: "row", alignItems: "center" }}>
                             <Text variant="bodySmall">
                                 {item.careHistory.length == 0 ? t("screens.home.noWateringHistory") : formatDate(searchMostRecentWatering(item.careHistory))}
                             </Text>
