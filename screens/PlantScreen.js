@@ -12,6 +12,7 @@ import Toast from "react-native-toast-message"
 import { useTheme } from "react-native-paper"
 import { addCareEvent } from "../services/plantService"
 import { useFocusEffect } from "@react-navigation/native"
+import CarePredictions from "../components/plant/CarePredictions"
 
 const PlantScreen = ({ route }) => {
 
@@ -102,15 +103,22 @@ const PlantScreen = ({ route }) => {
 
                 {!loading && plant && (
                     <>
-                        <CareButtons onAddCareEvent={handleAddCareEvent} saving={saving} />
+                        <CareButtons 
+                            onAddCareEvent={handleAddCareEvent} 
+                            saving={saving} />
                         <PlantDetails
                             plant={plant.plant}
                             careHistory={plant.careHistory}
                             nextWatering={plant.nextWatering}
                             nextFertilizing={plant.nextFertilizing}
                         />
-                        <CareHistory careHistory={plant.careHistory} />
-                        <EditButtons plant={plant.plant} />
+                        <CarePredictions 
+                            nextWatering={plant.nextWatering} 
+                            nextFertilizing={plant.nextFertilizing} />
+                        <CareHistory 
+                            careHistory={plant.careHistory} />
+                        <EditButtons 
+                            plant={plant.plant} />
                     </>
                 )}
 
