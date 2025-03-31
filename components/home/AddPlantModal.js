@@ -110,8 +110,8 @@ export default function AddPlantModal({ user, visible, onClose }) {
                         )}
                     </TouchableOpacity>
 
+                    <Text variant="bodyMedium">{t("screens.addPlant.nickname")}*</Text>
                     <View style={styles.inputContainer}>
-                        <Text variant="bodyMedium">{t("screens.addPlant.nickname")}*</Text>
                         <TextInput style={[styles.textInput, plantNicknameError && styles.errorInput]} onChangeText={(text) => {
                             setPlantNickname(text)
                             setPlantNicknameError(false)
@@ -119,13 +119,13 @@ export default function AddPlantModal({ user, visible, onClose }) {
                         </TextInput>
                     </View>
 
+                    <Text variant="bodyMedium">{t("screens.addPlant.scientificName")}</Text>
                     <View style={styles.inputContainer}>
-                        <Text variant="bodyMedium">{t("screens.addPlant.scientificName")}</Text>
                         <TextInput style={styles.textInput} onChangeText={(text) => setScientificName(text)}></TextInput>
                     </View>
 
-                    <View style={[styles.inputContainer, plantTypeError && styles.errorInput]}>
                     <Text variant="bodyMedium">{t("screens.addPlant.type")}*</Text>
+                    <View style={[styles.inputContainer, plantTypeError && styles.errorInput]}>
                         <Dropdown
                             placeholder={t("screens.addPlant.selectType")}
                             options={TYPES}
