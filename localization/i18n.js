@@ -406,8 +406,8 @@ const resources = {
                     title: "Växtkyrkogård",
                     noPlants: "Inga växter på kyrkogården än",
                     empty: "Inga växter på kyrkogården...än!",
-                    plantListEmptyDescription: "", // LISÄÄ
-                    rip: "RIP",
+                    plantListEmptyDescription: "När en växt dör flyttas den hit. Du kan se des historik och detaljer, men du kan inte väcka den till liv igen.", 
+                    rip: "Vila i frid",
                     killedOn: "Dödsdatum",
                 },
                 gallery: {

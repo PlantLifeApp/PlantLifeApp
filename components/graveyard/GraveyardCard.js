@@ -3,6 +3,7 @@ import { View, Image, StyleSheet } from "react-native"
 import { Card, Text } from "react-native-paper"
 import { useTranslation } from "react-i18next"
 import { formatDate } from "../../utils/dateUtils"
+import ItalicText from "../../utils/italicText"
 
 const GraveyardCard = ({ plant }) => {
     const { t } = useTranslation()
@@ -23,10 +24,10 @@ const GraveyardCard = ({ plant }) => {
                     <Text variant="titleLarge" style={styles.name} numberOfLines={1}>
                         {plant.givenName}
                     </Text>
-                    <Text variant="bodyMedium" numberOfLines={1}>
+                    <ItalicText variant="bodyLarge" numberOfLines={2}>
                         {plant.scientificName}
-                    </Text>
-                    <Text variant="bodySmall" style={styles.deathDate}>
+                    </ItalicText>
+                    <Text variant="bodyMedium" style={styles.deathDate}>
                         🪦 {killedAt ? formatDate(killedAt) : t("screens.graveyard.unknownDeath")}
                     </Text>
                 </Card.Content>
@@ -51,7 +52,6 @@ const styles = StyleSheet.create({
         width: 100,
         borderRadius: 8,
         marginRight: 12,
-        backgroundColor: "#eee",
     },
     content: {
         flex: 1,
@@ -61,8 +61,6 @@ const styles = StyleSheet.create({
     },
     deathDate: {
         marginTop: 8,
-        fontStyle: "italic",
-        color: "#666",
     },
 })
 

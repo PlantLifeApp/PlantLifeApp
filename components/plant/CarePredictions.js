@@ -4,6 +4,7 @@ import { Text, Surface, IconButton } from 'react-native-paper'
 import { useTranslation } from "react-i18next"
 import { formatDate } from '../../utils/dateUtils'
 import PlantInfoModal from './PlantInfoModal'
+import ItalicText from '../../utils/italicText'
 
 const CarePredictions = ({ nextWatering, nextFertilizing }) => {
     const { t } = useTranslation()
@@ -23,18 +24,30 @@ const CarePredictions = ({ nextWatering, nextFertilizing }) => {
             <View style={{ height: 8 }} />
 
             <Text variant="bodyMedium">
-                💧 {t("screens.plant.nextWateringEstimate")}:{" "}
+                💧 {t("screens.plant.nextWateringEstimate")}:
             </Text>
-            <Text variant="bodyMedium">
-                {"      "}{nextWatering ? formatDate(nextWatering) : t("screens.plant.needMoreEvents")}
-            </Text>
+            {nextWatering ? (
+                <Text variant="bodyMedium">
+                    {"      "}{formatDate(nextWatering)}
+                </Text>
+            ) : (
+                <ItalicText variant="bodyMedium">
+                    {"      "}{t("screens.plant.needMoreEvents")}
+                </ItalicText>
+            )}
 
             <Text variant="bodyMedium">
-                💥 {t("screens.plant.nextFertilizationEstimate")}:{" "}
+                💥 {t("screens.plant.nextFertilizationEstimate")}:
             </Text>
-            <Text variant="bodyMedium">
-                {"      "}{nextFertilizing ? formatDate(nextFertilizing) : t("screens.plant.needMoreEvents")}
-            </Text>
+            {nextFertilizing ? (
+                <Text variant="bodyMedium">
+                    {"      "}{formatDate(nextFertilizing)}
+                </Text>
+            ) : (
+                <ItalicText variant="bodyMedium">
+                    {"      "}{t("screens.plant.needMoreEvents")}
+                </ItalicText>
+            )}
 
             <PlantInfoModal visible={infoVisible} onClose={() => setInfoVisible(false)} />
         </Surface>

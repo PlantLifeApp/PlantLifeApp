@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next"
 
 const CareHistory = ({ careHistory }) => {
 
-    console.log("Care history received in CareHistory:", careHistory)
+    //console.log("Care history received in CareHistory:", careHistory)
 
     const { t } = useTranslation()
     const [expanded, setExpanded] = useState(false)

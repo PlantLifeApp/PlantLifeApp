@@ -13,6 +13,7 @@ import { useTheme } from "react-native-paper"
 import { addCareEvent } from "../services/plantService"
 import { useFocusEffect } from "@react-navigation/native"
 import CarePredictions from "../components/plant/CarePredictions"
+import ItalicText from "../utils/italicText.js"
 
 const PlantScreen = ({ route }) => {
 
@@ -92,7 +93,7 @@ const PlantScreen = ({ route }) => {
 
                 <Surface style={styles.surface}>
                     <Text variant="headlineMedium">{displayName}</Text>
-                    <Text variant="bodyLarge" style={{ fontStyle: "italic" }}>{displayScientific}</Text>
+                    <ItalicText variant="bodyLarge">{displayScientific}</ItalicText>
                 </Surface>
 
                 {loading && (

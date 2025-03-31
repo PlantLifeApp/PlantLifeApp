@@ -11,7 +11,7 @@ export default function GraveyardScreen() {
     const { deadPlants } = usePlants()
     const navigation = useNavigation()
 
-    console.log("Graveyard Screen deadPlants:", deadPlants)
+    //console.log("Graveyard Screen deadPlants:", deadPlants)
 
     return (
         <View style={styles.container}>

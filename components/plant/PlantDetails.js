@@ -4,12 +4,12 @@ import { Text, Surface, IconButton } from 'react-native-paper'
 import { formatDate } from '../../utils/dateUtils'
 import { useTranslation } from "react-i18next"
 import { View } from 'react-native'
-import PlantInfoModal from './PlantInfoModal'
+import ItalicText from '../../utils/italicText'
 
-const PlantDetails = ({ plant, careHistory, nextWatering, nextFertilizing }) => {
+const PlantDetails = ({ plant, careHistory }) => {
 
     //console.log("nextWatering received in PlantDetails:", nextWatering);
-    console.log("Care history receivedin PlantDetails:", careHistory);
+    //console.log("Care history receivedin PlantDetails:", careHistory);
 
     const { t } = useTranslation()
 
@@ -38,17 +38,44 @@ const PlantDetails = ({ plant, careHistory, nextWatering, nextFertilizing }) => 
 
             <View style={{ height: 8 }} />
 
-            <Text variant="bodyMedium">
-                💧 {t("screens.plant.lastWatered")}: {lastWatering ? formatDate(lastWatering.date) : t("screens.plant.neverWatered")}
-            </Text>
-            <Text variant="bodyMedium">
-                💥 {t("screens.plant.lastFertilized")}: {lastFertilization ? formatDate(lastFertilization.date) : t("screens.plant.neverFertilized")}
-            </Text>
-            <Text variant="bodyMedium">
-                ✂️ {t("screens.plant.lastPruned")}: {lastPruning ? formatDate(lastPruning.date) : t("screens.plant.neverPruned")}
-            </Text>
-            <Text variant="bodyMedium">
-                🪴 {t("screens.plant.lastRepotted")}: {lastRepotting ? formatDate(lastRepotting.date) : t("screens.plant.neverRepotted")}            </Text>
+            {lastWatering ? (
+                <Text variant="bodyMedium">
+                    💧 {t("screens.plant.lastWatered")}: {formatDate(lastWatering.date)}
+                </Text>
+                ) : (
+                <ItalicText variant="bodyMedium">
+                    💧 {t("screens.plant.neverWatered")}
+                </ItalicText>
+            )}
+            {lastFertilization ? (
+                <Text variant="bodyMedium">
+                    💥 {t("screens.plant.lastFertilized")}: {formatDate(lastFertilization.date)}
+                </Text>
+                ) : (
+                <ItalicText variant="bodyMedium">
+                    💥 {t("screens.plant.neverFertilized")}
+                </ItalicText>
+                )}
+
+            {lastPruning ? (
+                <Text variant="bodyMedium">
+                    ✂️ {t("screens.plant.lastPruned")}: {formatDate(lastPruning.date)}
+                </Text>
+                ) : (
+                <ItalicText variant="bodyMedium">
+                    ✂️ {t("screens.plant.neverPruned")}
+                </ItalicText>
+                )}
+
+            {lastRepotting ? (
+                <Text variant="bodyMedium">
+                    🪴 {t("screens.plant.lastRepotted")}: {formatDate(lastRepotting.date)}
+                </Text>
+                ) : (
+                <ItalicText variant="bodyMedium">
+                    🪴 {t("screens.plant.neverRepotted")}
+                </ItalicText>
+                )}
         
         </Surface>
 

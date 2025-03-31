@@ -6,9 +6,12 @@ import { useTheme } from "react-native-paper"
 import { formatDate } from "../utils/dateUtils"
 import PlantDetails from "../components/plant/PlantDetails"
 import CareHistory from "../components/plant/CareHistory"
+import ItalicText from "../utils/italicText"
 
 export default function DeadPlantScreen({ route }) {
-    
+
+    //console.log("DeadPlantScreen route params:", route.params)
+
     const { plant } = route.params
     const { t } = useTranslation()
     const theme = useTheme()
@@ -49,24 +52,31 @@ export default function DeadPlantScreen({ route }) {
     return (
         <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>
             <ScrollView contentContainerStyle={styles.container}>
-                {/* Title */}
-                <Surface style={styles.surface}>
-                    <Text variant="headlineMedium">{plant.givenName}</Text>
-                    <Text variant="bodyLarge" style={styles.italic}>
-                        {plant.scientificName}
-                    </Text>
-                </Surface>
 
                 <Surface style={styles.surface}>
-                    <Image
-                        style={styles.image}
-                        source={{ uri: plant.coverImageUrl ?? null }}
-                    />
-                    <Text variant="bodyMedium" style={styles.killedText}>
-                        ☠️ {t("screens.graveyard.killedOn")}:{" "}
-                        {killedAt ? formatDate(killedAt) : t("screens.graveyard.unknownDeath")}
-                    </Text>
+                    <Text variant="headlineMedium">{plant.givenName}</Text>
+                    <ItalicText variant="bodyLarge">{plant.scientificName}</ItalicText>
                 </Surface>
+
+                {plant.coverImageUrl ? (
+                    <Surface style={styles.surface}>
+                        <Image
+                            style={styles.image}
+                            source={{ uri: plant.coverImageUrl }}
+                        />
+                        <Text variant="bodyMedium" style={styles.killedText}>
+                            ☠️ {t("screens.graveyard.killedOn")}:{" "}
+                            {killedAt ? formatDate(killedAt) : t("screens.graveyard.unknownDeath")}
+                        </Text>
+                    </Surface>
+                ) : (
+                    <Surface style={styles.surface}>
+                        <Text variant="bodyMedium" style={styles.killedText}>
+                            ☠️ {t("screens.graveyard.killedOn")}:{" "}
+                            {killedAt ? formatDate(killedAt) : t("screens.graveyard.unknownDeath")}
+                        </Text>
+                    </Surface>
+                )}
 
                 <PlantDetails
                     plant={plant}
@@ -100,12 +110,5 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         borderRadius: 8,
         marginBottom: 16,
-        backgroundColor: "#ddd",
-    },
-    italic: {
-        fontStyle: "italic",
-    },
-    killedText: {
-        marginTop: 8,
     },
 })
