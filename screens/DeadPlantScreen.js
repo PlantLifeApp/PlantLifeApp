@@ -8,20 +8,48 @@ import PlantDetails from "../components/plant/PlantDetails"
 import CareHistory from "../components/plant/CareHistory"
 
 export default function DeadPlantScreen({ route }) {
+    
     const { plant } = route.params
     const { t } = useTranslation()
     const theme = useTheme()
 
-    let killedAt = null
-    if (plant.killedAt && typeof plant.killedAt.toDate === "function") {
-        killedAt = plant.killedAt.toDate()
-    }
+    // normalize the care history to ensure dates are Date objects and events are arrays
+    const normalizedCareHistory = plant.careHistory.map(entry => {
+        const date = typeof entry.date?.toDate === "function"
+            ? entry.date.toDate()
+            : entry.date instanceof Date
+            ? entry.date
+            : null
+        return {
+            ...entry,
+            date,
+            events: Array.isArray(entry.events)
+                ? entry.events
+                : entry.type
+                ? [entry.type]
+                : [],
+        }
+    }).filter(entry => entry.date) // filter out anything without a valid date just in case
 
-    const imageUrl = plant.coverImageUrl ?? null
+    // group care history by date
+    const groupedByDate = {}
+    normalizedCareHistory.forEach(entry => {
+        const dateKey = entry.date.toISOString().split("T")[0]
+        if (!groupedByDate[dateKey]) {
+            groupedByDate[dateKey] = { date: entry.date, events: [] }
+        }
+        groupedByDate[dateKey].events.push(...entry.events)
+    })
+
+    // convert grouped object to sorted array
+    const groupedCareHistory = Object.values(groupedByDate).sort((a, b) => b.date - a.date)
+
+    const killedAt = plant.killedAt?.toDate?.() ?? null
 
     return (
         <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>
             <ScrollView contentContainerStyle={styles.container}>
+                {/* Title */}
                 <Surface style={styles.surface}>
                     <Text variant="headlineMedium">{plant.givenName}</Text>
                     <Text variant="bodyLarge" style={styles.italic}>
@@ -30,21 +58,21 @@ export default function DeadPlantScreen({ route }) {
                 </Surface>
 
                 <Surface style={styles.surface}>
-                <Image style={styles.image} source={{ uri: imageUrl }} />
-
-                <Text variant="bodyMedium" style={styles.killedText}>
-                    ☠️ {t("screens.graveyard.killedOn")}: {killedAt ? formatDate(killedAt) : t("screens.graveyard.unknownDeath")}
-                </Text>
+                    <Image
+                        style={styles.image}
+                        source={{ uri: plant.coverImageUrl ?? null }}
+                    />
+                    <Text variant="bodyMedium" style={styles.killedText}>
+                        ☠️ {t("screens.graveyard.killedOn")}:{" "}
+                        {killedAt ? formatDate(killedAt) : t("screens.graveyard.unknownDeath")}
+                    </Text>
                 </Surface>
 
                 <PlantDetails
                     plant={plant}
-                    careHistory={plant.careHistory}
-                    nextWatering={null}
-                    nextFertilizing={null}
+                    careHistory={groupedCareHistory}
                 />
-
-                <CareHistory careHistory={plant.careHistory} />
+                <CareHistory careHistory={groupedCareHistory} />
             </ScrollView>
         </View>
     )
@@ -69,12 +97,15 @@ const styles = StyleSheet.create({
     },
     image: {
         width: "100%",
-        aspectRatio: 1, // maintains square shape
+        aspectRatio: 1,
         borderRadius: 8,
         marginBottom: 16,
+        backgroundColor: "#ddd",
     },
     italic: {
         fontStyle: "italic",
     },
-
+    killedText: {
+        marginTop: 8,
+    },
 })

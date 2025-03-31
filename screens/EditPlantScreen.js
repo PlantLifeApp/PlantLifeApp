@@ -141,7 +141,8 @@ export default function EditPlantScreen({ route }) {
                     try {
 
                         await updatePlant(user.uid, plantId, { isDead: true, killedAt: Timestamp.now() })
-                        await fetchPlantData(user.uid, plantId)
+                        await loadPlantDetails(plantId, true)
+                        // await fetchPlantData(user.uid, plantId)
                         await refreshPlantInList(plantId)
                         navigation.navigate("HomeScreen")
                         setGraveyardModalVisible(false)

@@ -109,8 +109,6 @@ const PlantScreen = ({ route }) => {
                         <PlantDetails
                             plant={plant.plant}
                             careHistory={plant.careHistory}
-                            nextWatering={plant.nextWatering}
-                            nextFertilizing={plant.nextFertilizing}
                         />
                         <CarePredictions 
                             nextWatering={plant.nextWatering} 

@@ -44,6 +44,7 @@ const resources = {
                     watering: "Watering",
                     fertilization: "Fertilizing",
                     pruning: "Pruning",
+                    repotting: "Repotting",
                     type: "Plant Type",
                     justWatered: "Just Watered",
                     justFertilized: "Just Fertilized",
@@ -188,6 +189,7 @@ const resources = {
                     watering: "kastelu",
                     fertilization: "lannoitus",
                     pruning: "leikkaus",
+                    repotting: "uudelleenistutus",
                     lastRepotted: "Viimeksi istutettu uudelleen",
                     neverRepotted: "Ei uudelleenistutettu!",
                     justRepotted: "Ruukutettu!", // repotettu vaihdettu
@@ -330,6 +332,7 @@ const resources = {
                     watering: "vattning",
                     fertilization: "gödsling",
                     pruning: "beskärning",
+                    repotting: "ompotning",
                     type: "Växttyp",
                     justWatered: "Vattnad!",
                     justFertilized: "Gödslad!",

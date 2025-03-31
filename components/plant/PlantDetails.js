@@ -8,10 +8,10 @@ import PlantInfoModal from './PlantInfoModal'
 
 const PlantDetails = ({ plant, careHistory, nextWatering, nextFertilizing }) => {
 
-    console.log("nextWatering received in PlantDetails:", nextWatering);
+    //console.log("nextWatering received in PlantDetails:", nextWatering);
+    console.log("Care history receivedin PlantDetails:", careHistory);
 
     const { t } = useTranslation()
-    const [infoVisible, setInfoVisible] = useState(false)
 
     const lastWatering = careHistory.find(entry => entry.events.includes("watering"))
     const lastFertilization = careHistory.find(entry => entry.events.includes("fertilizing"))

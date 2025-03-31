@@ -1,22 +1,20 @@
 import React from "react"
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native"
-import { Text, Surface } from "react-native-paper"
+import { Text } from "react-native-paper"
 import { useNavigation } from "@react-navigation/native"
 import { usePlants } from "../context/plantsContext"
 import { useTranslation } from "react-i18next"
 import GraveyardCard from "../components/graveyard/GraveyardCard"
 
 export default function GraveyardScreen() {
-    
     const { t } = useTranslation()
     const { deadPlants } = usePlants()
     const navigation = useNavigation()
 
-    console.log("Dead plants:", deadPlants)
+    console.log("Graveyard Screen deadPlants:", deadPlants)
 
     return (
         <View style={styles.container}>
-
             {deadPlants.length === 0 ? (
                 <>
                     <Text variant="headlineSmall" style={styles.title}>
@@ -24,9 +22,9 @@ export default function GraveyardScreen() {
                     </Text>
                     <View style={styles.row}>
                         <Text style={styles.empty}>
-                        {t("screens.graveyard.plantListEmptyDescription")}
-                    </Text>
-                </View>
+                            {t("screens.graveyard.plantListEmptyDescription")}
+                        </Text>
+                    </View>
                 </>
             ) : (
                 <FlatList
@@ -66,9 +64,5 @@ const styles = StyleSheet.create({
         paddingTop: 16,
         paddingHorizontal: 16,
         paddingBottom: 16,
-        },
-    card: {
-        marginTop: 8,
-
     },
 })
