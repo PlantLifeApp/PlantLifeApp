@@ -62,6 +62,7 @@ export default function EditCareHistory({ route }) {
             setDeleteModalVisible(false)
 
             setCareHistory(prev => prev.filter(entry => entry.id !== selectedCareId))
+            await refreshPlantInList(plantId)
 
             Toast.show({
                 type: "success",

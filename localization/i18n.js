@@ -25,7 +25,7 @@ const resources = {
                     registerHeader: "Sign up to PlantLife!"
                 },
                 home: {
-                    noWateringHistory: "No watering history",
+                    noWateringHistory: "Not watered yet",
                 },
                 addPlant: {
                     title: "Enter plant details",
@@ -78,10 +78,15 @@ const resources = {
                     scientificName: "Scientific Name",
                     plantType: "Plant Type",
                     plantNotFound: "Plant not found",
-                    delete: "Delete This Plant",
+                    delete: "Delete Plant",
                     errorDeleting: "Error deleting plant!",
                     confirmDeleteTitle: "Delete Plant",
                     confirmDelete: "Are you sure you want to delete this plant? This action cannot be undone.",
+                    killedPlant: "Plant Died",
+                    confirmGraveyardTitle: "Move to Graveyard",
+                    confirmGraveyard: "This action will mark your plant as dead and move it to the Graveyard, which you can access from the Options menu. This action cannot be undone.",
+                    errorKilling: "Error marking plant as dead",
+                    plantKilled: "RIP, Plant!"
                 },
                 editCareHistory: {
                     title: "Edit Care History",
@@ -108,7 +113,18 @@ const resources = {
                     languagePlaceholder: "Select language",
                     logoutButton: "Log Out",
                     deleteAccountButton: "Delete Account",
-                    signedInAs: "Signed in as"
+                    signedInAs: "Signed in as",
+                    visitGraveyard: "Visit Graveyard",
+                    confirmDeleteTitle: "Delete Account",
+                    confirmDelete: "Are you sure you want to delete your account? This action cannot be undone.",
+                    errorDeleting: "Error deleting account",
+                },
+                graveyard: {
+                    title: "Plant Graveyard",
+                    noPlants: "No plants in the graveyard yet",
+                    plantListEmpty: "No plants in the graveyard yet",
+                    plantListEmptyDescription: "When a plant dies, it will be moved here. You can view its history and details, but you can't bring it back to life.",
+                    
                 },
                 gallery: {
                     listEmpty: "No Images Available",
@@ -152,7 +168,7 @@ const resources = {
                     registerHeader: "Rekisteröidy PlantLife-sovellukseen!"
                 },
                 home: {
-                    noWateringHistory: "Ei kasteluhistoriaa",
+                    noWateringHistory: "ei vielä kasteltu",
                 },
                 addPlant: {
                     title: "Lisää kasvin tiedot",
@@ -211,6 +227,11 @@ const resources = {
                     errorDeleting: "Virhe poistaessa kasvia",
                     confirmDeleteTitle: "Poista kasvi",
                     confirmDelete: "Oletko varma, että haluat poistaa kasvin? Tätä toimintoa ei voi peruuttaa.",
+                    killedPlant: "Kasvi kuoli",
+                    confirmGraveyardTitle: "Siirrä hautausmaalle",
+                    confirmGraveyard: "Tämä toiminto merkitsee kasvisi kuolleeksi ja siirtää sen hautausmaalle, johon pääset Valinnat-valikosta. Tätä toimintoa ei voi peruuttaa.",
+                    errorKilling: "Virhe merkitessä kasvia kuolleeksi",
+                    plantKilled: "RIP, kasvi!"
                 },
                 editCareHistory: {
                     title: "Muokkaa hoitohistoriaa",
@@ -281,7 +302,7 @@ const resources = {
                     registerHeader: "Registrera dig på PlantLife!"
                 },
                 home: {
-                    noWateringHistory: "Ingen vattningshistorik",
+                    noWateringHistory: "inga vattningar",
                 },
                 addPlant: {
                     title: "Lägg till växtinformation",
@@ -336,6 +357,11 @@ const resources = {
                     errorDeleting: "Fel vid borttagning av växt",
                     confirmDeleteTitle: "Ta bort växt",
                     confirmDeleteMessage: "Är du säker på att du vill ta bort denna växt? Denna åtgärd kan inte ångras.",
+                    killedPlant: "Växten dog",
+                    confirmGraveyardTitle: "Flytta till kyrkogården",
+                    confirmGraveyard: "Denna åtgärd markerar din växt som död och flyttar den till kyrkogården, som du kan komma åt från alternativmenyn. Denna åtgärd kan inte ångras.",
+                    errorKilling: "Fel vid markering av växt som död",
+                    plantKilled: "RIP, växt!"
                 },
                 editCareHistory: {
                     title: "Redigera vårdhistorik",

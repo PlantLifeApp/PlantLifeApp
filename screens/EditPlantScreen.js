@@ -7,8 +7,9 @@ import { usePlants } from "../context/plantsContext"
 import { useTheme } from "react-native-paper"
 import { useNavigation } from "@react-navigation/native"
 import Toast from "react-native-toast-message"
-import { deletePlant, updatePlant } from "../services/plantService"
+import { deletePlant, fetchPlantData, updatePlant } from "../services/plantService"
 import DeletePlantModal from "../components/editPlant/DeletePlantModal"
+import PlantKilledModal from "../components/editPlant/PlantKilledModal"
 import EditPlantDetails from "../components/editPlant/EditPlantDetails"
 
 export default function EditPlantScreen({ route }) {
@@ -27,6 +28,7 @@ export default function EditPlantScreen({ route }) {
     const [plantData, setPlantData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+    const [graveyardModalVisible, setGraveyardModalVisible] = useState(false)
 
     const [editedPlant, setEditedPlant] = useState({
         givenName: plant.givenName,
@@ -93,7 +95,14 @@ export default function EditPlantScreen({ route }) {
                 </Button>
             </View>
 
-            <View style={styles.singleButtonRow}>
+            <View style={styles.doubleButtonRow}>
+                <Button 
+                    style={styles.button} 
+                    mode="contained" 
+                    onPress={() => setGraveyardModalVisible(true)}
+                >
+                    {t("screens.editPlant.killedPlant")}
+                </Button>
                 <Button
                     style={styles.button}
                     mode="contained"
@@ -124,6 +133,33 @@ export default function EditPlantScreen({ route }) {
                     }
                 }}
             />
+            <PlantKilledModal
+                visible={graveyardModalVisible}
+                onCancel={() => setGraveyardModalVisible(false)}
+                onConfirm={async() => {
+                    try {
+
+                        await updatePlant(user.uid, plantId, { isDead: true })
+                        await fetchPlantData(user.uid, plantId)
+                        await refreshPlantInList(plantId)
+                        navigation.navigate("HomeScreen")
+                        setGraveyardModalVisible(false)
+
+                        Toast.show({
+                            type: "success",
+                            text1: t("screens.editPlant.plantKilled"),
+                            position: "bottom",
+                        })
+
+                    } catch (error) {
+                        console.error("Error killing plant:", error)
+                        Toast.show({
+                            type: "error",
+                            text1: t("screens.editPlant.errorKilling"),
+                            position: "bottom",
+                        })
+                    }
+                }} />
 
         </ScrollView>
     </View>
@@ -158,6 +194,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginBottom: 8,
         marginTop: 16,
+    },
+    doubleButtonRow: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 8,
+        marginTop: 8,
     },
     button: {
         flex: 1,

@@ -106,7 +106,13 @@ export const PlantsProvider = ({ children }) => {
     }
 
     return (
-        <PlantsContext.Provider value={{ plants, loadPlantDetails, refreshPlantInList }}>
+        <PlantsContext.Provider value={{ 
+            plants, 
+            loadPlantDetails, 
+            refreshPlantInList,
+            alivePlants: plants.filter(p => !p.isDead), // general falsy check
+            deadPlants: plants.filter(p => p.isDead),   // only isDead=true
+        }}>
             {children}
         </PlantsContext.Provider>
     )
