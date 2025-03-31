@@ -31,9 +31,11 @@ const resources = {
                     title: "Enter plant details",
                     nickname: "Plant Nickname",
                     scientificName: "Scientific Name",
+                    type: "Type",
                     selectType: "Select Type",
                     addButton: "Add Plant",
-                    cancelButton: "Cancel"
+                    cancelButton: "Cancel",
+                    inputRequired: "Plant nickname and type are required"
                 },
                 plant: {
                     title: "Plant Info",
@@ -161,9 +163,11 @@ const resources = {
                     title: "Lisää kasvin tiedot",
                     nickname: "Kasvin lempinimi",
                     scientificName: "Tieteellinen nimi",
+                    type: "Tyyppi",
                     selectType: "Valitse tyyppi",
                     addButton: "Lisää kasvi",
-                    cancelButton: "Peruuta"
+                    cancelButton: "Peruuta",
+                    inputRequired: "Kasvin lempinimi ja tyyppi vaaditaan",
                 },
                 plant: {
                     title: "Kasvin tiedot",
@@ -293,9 +297,11 @@ const resources = {
                     title: "Lägg till växtinformation",
                     nickname: "Växtens smeknamn",
                     scientificName: "Vetenskapligt namn",
+                    type: "Typ",
                     selectType: "Välj typ",
                     addButton: "Lägg till växt",
                     cancelButton: "Avbryt",
+                    inputRequired: "Växtens smeknamn och typ är obligatoriska",
                 },
                 plant: {
                     title: "Växtinfo",

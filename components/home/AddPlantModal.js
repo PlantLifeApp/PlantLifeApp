@@ -6,14 +6,15 @@ import { Dropdown } from 'react-native-paper-dropdown';
 import { useTranslation } from 'react-i18next';
 import * as ImagePicker from 'expo-image-picker'
 import { useImages } from '../../context/imageContext';
+import Toast from 'react-native-toast-message';
 
 export default function AddPlantModal({ user, visible, onClose }) {
     const [plantType, setPlantType] = useState("");
     const [plantNickname, setPlantNickname] = useState("");
     const [scientificName, setScientificName] = useState("");
     const [plantImageUri, setPlantImageUri] = useState(null);
-    const [errorMessage, setErrorMessage] = useState("")
-    const [showSnackbar, setShowSnackbar] = useState(null)
+    const [plantNicknameError, setPlantNicknameError] = useState(false)
+    const [plantTypeError, setPlantTypeError] = useState(false)
 
     const { t } = useTranslation()
     const { addImage } = useImages()
@@ -35,12 +36,28 @@ export default function AddPlantModal({ user, visible, onClose }) {
     }
 
     const handleAddPlant = async () => {
+
+        if (!plantNickname) {
+            setPlantNicknameError(true);
+        } else {
+            setPlantNicknameError(false);
+        }
+
+        if (!plantType) {
+            setPlantTypeError(true);
+        } else {
+            setPlantTypeError(false);
+        }
         if (!plantNickname || !plantType) {
-            setErrorMessage("Nickname and Plant Type are required!");
-            setShowSnackbar(true);
+            Toast.show({
+                type: "error",
+                text1: t("screens.addPlant.inputRequired"),
+                position: "bottom",
+                visibilityTime: 2000,
+            })
             return;
         }
-        
+
         const newPlantId = await addPlant(plantNickname, scientificName, plantType, user.uid);
 
         if (newPlantId && plantImageUri) {
@@ -94,8 +111,12 @@ export default function AddPlantModal({ user, visible, onClose }) {
                     </TouchableOpacity>
 
                     <View style={styles.inputContainer}>
-                        <Text variant="bodyMedium">{t("screens.addPlant.nickname")}</Text>
-                        <TextInput style={styles.textInput} onChangeText={(text) => setPlantNickname(text)}></TextInput>
+                        <Text variant="bodyMedium">{t("screens.addPlant.nickname")}*</Text>
+                        <TextInput style={[styles.textInput, plantNicknameError && styles.errorInput]} onChangeText={(text) => {
+                            setPlantNickname(text)
+                            setPlantNicknameError(false)
+                        }}>
+                        </TextInput>
                     </View>
 
                     <View style={styles.inputContainer}>
@@ -103,12 +124,16 @@ export default function AddPlantModal({ user, visible, onClose }) {
                         <TextInput style={styles.textInput} onChangeText={(text) => setScientificName(text)}></TextInput>
                     </View>
 
-                    <View style={styles.inputContainer}>
+                    <View style={[styles.inputContainer, plantTypeError && styles.errorInput]}>
+                    <Text variant="bodyMedium">{t("screens.addPlant.type")}*</Text>
                         <Dropdown
                             placeholder={t("screens.addPlant.selectType")}
                             options={TYPES}
                             value={plantType}
-                            onSelect={setPlantType}
+                            onSelect={(value) => {
+                                setPlantType(value)
+                                setPlantTypeError(false)
+                            }}
                             style={styles.dropdown}
                         />
                     </View>
@@ -116,20 +141,6 @@ export default function AddPlantModal({ user, visible, onClose }) {
                     <Button style={styles.button} mode="contained" onPress={handleAddPlant} >{t("screens.addPlant.addButton")}</Button>
                     <Button style={styles.button} mode="contained" onPress={onCloseFunction} >{t("screens.addPlant.cancelButton")}</Button>
 
-                    <Snackbar
-                        visible={showSnackbar}
-                        onDismiss={() => setShowSnackbar(false)}
-                        action={{
-                            label: "OK",
-                            onPress: () => setShowSnackbar(false),
-                        }}
-                        style={{
-                            backgroundColor: "#ff6b6b",
-                            borderRadius: 10,
-                            margin: 10,
-                        }}>
-                        {errorMessage}
-                    </Snackbar>
                 </Surface>
             </Modal>
         </Portal>
@@ -194,4 +205,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: "gray",
     },
+    errorInput: {
+        borderColor: 'red',
+        borderWidth: 1,
+    }
 })
