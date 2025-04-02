@@ -132,7 +132,8 @@ const resources = {
                 delete: "Delete",
                 sort: "Sort By",
                 alphabetical: "By Name",
-                latestCare: "Latest Care"
+                latestCare: "Latest Care",
+                all: "All",
             }
         }
     },
@@ -171,10 +172,10 @@ const resources = {
                 },
                 plant: {
                     title: "Kasvin tiedot",
-                    succulent: "mehikasvi",
-                    cactus: "kaktus",
-                    general: "yleinen",
-                    utilitarian: "hyötykasvi",
+                    succulent: "Mehikasvi",
+                    cactus: "Kaktus",
+                    general: "Yleinen",
+                    utilitarian: "Hyötykasvi",
                     watering: "kastelu",
                     fertilization: "lannoitus",
                     pruning: "leikkaus",
@@ -267,6 +268,7 @@ const resources = {
                 sort: "Järjestä",
                 alphabetical: "Nimi",
                 latestCare: "Viimeisin toimenpide",
+                all: "Kaikki"
             }
         }
     },
@@ -397,7 +399,8 @@ const resources = {
                 delete: "Ta bort",
                 sort: "Ordna",
                 alphabetical: "På Namn",
-                latestCare: "Sista action"
+                latestCare: "Sista action",
+                all: "Alla",
             }
         }
     }

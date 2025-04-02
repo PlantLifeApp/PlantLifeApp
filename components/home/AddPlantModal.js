@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
-import { Button, Modal, Surface, Text, TextInput, Portal, Icon, Snackbar } from 'react-native-paper'
+import { Button, Modal, Surface, Text, TextInput, Portal, Icon } from 'react-native-paper'
 import { addPlant, uploadPlantImage } from '../../services/plantService';
 import { Dropdown } from 'react-native-paper-dropdown';
 import { useTranslation } from 'react-i18next';
@@ -33,6 +33,8 @@ export default function AddPlantModal({ user, visible, onClose }) {
         setPlantNickname("");
         setScientificName("");
         setPlantImageUri(null)
+        setPlantNicknameError(false)
+        setPlantTypeError(false)
     }
 
     const handleAddPlant = async () => {
@@ -53,7 +55,7 @@ export default function AddPlantModal({ user, visible, onClose }) {
                 type: "error",
                 text1: t("screens.addPlant.inputRequired"),
                 position: "bottom",
-                visibilityTime: 2000,
+                visibilityTime: 3000,
             })
             return;
         }

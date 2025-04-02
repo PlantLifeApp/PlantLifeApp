@@ -23,11 +23,13 @@ const HomeScreen = () => {
     const [isTwoColumns, setIsTwoColumns] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [sortOption, setSortOption] = useState("alphabetical");
+    const [selectedType, setSelectedType] = useState("all")
 
     const filteredPlants = useMemo(() => {
         return plants
             .filter((item) =>
-                item.givenName.toLowerCase().includes(searchQuery.toLowerCase())
+                item.givenName.toLowerCase().includes(searchQuery.toLowerCase()) &&
+                (selectedType === "all" || item.plantType === selectedType)
             )
             .sort((a, b) => {
                 if (sortOption === "alphabetical") {
@@ -44,7 +46,7 @@ const HomeScreen = () => {
                 }
                 return 0;
             });
-    }, [plants, searchQuery, sortOption]);
+    }, [plants, searchQuery, selectedType,  sortOption]);
 
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -54,6 +56,8 @@ const HomeScreen = () => {
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
                 setSortOption={setSortOption}
+                selectedType={selectedType}
+                setSelectedType={setSelectedType}
             />
 
             <FlatList

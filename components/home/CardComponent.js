@@ -43,7 +43,7 @@ const CardComponent = ({ item, isTwoColumns }) => {
                 </View>
             ) : (
                 <View style={styles.containerRow}>
-                    <Image style={styles.imageRow} source={{ uri: plantImageUrl }} />
+                    <Image style={styles.imageRow} source={plantImageUrl} />
                     <Card.Content style={styles.contentRow}>
                         <Text style={{ alignSelf: "left", fontWeight: 'bold' }} variant="titleLarge" numberOfLines={2} ellipsizeMode="tail">{item.givenName}</Text>
                         <Text variant="bodyMedium" numberOfLines={2} ellipsizeMode="tail">{item.scientificName}</Text>
