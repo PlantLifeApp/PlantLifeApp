@@ -109,8 +109,7 @@ const PlantScreen = ({ route }) => {
                             saving={saving} />
                         <PlantDetails
                             plant={plant.plant}
-                            careHistory={plant.careHistory}
-                        />
+                            careHistory={plant.careHistory} />
                         <CarePredictions 
                             nextWatering={plant.nextWatering} 
                             nextFertilizing={plant.nextFertilizing} />

@@ -13,6 +13,13 @@ export default function GraveyardScreen() {
 
     //console.log("Graveyard Screen deadPlants:", deadPlants)
 
+    // sort dead plants by killedAt (most recent first)
+    const sortedDeadPlants = [...deadPlants].sort((a, b) => {
+        const aDate = a.killedAt?.toDate?.() ?? new Date(0)
+        const bDate = b.killedAt?.toDate?.() ?? new Date(0)
+        return bDate - aDate // descending order
+    })
+
     return (
         <View style={styles.container}>
             {deadPlants.length === 0 ? (
@@ -28,7 +35,7 @@ export default function GraveyardScreen() {
                 </>
             ) : (
                 <FlatList
-                    data={deadPlants}
+                    data={sortedDeadPlants}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <TouchableOpacity onPress={() => navigation.navigate("DeadPlantScreen", { plant: item })}>

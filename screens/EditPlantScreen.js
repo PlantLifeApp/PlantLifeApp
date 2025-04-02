@@ -137,10 +137,13 @@ export default function EditPlantScreen({ route }) {
             <PlantKilledModal
                 visible={graveyardModalVisible}
                 onCancel={() => setGraveyardModalVisible(false)}
-                onConfirm={async() => {
+                onConfirm={async(causeOfDeath) => {
                     try {
 
-                        await updatePlant(user.uid, plantId, { isDead: true, killedAt: Timestamp.now() })
+                        await updatePlant(user.uid, plantId, { 
+                            isDead: true, 
+                            killedAt: Timestamp.now(),
+                            causeOfDeath: causeOfDeath,})
                         await loadPlantDetails(plantId, true)
                         // await fetchPlantData(user.uid, plantId)
                         await refreshPlantInList(plantId)

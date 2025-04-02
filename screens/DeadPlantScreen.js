@@ -48,12 +48,16 @@ export default function DeadPlantScreen({ route }) {
     const groupedCareHistory = Object.values(groupedByDate).sort((a, b) => b.date - a.date)
 
     const killedAt = plant.killedAt?.toDate?.() ?? null
+    const causeOfDeathKey = plant.causeOfDeath ?? "unknown"
+    
+    console.log("Cause of Death in DeadPlantScreen:", causeOfDeathKey)
+    console.log("Killed At in DeadPlantScreen:", killedAt)
 
     return (
         <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>
             <ScrollView contentContainerStyle={styles.container}>
 
-                <Surface style={styles.surface}>
+                <Surface style={[styles.surface, { marginTop: 16 }]}>
                     <Text variant="headlineMedium">{plant.givenName}</Text>
                     <ItalicText variant="bodyLarge">{plant.scientificName}</ItalicText>
                 </Surface>
@@ -65,15 +69,15 @@ export default function DeadPlantScreen({ route }) {
                             source={{ uri: plant.coverImageUrl }}
                         />
                         <Text variant="bodyMedium" style={styles.killedText}>
-                            ☠️ {t("screens.graveyard.killedOn")}:{" "}
-                            {killedAt ? formatDate(killedAt) : t("screens.graveyard.unknownDeath")}
+                            {t("screens.graveyard.killedOn")}: {killedAt ? formatDate(killedAt) : t("screens.graveyard.unknownDeath")}{"\n"}
+                            {t("screens.graveyard.causeOfDeath")}: {t(`screens.graveyard.causesOfDeath.${causeOfDeathKey}`)}
                         </Text>
                     </Surface>
                 ) : (
                     <Surface style={styles.surface}>
                         <Text variant="bodyMedium" style={styles.killedText}>
-                            ☠️ {t("screens.graveyard.killedOn")}:{" "}
-                            {killedAt ? formatDate(killedAt) : t("screens.graveyard.unknownDeath")}
+                            {t("screens.graveyard.killedOn")}: {killedAt ? formatDate(killedAt) : t("screens.graveyard.unknownDeath")}{"\n"}
+                            {t("screens.graveyard.causeOfDeath")}: {t(`screens.graveyard.causesOfDeath.${causeOfDeathKey}`)}
                         </Text>
                     </Surface>
                 )}
@@ -101,7 +105,7 @@ const styles = StyleSheet.create({
         padding: 16,
         width: "100%",
         alignItems: "center",
-        marginTop: 16,
+        //marginTop: 16,
         marginBottom: 16,
         borderRadius: 8,
     },
@@ -110,5 +114,9 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         borderRadius: 8,
         marginBottom: 16,
+    },
+    killedText: {
+        textAlign: "center",
+        //marginTop: 8,
     },
 })
