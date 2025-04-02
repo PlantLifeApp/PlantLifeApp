@@ -43,10 +43,19 @@ const HomeScreen = () => {
                     if (!dateB) return -1;
 
                     return dateB - dateA;
+                } else if (sortOption === "nextWatering") {
+                    const dateA = a.nextWatering ? a.nextWatering : null
+                    const dateB = b.nextWatering ? b.nextWatering : null
+
+                    if (!dateA && !dateB) return 0;
+                    if (!dateA) return 1;
+                    if (!dateB) return -1;
+
+                    return dateA - dateB
                 }
                 return 0;
             });
-    }, [plants, searchQuery, selectedType,  sortOption]);
+    }, [plants, searchQuery, selectedType, sortOption]);
 
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>

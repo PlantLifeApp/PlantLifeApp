@@ -3,6 +3,7 @@ import { onSnapshot, collection, getDocs, getDoc, doc } from "firebase/firestore
 import { AuthContext } from "./authContext"
 import { fetchPlantData } from "../services/plantService"
 import { db } from "../services/firebaseConfig"
+import { calculateNextFertilizing, calculateNextWatering } from "../utils/dateUtils"
 
 const PlantsContext = createContext()
 
@@ -10,10 +11,8 @@ export const PlantsProvider = ({ children }) => {
     const { user } = useContext(AuthContext)
 
     const [plants, setPlants] = useState([])
-    const [plantDetails, setPlantDetails] = useState({}) 
+    const [plantDetails, setPlantDetails] = useState({})
 
-
-    // this full fetch is only done automatically once on app start (or user login)
     useEffect(() => {
         if (!user?.uid) return
 
@@ -22,8 +21,6 @@ export const PlantsProvider = ({ children }) => {
         const unsubscribe = onSnapshot(plantsRef, async (querySnapshot) => {
             try {
                 const plantDocs = querySnapshot.docs
-
-                // Fetch careHistory for all plants in parallel
 
                 const plantPromises = plantDocs.map(async (doc) => {
                     const baseData = { ...doc.data(), id: doc.id }
@@ -36,13 +33,38 @@ export const PlantsProvider = ({ children }) => {
                         ...careDoc.data(),
                     }))
 
+                    // convert to js dates + sort care entries to remove any that have invalid/null date
+                    const careEntries = careHistory.map(entry => ({
+                        ...entry,
+                        date: entry.date?.toDate?.() ?? null,
+                    })).filter(e => e.date)
+
+                    careEntries.sort((a, b) => b.date - a.date)
+                    // group by date bc that's what the util function expects
+                    const groupedHistory = {}
+                    careEntries.forEach(entry => {
+                        const dateKey = entry.date.toISOString().split("T")[0]
+                        if (!groupedHistory[dateKey]) {
+                            groupedHistory[dateKey] = { date: entry.date, events: [] }
+                        }
+                        groupedHistory[dateKey].events.push(entry.type)
+                    })
+
+                    const sortedGroupedHistory = Object.values(groupedHistory)
+
+                    // calculate predictions
+                    const nextWatering = calculateNextWatering(sortedGroupedHistory)
+                    const nextFertilizing = calculateNextFertilizing(sortedGroupedHistory)
+
                     return {
                         ...baseData,
                         careHistory,
+                        nextWatering,
+                        nextFertilizing,
                     }
                 })
 
-                const plantsWithCareHistory = await Promise.all(plantPromises) // wait for all promises to resolve
+                const plantsWithCareHistory = await Promise.all(plantPromises)
                 setPlants(plantsWithCareHistory)
 
             } catch (error) {
@@ -51,7 +73,6 @@ export const PlantsProvider = ({ children }) => {
         })
 
         return () => unsubscribe()
-
     }, [user?.uid])
 
     // fetch full detail for a single plant, including grouped history + predictions
@@ -84,19 +105,19 @@ export const PlantsProvider = ({ children }) => {
         try {
             const plantDocRef = doc(db, "users", user.uid, "plants", plantId);
             const plantSnap = await getDoc(plantDocRef);
-    
+
             const baseData = { ...plantSnap.data(), id: plantSnap.id }
-    
+
             const careHistoryRef = collection(db, "users", user.uid, "plants", plantId, "careHistory")
             const careHistorySnap = await getDocs(careHistoryRef)
-    
+
             const careHistory = careHistorySnap.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data(),
             }))
-    
+
             const updatedPlant = { ...baseData, careHistory }
-    
+
             setPlants(prev =>
                 prev.map(p => p.id === plantId ? updatedPlant : p)
             )
@@ -106,9 +127,9 @@ export const PlantsProvider = ({ children }) => {
     }
 
     return (
-        <PlantsContext.Provider value={{ 
-            plants, 
-            loadPlantDetails, 
+        <PlantsContext.Provider value={{
+            plants,
+            loadPlantDetails,
             refreshPlantInList,
             alivePlants: plants.filter(p => !p.isDead), // general falsy check
             deadPlants: plants.filter(p => p.isDead),   // only isDead=true

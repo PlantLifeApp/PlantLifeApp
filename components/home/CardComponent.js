@@ -35,9 +35,13 @@ const CardComponent = ({ item, isTwoColumns }) => {
                         <Text style={{ alignSelf: "center" }} variant="bodySmall" numberOfLines={1} ellipsizeMode="tail">{item.scientificName}</Text>
                         <View style={{ flexDirection: "row", alignItems: "center", alignSelf: 'center' }}>
                             <Text style={{ alignSelf: "center" }} variant="bodySmall">
-                                {item.careHistory.length == 0 ? t("screens.home.noWateringHistory") : formatDate(searchMostRecentWatering(item.careHistory))}
+                                {item.careHistory.length == 0 ? t("screens.home.lastWatered") + " " + t("screens.home.noWateringHistory") : t("screens.home.lastWatered") + " " + formatDate(searchMostRecentWatering(item.careHistory))}
                             </Text>
-                            <Icon source="water" size={15} color="blue" />
+                        </View>
+                        <View style={{ flexDirection: "row", alignItems: "center", alignSelf: 'center' }}>
+                            <Text style={{ alignSelf: "center" }} variant="bodySmall">
+                                {item.nextWatering ? t("screens.home.nextWatering") + " " + formatDate(item.nextWatering) : t("screens.home.nextWatering") + " " + "--"}
+                            </Text>
                         </View>
                     </Card.Content>
                 </View>
@@ -49,9 +53,15 @@ const CardComponent = ({ item, isTwoColumns }) => {
                         <Text variant="bodyMedium" numberOfLines={2} ellipsizeMode="tail">{item.scientificName}</Text>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
                             <Text variant="bodySmall">
-                                {item.careHistory.length == 0 ? t("screens.home.noWateringHistory") : formatDate(searchMostRecentWatering(item.careHistory))}
+                                {item.careHistory.length == 0 ? tt("screens.home.lastWatered") + " " + t("screens.home.noWateringHistory") : t("screens.home.lastWatered") + " " + formatDate(searchMostRecentWatering(item.careHistory))}
                             </Text>
-                            <Icon source="water" size={15} color="blue" />
+                            <Icon source="water" size={15} color="grey" />
+                        </View>
+                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                            <Text style={{ alignSelf: "center" }} variant="bodySmall">
+                                {item.nextWatering ? t("screens.home.nextWatering") + " " + formatDate(item.nextWatering) : t("screens.home.nextWatering") + " " + "--"}
+                            </Text>
+                            <Icon source="water" size={15} color="grey" />
                         </View>
                     </Card.Content>
                 </View>

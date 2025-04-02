@@ -60,6 +60,7 @@ export default function ActionBar({ isTwoColumns, setIsTwoColumns, searchQuery, 
                     >
                         <Menu.Item onPress={() => { setSortOption("alphabetical"), setMenuVisible(false) }} title={t("common.alphabetical")} />
                         <Menu.Item onPress={() => { setSortOption("latestCare"), setMenuVisible(false) }} title={t("common.latestCare")} />
+                        <Menu.Item onPress={() => { setSortOption("nextWatering"), setMenuVisible(false) }} title={t("common.nextWatering")} />
                     </Menu>
 
                     <Dropdown

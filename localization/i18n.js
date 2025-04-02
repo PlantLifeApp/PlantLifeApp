@@ -26,6 +26,8 @@ const resources = {
                 },
                 home: {
                     noWateringHistory: "Not watered yet",
+                    lastWatered: "Last watered",
+                    nextWatering: "Next watering",
                 },
                 addPlant: {
                     title: "Enter plant details",
@@ -149,6 +151,7 @@ const resources = {
                 sort: "Sort By",
                 alphabetical: "By Name",
                 latestCare: "Latest Care",
+                nextWatering: "Next Estimated Watering",
                 all: "All",
             }
         }
@@ -175,6 +178,9 @@ const resources = {
                 },
                 home: {
                     noWateringHistory: "ei vielä kasteltu",
+                    lastWatered: "Viimeksi kasteltu",
+                    nextWatering: "Seuraava kastelu",
+
                 },
                 addPlant: {
                     title: "Lisää kasvin tiedot",
@@ -289,6 +295,7 @@ const resources = {
                 sort: "Järjestä",
                 alphabetical: "Nimi",
                 latestCare: "Viimeisin toimenpide",
+                nextWatering: "Seuraava arvioitu kastelu",
                 all: "Kaikki"
             }
         }
@@ -315,6 +322,9 @@ const resources = {
                 },
                 home: {
                     noWateringHistory: "inga vattningar",
+                    lastWatered: "Senast vattnad",
+                    nextWatering: "Nästa vattarnööraring", //<- Translate
+
                 },
                 addPlant: {
                     title: "Lägg till växtinformation",
@@ -425,7 +435,8 @@ const resources = {
                 delete: "Ta bort",
                 sort: "Ordna",
                 alphabetical: "På Namn",
-                latestCare: "Sista action",
+                latestCare: "Sista action",     // <- check
+                nextWatering: "Nästa vattening", // <-Check
                 all: "Alla",
             }
         }
