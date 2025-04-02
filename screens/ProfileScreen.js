@@ -8,14 +8,19 @@ import { useTranslation } from "react-i18next"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Dropdown } from "react-native-paper-dropdown"
 import LANGUAGES from "../localization/languages"
+import { useNavigation } from "@react-navigation/native"
+import DeleteAccountModal from "../components/profile/deleteAccountModal"
 
 export default function ProfileScreen() {
     const { user } = useContext(AuthContext)
     const { t, i18n } = useTranslation()
     const [language, setLanguage] = useState(i18n.language)
     const auth = getAuth()
+    const navigation = useNavigation()
 
     const { useSystemTheme, setUseSystemTheme, isDarkMode, setIsDarkMode } = useContext(ThemeContext)
+
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false)
 
     const changeLanguage = async (lng) => {
         i18n.changeLanguage(lng)
@@ -29,6 +34,12 @@ export default function ProfileScreen() {
             <View style={styles.topContent}>
                 <Text variant="bodyMedium">{t("screens.options.signedInAs")}:</Text>
                 <Text variant="bodyLarge" style={styles.sectionEnd}>{user?.email}</Text>
+
+                <Button style={styles.singleButtonRow} mode="contained" onPress={() => 
+                    navigation.navigate("Home", {
+                        screen: "GraveyardScreen",
+                    })}>{t("screens.options.visitGraveyard")}
+                </Button>
 
                 <Text variant="bodyMedium">{t("screens.options.themeHeader")}</Text>
                 <SegmentedButtons
@@ -61,14 +72,38 @@ export default function ProfileScreen() {
             </View>
 
             <View style={styles.bottomContent}>
-                <Button style={styles.mainButton} mode="contained" onPress={() => signOut(auth)}>
-                    {t("screens.options.logoutButton")}
-                </Button>
+                <View style={styles.doubleButtonRow}>
+                    <Button style={styles.mainButton} mode="contained" onPress={() => signOut(auth)}>
+                        {t("screens.options.logoutButton")}
+                    </Button>
 
-                <Button style={styles.mainButton} mode="contained">
-                    {t("screens.options.deleteAccountButton")}
-                </Button>
+                    <Button style={styles.mainButton} mode="contained" onPress={ () => setDeleteModalVisible(true)}>
+                        {t("screens.options.deleteAccountButton")}
+                    </Button>
+                </View>
             </View>
+
+            <DeleteAccountModal
+                visible={deleteModalVisible}
+                onCancel={() => setDeleteModalVisible(false)}
+                onConfirm={async () => {
+                    try {
+                        
+                        setDeleteModalVisible(false)
+                        console.log("Pressed Delete Account")
+                        navigation.navigate("Home")
+
+                    } catch (error) {
+                        console.error("Error deleting account:", error)
+                        Toast.show({
+                            type: "error",
+                            text1: t("screens.options.errorDeleting"),
+                            position: "bottom",
+                        })
+                    }
+                }}
+            />
+
         </Surface>
     )
 }
@@ -78,6 +113,7 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         height: "100%",
+        justifyContent: "space-between",
     },
 
     topContent: {
@@ -92,8 +128,12 @@ const styles = StyleSheet.create({
     },
 
     mainButton: {
+        flex: 1,
         alignSelf: "stretch",
-        margin: 10
+        marginBottom: 12,
+        marginTop: 12,
+        marginLeft: 4,
+        marginRight: 4,
     },
 
     sectionEnd: {
@@ -115,6 +155,17 @@ const styles = StyleSheet.create({
     dropdown: {
         paddingHorizontal: 10,
         height: 40,
+    },
+    doubleButtonRow: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    singleButtonRow: {
+        width: '100%',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginBottom: 8,
     },
 
 })

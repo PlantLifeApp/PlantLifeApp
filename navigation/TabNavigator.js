@@ -13,6 +13,7 @@ import GalleryScreen from "../screens/GalleryScreen"
 import { ImagesProvider } from "../context/imageContext"
 import EditPlantScreen from "../screens/EditPlantScreen"
 import EditCareHistory from "../screens/EditCareHistoryScreen"
+import GraveyardScreen from "../screens/GraveyardScreen"
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator()
@@ -34,6 +35,7 @@ const HomeStackNavigator = () => {
             <Stack.Screen name="PlantScreen" component={PlantScreen} options={{ title: t("screens.plant.title") }} />
             <Stack.Screen name="EditPlant" component={EditPlantScreen} options={{ title: t("screens.editPlant.title") }} />
             <Stack.Screen name="EditCareHistory" component={EditCareHistory} options={{ title: t("screens.editCareHistory.title") }} />
+            <Stack.Screen name="GraveyardScreen" component={GraveyardScreen} options={{ title: t("screens.graveyard.title") }} />
         </Stack.Navigator>
     );
 };
