@@ -13,7 +13,7 @@ export default function EditCareHistory({ route }) {
     const { plant } = route.params
     const plantId = plant.id
     const { user } = useContext(AuthContext)
-    const { loadPlantDetails, refreshPlantInList } = usePlants()
+    const { updatePlantData } = usePlants()
     const { t } = useTranslation()
 
     const [careHistory, setCareHistory] = useState([])
@@ -21,7 +21,6 @@ export default function EditCareHistory({ route }) {
     const [deleteModalVisible, setDeleteModalVisible] = useState(false)
     const [selectedCareId, setSelectedCareId] = useState(null)
 
-    // full load of plant data with care history happens only once
     useEffect(() => {
         if (user?.uid) {
             loadHistory()
@@ -31,7 +30,7 @@ export default function EditCareHistory({ route }) {
     const loadHistory = async () => {
         try {
             setLoading(true)
-            const data = await loadPlantDetails(plantId, true)
+            const data = await updatePlantData(plantId, true)
             if (!data || !data.ungroupedHistory) {
                 console.log("No careHistory found for plant:", plantId)
                 setCareHistory([])
@@ -61,8 +60,9 @@ export default function EditCareHistory({ route }) {
             await deleteCareEvent(user.uid, plantId, selectedCareId)
             setDeleteModalVisible(false)
 
-            setCareHistory(prev => prev.filter(entry => entry.id !== selectedCareId))
-            await refreshPlantInList(plantId)
+            // Update context and local state
+            const updated = await updatePlantData(plantId, true)
+            setCareHistory(updated?.ungroupedHistory ?? [])
 
             Toast.show({
                 type: "success",
@@ -82,13 +82,10 @@ export default function EditCareHistory({ route }) {
     const handleEditDate = async (careId, newDate) => {
         try {
             await updateCareEventDate(user.uid, plantId, careId, newDate)
-    
-            // Use the fresh ungrouped history from Firestore
-            const updated = await loadPlantDetails(plantId, true)
+
+            const updated = await updatePlantData(plantId, true)
             setCareHistory(updated?.ungroupedHistory ?? [])
 
-            await refreshPlantInList(plantId)
-    
             Toast.show({
                 type: "success",
                 text1: t("screens.editCareHistory.successEditing"),

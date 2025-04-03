@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react"
-import { View, ScrollView, StyleSheet, Alert } from "react-native"
+import { View, ScrollView, StyleSheet } from "react-native"
 import { Text, ActivityIndicator, Surface, Button } from "react-native-paper"
 import { AuthContext } from "../context/authContext"
 import { useTranslation } from "react-i18next"
@@ -7,16 +7,13 @@ import { usePlants } from "../context/plantsContext"
 import { useTheme } from "react-native-paper"
 import { useNavigation } from "@react-navigation/native"
 import Toast from "react-native-toast-message"
-import { deletePlant, fetchPlantData, updatePlant } from "../services/plantService"
+import { deletePlant, updatePlant } from "../services/plantService"
 import DeletePlantModal from "../components/editPlant/DeletePlantModal"
 import PlantKilledModal from "../components/editPlant/PlantKilledModal"
 import EditPlantDetails from "../components/editPlant/EditPlantDetails"
 import { Timestamp } from "firebase/firestore"
 
 export default function EditPlantScreen({ route }) {
-
-    //console.log(route)
-    
     const { t } = useTranslation()
     const theme = useTheme()
     const navigation = useNavigation()
@@ -24,7 +21,7 @@ export default function EditPlantScreen({ route }) {
     const { user } = useContext(AuthContext)
     const { plant } = route.params
     const plantId = plant.id
-    const { loadPlantDetails, refreshPlantInList } = usePlants()
+    const { updatePlantData } = usePlants()
 
     const [plantData, setPlantData] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -37,36 +34,25 @@ export default function EditPlantScreen({ route }) {
         plantType: plant.plantType,
     })
 
-    // full load of plant data with care history happens only once
     useEffect(() => {
         if (user?.uid) {
             loadData()
         }
     }, [plantId, user])
 
-    const loadData = async() => {
+    const loadData = async () => {
         setLoading(true)
-        const data = await loadPlantDetails(plantId)
+        const data = await updatePlantData(plantId, false) // cached load
         setPlantData(data)
         setLoading(false)
     }
 
-    if (loading) {
-        return (
-            <View style={styles.centered}>
-                <ActivityIndicator animating={true} size="large" />
-            </View>
-        )
-    }
-
     const handleSave = async () => {
         try {
-
-            await updatePlant(user.uid, plantId, editedPlant) // update plant data
-            await refreshPlantInList(plantId) // refresh the plant list on front page
-            await loadPlantDetails(plantId, true)   // reload the plant data
+            await updatePlant(user.uid, plantId, editedPlant)
+            const updated = await updatePlantData(plantId, true)
+            setPlantData(updated)
             navigation.navigate("PlantScreen", { plantId })
-
         } catch (error) {
             console.error("Error updating plant:", error)
             Toast.show({
@@ -77,98 +63,94 @@ export default function EditPlantScreen({ route }) {
         }
     }
 
-    return <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>
-        <ScrollView contentContainerStyle={styles.container}>
-            
-            <Surface style={styles.surface}>
-                <Text variant="bodyLarge">Editing {plantData.plant.givenName}</Text>
-            </Surface>
+    const handleKillPlant = async (causeOfDeath) => {
+        try {
+            await updatePlant(user.uid, plantId, {
+                isDead: true,
+                killedAt: Timestamp.now(),
+                causeOfDeath: causeOfDeath,
+            })
 
-            <EditPlantDetails plant={plantData.plant} onChange={setEditedPlant} />
+            await updatePlantData(plantId, true)
+            setGraveyardModalVisible(false)
+            navigation.navigate("HomeScreen")
 
-            <View style={styles.singleButtonRow}>
-                <Button
-                    mode="contained"
-                    style={styles.button}
-                    onPress={handleSave}
-                >
-                    {t("common.save")}
-                </Button>
+            Toast.show({
+                type: "success",
+                text1: t("screens.editPlant.plantKilled"),
+                position: "bottom",
+            })
+        } catch (error) {
+            console.error("Error killing plant:", error)
+            Toast.show({
+                type: "error",
+                text1: t("screens.editPlant.errorKilling"),
+                position: "bottom",
+            })
+        }
+    }
+
+    const handleDeletePlant = async () => {
+        try {
+            setDeleteModalVisible(false)
+            await deletePlant(user.uid, plantId)
+            await updatePlantData(plantId, true)
+            navigation.navigate("HomeScreen")
+        } catch (error) {
+            console.error("Error deleting plant:", error)
+            Toast.show({
+                type: "error",
+                text1: t("screens.editPlant.errorDeleting"),
+                position: "bottom",
+            })
+        }
+    }
+
+    if (loading) {
+        return (
+            <View style={styles.centered}>
+                <ActivityIndicator animating={true} size="large" />
             </View>
+        )
+    }
 
-            <View style={styles.doubleButtonRow}>
-                <Button 
-                    style={styles.button} 
-                    mode="contained" 
-                    onPress={() => setGraveyardModalVisible(true)}
-                >
-                    {t("screens.editPlant.killedPlant")}
-                </Button>
-                <Button
-                    style={styles.button}
-                    mode="contained"
-                    onPress={() => setDeleteModalVisible(true)}
-                >
-                    {t("screens.editPlant.delete")}
-                </Button>
-            </View>
+    return (
+        <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>
+            <ScrollView contentContainerStyle={styles.container}>
+                <Surface style={styles.surface}>
+                    <Text variant="bodyLarge">Editing {plantData?.plant?.givenName}</Text>
+                </Surface>
 
-            <DeletePlantModal
-                visible={deleteModalVisible}
-                onCancel={() => setDeleteModalVisible(false)}
-                onConfirm={async () => {
-                    try {
+                <EditPlantDetails plant={plantData.plant} onChange={setEditedPlant} />
 
-                        setDeleteModalVisible(false)
-                        await deletePlant(user.uid, plantId)
-                        await refreshPlantInList(plantId)
-                        navigation.navigate("HomeScreen")
+                <View style={styles.singleButtonRow}>
+                    <Button mode="contained" style={styles.button} onPress={handleSave}>
+                        {t("common.save")}
+                    </Button>
+                </View>
 
-                    } catch (error) {
-                        console.error("Error deleting plant:", error)
-                        Toast.show({
-                            type: "error",
-                            text1: t("screens.editPlant.errorDeleting"),
-                            position: "bottom",
-                        })
-                    }
-                }}
-            />
-            <PlantKilledModal
-                visible={graveyardModalVisible}
-                onCancel={() => setGraveyardModalVisible(false)}
-                onConfirm={async(causeOfDeath) => {
-                    try {
+                <View style={styles.doubleButtonRow}>
+                    <Button style={styles.button} mode="contained" onPress={() => setGraveyardModalVisible(true)}>
+                        {t("screens.editPlant.killedPlant")}
+                    </Button>
+                    <Button style={styles.button} mode="contained" onPress={() => setDeleteModalVisible(true)}>
+                        {t("screens.editPlant.delete")}
+                    </Button>
+                </View>
 
-                        await updatePlant(user.uid, plantId, { 
-                            isDead: true, 
-                            killedAt: Timestamp.now(),
-                            causeOfDeath: causeOfDeath,})
-                        await loadPlantDetails(plantId, true)
-                        // await fetchPlantData(user.uid, plantId)
-                        await refreshPlantInList(plantId)
-                        navigation.navigate("HomeScreen")
-                        setGraveyardModalVisible(false)
-
-                        Toast.show({
-                            type: "success",
-                            text1: t("screens.editPlant.plantKilled"),
-                            position: "bottom",
-                        })
-
-                    } catch (error) {
-                        console.error("Error killing plant:", error)
-                        Toast.show({
-                            type: "error",
-                            text1: t("screens.editPlant.errorKilling"),
-                            position: "bottom",
-                        })
-                    }
-                }} />
-
-        </ScrollView>
-    </View>
-
+                <DeletePlantModal
+                    visible={deleteModalVisible}
+                    onCancel={() => setDeleteModalVisible(false)}
+                    onConfirm={handleDeletePlant}
+                />
+                <PlantKilledModal
+                    visible={graveyardModalVisible}
+                    onCancel={() => setGraveyardModalVisible(false)}
+                    onConfirm={handleKillPlant}
+                />
+            </ScrollView>
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({

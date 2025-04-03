@@ -26,14 +26,18 @@ const resources = {
                 },
                 home: {
                     noWateringHistory: "Not watered yet",
+                    lastWatered: "Last watered",
+                    nextWatering: "Next watering",
                 },
                 addPlant: {
                     title: "Enter plant details",
                     nickname: "Plant Nickname",
                     scientificName: "Scientific Name",
+                    type: "Type",
                     selectType: "Select Type",
                     addButton: "Add Plant",
-                    cancelButton: "Cancel"
+                    cancelButton: "Cancel",
+                    inputRequired: "Plant nickname and type are required"
                 },
                 plant: {
                     title: "Plant Info",
@@ -150,28 +154,33 @@ const resources = {
                         humidityStress: "Humidity Stress",
                         unknown: "Unknown",
                         other: "Other",
-                },
-                gallery: {
-                    listEmpty: "No Images Available",
-                },
-                fab: {
-                    camera: "Take Photo",
-                    phoneGallery: "Choose Photo",
-                    requestPermissionHeader: "Permission Needed",
-                    requestMediaPermission: "Allow Access to Photos",
-                    requestCameraPermission: "Allow Access to Camera",
-                    choosePlantName: "Choose plant",
+                    },
+                    gallery: {
+                        listEmpty: "No Images Available",
+                    },
+                    fab: {
+                        camera: "Take Photo",
+                        phoneGallery: "Choose Photo",
+                        requestPermissionHeader: "Permission Needed",
+                        requestMediaPermission: "Allow Access to Photos",
+                        requestCameraPermission: "Allow Access to Camera",
+                        choosePlantName: "Choose plant",
+                    },
                 },
             },
-        },
             common: {
                 confirm: "Confirm",
                 cancel: "Cancel",
                 save: "Save",
                 ok: "OK",
-                delete: "Delete"
-            },
-        },
+                delete: "Delete",
+                sort: "Sort By",
+                alphabetical: "By Name",
+                latestCare: "Latest Care",
+                nextWatering: "Next Estimated Watering",
+                all: "All",
+            }
+        }
     },
     fi: {
         translation: {
@@ -195,21 +204,26 @@ const resources = {
                 },
                 home: {
                     noWateringHistory: "ei vielä kasteltu",
+                    lastWatered: "Viimeksi kasteltu",
+                    nextWatering: "Seuraava kastelu",
+
                 },
                 addPlant: {
                     title: "Lisää kasvin tiedot",
                     nickname: "Kasvin lempinimi",
                     scientificName: "Tieteellinen nimi",
+                    type: "Tyyppi",
                     selectType: "Valitse tyyppi",
                     addButton: "Lisää kasvi",
-                    cancelButton: "Peruuta"
+                    cancelButton: "Peruuta",
+                    inputRequired: "Kasvin lempinimi ja tyyppi vaaditaan",
                 },
                 plant: {
                     title: "Kasvin tiedot",
-                    succulent: "mehikasvi",
-                    cactus: "kaktus",
-                    general: "yleinen",
-                    utilitarian: "hyötykasvi",
+                    succulent: "Mehikasvi",
+                    cactus: "Kaktus",
+                    general: "Yleinen",
+                    utilitarian: "Hyötykasvi",
                     watering: "kastelu",
                     fertilization: "lannoitus",
                     pruning: "leikkaus",
@@ -340,9 +354,14 @@ const resources = {
                 cancel: "Peruuta",
                 save: "Tallenna",
                 ok: "OK",
-                delete: "Poista"
-            },
-        },
+                delete: "Poista",
+                sort: "Järjestä",
+                alphabetical: "Nimi",
+                latestCare: "Viimeisin toimenpide",
+                nextWatering: "Seuraava arvioitu kastelu",
+                all: "Kaikki"
+            }
+        }
     },
     sv: {
         translation: {
@@ -366,14 +385,19 @@ const resources = {
                 },
                 home: {
                     noWateringHistory: "inga vattningar",
+                    lastWatered: "Senast vattnad",
+                    nextWatering: "Nästa vattarnööraring", //<- Translate
+
                 },
                 addPlant: {
                     title: "Lägg till växtinformation",
                     nickname: "Växtens smeknamn",
                     scientificName: "Vetenskapligt namn",
+                    type: "Typ",
                     selectType: "Välj typ",
                     addButton: "Lägg till växt",
                     cancelButton: "Avbryt",
+                    inputRequired: "Växtens smeknamn och typ är obligatoriska",
                 },
                 plant: {
                     title: "Växtinfo",
@@ -474,7 +498,7 @@ const resources = {
                     title: "Växtkyrkogården",
                     noPlants: "Inga växter på kyrkogården än",
                     empty: "Inga växter på kyrkogården...än!",
-                    plantListEmptyDescription: "När en växt dör flyttas den hit. Du kan se des historik och detaljer, men du kan inte väcka den till liv igen.", 
+                    plantListEmptyDescription: "När en växt dör flyttas den hit. Du kan se des historik och detaljer, men du kan inte väcka den till liv igen.",
                     rip: "Vila i frid",
                     killedOn: "Dödsdatum",
                     causeOfDeath: "Dödsorsak",
@@ -509,9 +533,14 @@ const resources = {
                 save: "Spara",
                 ok: "OK",
                 delete: "Ta bort",
-            },
-        },
-    },
+                sort: "Ordna",
+                alphabetical: "På Namn",
+                latestCare: "Sista action",     // <- check
+                nextWatering: "Nästa vattening", // <-Check
+                all: "Alla",
+            }
+        }
+    }
 }
 
 

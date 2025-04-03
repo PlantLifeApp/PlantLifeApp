@@ -54,14 +54,7 @@ export default function ProfileScreen() {
                 <Text variant="bodyMedium">{t("screens.options.themeHeader")}</Text>
                 <SegmentedButtons
                     value={useSystemTheme ? "system" : isDarkMode ? "dark" : "light"}
-                    onValueChange={(value) => {
-                        if (value === "system") {
-                            setUseSystemTheme(true)
-                        } else {
-                            setUseSystemTheme(false)
-                            setIsDarkMode(value === "dark")
-                        }
-                    }}
+                    onValueChange={(value) => changeTheme(value)}
                     buttons={[
                         { value: "system", label: t("screens.options.system") },
                         { value: "light", label: t("screens.options.light") },
