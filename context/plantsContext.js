@@ -3,7 +3,7 @@ import { onSnapshot, collection, getDocs, getDoc, doc } from "firebase/firestore
 import { AuthContext } from "./authContext"
 import { fetchFullPlantData } from "../services/plantService"
 import { db } from "../services/firebaseConfig"
-import { calculateNextWatering, calculateNextFertilizing } from "../utils/dateUtils"
+import { calculateNextFertilizing, calculateNextWatering } from "../utils/dateUtils"
 
 const PlantsContext = createContext()
 
