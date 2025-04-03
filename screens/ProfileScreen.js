@@ -29,6 +29,16 @@ export default function ProfileScreen() {
         await AsyncStorage.setItem("language", lng)
     }
 
+    const changeTheme = async (theme) => {
+        if (theme === "system") {
+            setUseSystemTheme(true)
+        } else {
+            setUseSystemTheme(false)
+            setIsDarkMode(theme === "dark")
+        }
+        await AsyncStorage.setItem("theme", theme)
+    }
+
     const handleDelete = async (password) => {
         try {
             await deleteAccount(password)
