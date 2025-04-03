@@ -4,133 +4,100 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import { calculateNextWatering, calculateNextFertilizing } from "../utils/dateUtils"
 import { compressImage } from "../utils/compressImage";
 
+// ADD PLANT
 export const addPlant = async (givenName, scientificName, plantType, userId) => {
-
     try {
         const db = getFirestore();
-
-        // Reference to the user's "plants" subcollection
         const plantRef = doc(collection(db, "users", userId, "plants"))
-
-        // Define plant data
         const plantData = {
-            givenName: givenName,
-            scientificName: scientificName,
-            plantType: plantType,
+            givenName,
+            scientificName,
+            plantType,
             coverImageUrl: null,
             images: []
         }
-
-        // Add plant data to Firestore
         await setDoc(plantRef, plantData)
         console.log("Plant added successfully with ID:", plantRef.id)
-
-        return plantRef.id // Return generated plant ID if needed
-
+        return plantRef.id
     } catch (error) {
         console.error("Error adding plant:", error)
     }
 }
 
+// UPLOAD IMAGE
 export const uploadPlantImage = async (userId, plantId, imageUri, setAsCover = false) => {
     try {
         const storage = getStorage();
         const db = getFirestore();
-
-        // Compress image
         const compressedUri = await compressImage(imageUri);
-        if (!compressedUri) {
-            throw new Error("Compressed image URI is undefined.");
-        }
-
+        if (!compressedUri) throw new Error("Compressed image URI is undefined.");
         const imageRef = ref(storage, `plants/${userId}/${plantId}/${Date.now()}.jpg`);
-
-        // Convert image to blob
         const response = await fetch(compressedUri);
-        if (!response.ok) {
-            throw new Error(`Failed to fetch image: ${response.statusText}`);
-        }
-
+        if (!response.ok) throw new Error(`Failed to fetch image: ${response.statusText}`);
         const blob = await response.blob();
-
-        // Upload image to FireStorage
         await uploadBytes(imageRef, blob);
-
-        // Get image URL
         const downloadURL = await getDownloadURL(imageRef);
-
-        // Update Firestore
         const plantRef = doc(db, "users", userId, "plants", plantId);
         await updateDoc(plantRef, {
-            images: arrayUnion(downloadURL), // Add image to images Array
-            ...(setAsCover && { coverImageUrl: downloadURL }) // Set cover image only if true
+            images: arrayUnion(downloadURL),
+            ...(setAsCover && { coverImageUrl: downloadURL })
         });
-
         console.log("Image uploaded successfully:", downloadURL);
         return downloadURL;
     } catch (error) {
         console.error("Error uploading image:", error);
     }
-};
+}
 
+// FETCH IMAGES
 export const getUserPlantImages = async (userId) => {
     try {
-      const db = getFirestore();
-      const plantsCollection = collection(db, "users", userId, "plants");
-      const querySnapshot = await getDocs(plantsCollection);
-  
-      let fetchedImages = {};
-  
-      querySnapshot.forEach((doc) => {
-        const plantData = doc.data();
-        if (plantData.images) {
-          fetchedImages[doc.id] = plantData.images;
-        }
-      });
-      
-      return fetchedImages;
+        const db = getFirestore();
+        const plantsCollection = collection(db, "users", userId, "plants");
+        const querySnapshot = await getDocs(plantsCollection);
+        let fetchedImages = {};
+        querySnapshot.forEach((doc) => {
+            const plantData = doc.data();
+            if (plantData.images) {
+                fetchedImages[doc.id] = plantData.images;
+            }
+        });
+        return fetchedImages;
     } catch (error) {
-      console.error("Error fetching images from Firestore: ", error);
-      return {};
+        console.error("Error fetching images from Firestore: ", error);
+        return {};
     }
-  };
+}
 
-export const fetchPlantData = async (userId, plantId) => {
-
+// FETCH FULL DATA FOR ONE PLANT
+export const fetchFullPlantData = async (userId, plantId) => {
     try {
-
-        // fetch plant document
         const plantRef = doc(db, "users", userId, "plants", plantId)
         const plantSnap = await getDoc(plantRef)
-        let plantData = null // let = can be reassigned
-
+        let plantData = null
         if (plantSnap.exists()) {
             plantData = { id: plantSnap.id, ...plantSnap.data() }
         } else {
             console.error("No such plant found!")
         }
 
-        // fetch care history subcollection
         const careHistoryRef = collection(db, "users", userId, "plants", plantId, "careHistory")
         const careHistorySnap = await getDocs(careHistoryRef)
 
         const careEntries = careHistorySnap.docs.map(doc => {
-            const rawDate = doc.data().date.seconds * 1000 // convert Firestore timestamp to milliseconds
+            const rawDate = doc.data().date?.seconds * 1000
             return {
                 id: doc.id,
-                date: new Date(rawDate), // keep as Date object for formatting later
+                date: rawDate ? new Date(rawDate) : null,
                 type: doc.data().type,
             }
-        })
+        }).filter(e => e.date)
 
-        // sort by date (newest first)
         careEntries.sort((a, b) => b.date - a.date)
 
-        // group events by date
         const groupedHistory = {}
         careEntries.forEach(entry => {
-            const dateKey = entry.date.toISOString().split("T")[0] // "YYYY-MM-DD"
-
+            const dateKey = entry.date.toISOString().split("T")[0]
             if (!groupedHistory[dateKey]) {
                 groupedHistory[dateKey] = { date: entry.date, events: [] }
             }
@@ -138,108 +105,92 @@ export const fetchPlantData = async (userId, plantId) => {
         })
 
         const sortedGroupedHistory = Object.values(groupedHistory)
-
-        // calculate next predicted watering date
         const nextWatering = calculateNextWatering(sortedGroupedHistory)
-        // calculate next predicted fertilizing date
         const nextFertilizing = calculateNextFertilizing(sortedGroupedHistory)
 
-        return { plant: plantData, careHistory: sortedGroupedHistory, ungroupedHistory: careEntries, nextWatering: nextWatering, nextFertilizing: nextFertilizing }
-        
+        return {
+            plant: plantData,
+            careHistory: sortedGroupedHistory,
+            ungroupedHistory: careEntries,
+            nextWatering,
+            nextFertilizing
+        }
+
     } catch (error) {
         console.error("Error fetching plant or care history:", error)
         throw error
     }
 }
 
+// ADD CARE EVENT
 export const addCareEvent = async (userId, plantId, eventType) => {
     if (!userId || !plantId || !eventType) {
         throw new Error("Missing required parameters (userId, plantId, eventType).")
     }
-
     try {
-        // Reference to the "careHistory" subcollection
         const careHistoryRef = doc(collection(db, "users", userId, "plants", plantId, "careHistory"))
-
-        // Create care event data
         const eventData = {
             type: eventType,
-            date: serverTimestamp(), // Firestore server timestamp
+            date: serverTimestamp(),
         }
-
-        // Save the care event
         await setDoc(careHistoryRef, eventData)
-
         console.log(`Added ${eventType} event for plant ${plantId}`)
-        return true // Return success flag
-
+        return true
     } catch (error) {
         console.error(`Error adding ${eventType} event:`, error)
         throw error
     }
 }
 
-export const deletePlant = async(userId, plantId) => {
+// DELETE PLANT
+export const deletePlant = async (userId, plantId) => {
     if (!userId || !plantId) {
         throw new Error("Missing required parameters (userId, plantId).")
     }
-
     try {
-        // Reference to the plant document
         const plantRef = doc(db, "users", userId, "plants", plantId)
-
-        // Delete the plant
         await deleteDoc(plantRef)
-
         console.log(`Deleted plant ${plantId}`)
-        return true // Return success flag
-
+        return true
     } catch (error) {
         console.error(`Error deleting plant ${plantId}:`, error)
         throw error
     }
 }
 
+// UPDATE PLANT
 export const updatePlant = async (userId, plantId, updatedData) => {
-
     try {
-
         const plantRef = doc(db, "users", userId, "plants", plantId)
         await updateDoc(plantRef, updatedData)
-
         console.log(`Updated plant ${plantId}`)
-        return true // Return success flag
-
+        return true
     } catch (error) {
         console.error(`Error updating plant ${plantId}:`, error)
         throw error
     }
 }
 
+// DELETE CARE EVENT
 export const deleteCareEvent = async (userId, plantId, eventId) => {
-
     try {
-
         const careEventRef = doc(db, "users", userId, "plants", plantId, "careHistory", eventId)
         await deleteDoc(careEventRef)
-
         console.log(`Deleted event ${eventId} for plant ${plantId}`)
-        return true // Return success flag
-
+        return true
     } catch (error) {
         console.error(`Error deleting event ${eventId} for plant ${plantId}:`, error)
         throw error
     }
-
 }
 
+// UPDATE EVENT DATE
 export const updateCareEventDate = async (userId, plantId, careId, newDate) => {
     try {
         const careEventRef = doc(db, "users", userId, "plants", plantId, "careHistory", careId)
         await updateDoc(careEventRef, {
             date: Timestamp.fromDate(newDate),
         })
-
         console.log(`Updated date of event ${careId} for plant ${plantId}`)
         return true
     } catch (error) {
