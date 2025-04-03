@@ -4,14 +4,14 @@ import { Text, Surface, IconButton } from 'react-native-paper'
 import { formatDate } from '../../utils/dateUtils'
 import { useTranslation } from "react-i18next"
 import { View } from 'react-native'
-import PlantInfoModal from './PlantInfoModal'
+import ItalicText from '../../utils/italicText'
 
-const PlantDetails = ({ plant, careHistory, nextWatering, nextFertilizing }) => {
+const PlantDetails = ({ plant, careHistory }) => {
 
-    console.log("nextWatering received in PlantDetails:", nextWatering);
+    //console.log("nextWatering received in PlantDetails:", nextWatering);
+    //console.log("Care history receivedin PlantDetails:", careHistory);
 
     const { t } = useTranslation()
-    const [infoVisible, setInfoVisible] = useState(false)
 
     const lastWatering = careHistory.find(entry => entry.events.includes("watering"))
     const lastFertilization = careHistory.find(entry => entry.events.includes("fertilizing"))
@@ -38,46 +38,45 @@ const PlantDetails = ({ plant, careHistory, nextWatering, nextFertilizing }) => 
 
             <View style={{ height: 8 }} />
 
-            <Text variant="bodyMedium">
-                💧 {t("screens.plant.lastWatered")}: {lastWatering ? formatDate(lastWatering.date) : t("screens.plant.neverWatered")}
-            </Text>
-            <Text variant="bodyMedium">
-                💥 {t("screens.plant.lastFertilized")}: {lastFertilization ? formatDate(lastFertilization.date) : t("screens.plant.neverFertilized")}
-            </Text>
-            <Text variant="bodyMedium">
-                ✂️ {t("screens.plant.lastPruned")}: {lastPruning ? formatDate(lastPruning.date) : t("screens.plant.neverPruned")}
-            </Text>
-            <Text variant="bodyMedium">
-                🪴 {t("screens.plant.lastRepotted")}: {lastRepotting ? formatDate(lastRepotting.date) : t("screens.plant.neverRepotted")}            </Text>
+            {lastWatering ? (
+                <Text variant="bodyMedium">
+                    💧 {t("screens.plant.lastWatered")}: {formatDate(lastWatering.date)}
+                </Text>
+                ) : (
+                <ItalicText variant="bodyMedium">
+                    💧 {t("screens.plant.neverWatered")}
+                </ItalicText>
+            )}
+            {lastFertilization ? (
+                <Text variant="bodyMedium">
+                    💥 {t("screens.plant.lastFertilized")}: {formatDate(lastFertilization.date)}
+                </Text>
+                ) : (
+                <ItalicText variant="bodyMedium">
+                    💥 {t("screens.plant.neverFertilized")}
+                </ItalicText>
+                )}
+
+            {lastPruning ? (
+                <Text variant="bodyMedium">
+                    ✂️ {t("screens.plant.lastPruned")}: {formatDate(lastPruning.date)}
+                </Text>
+                ) : (
+                <ItalicText variant="bodyMedium">
+                    ✂️ {t("screens.plant.neverPruned")}
+                </ItalicText>
+                )}
+
+            {lastRepotting ? (
+                <Text variant="bodyMedium">
+                    🪴 {t("screens.plant.lastRepotted")}: {formatDate(lastRepotting.date)}
+                </Text>
+                ) : (
+                <ItalicText variant="bodyMedium">
+                    🪴 {t("screens.plant.neverRepotted")}
+                </ItalicText>
+                )}
         
-        </Surface>
-
-        <Surface style={styles.detailsContainer}>
-
-        <TouchableOpacity 
-                onPress={() => setInfoVisible(true)} 
-                style={styles.infoButton}
-                hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }} // expands invisible touchable area
-            >
-                <IconButton 
-                    icon="information-outline" 
-                    size={20}  
-                />
-            </TouchableOpacity>
-
-            <Text variant="bodyMedium">{t("screens.plant.basedOnHistory")}</Text>
-            <View style={{ height: 8 }} />
-            <Text variant="bodyMedium">
-                💧 {t("screens.plant.nextWateringEstimate")}:{" "}
-            </Text>
-            <Text variant="bodyMedium">{"      "}{nextWatering ? formatDate(nextWatering) : t("screens.plant.needMoreEvents")}</Text>
-            <Text variant="bodyMedium">
-                💥 {t("screens.plant.nextFertilizationEstimate")}:{" "}
-            </Text>
-            <Text variant="bodyMedium">{"      "}{nextFertilizing ? formatDate(nextFertilizing) : t("screens.plant.needMoreEvents")}</Text>
-
-            <PlantInfoModal visible={infoVisible} onClose={() => setInfoVisible(false)} />
-
         </Surface>
 
 </>
@@ -89,7 +88,7 @@ const styles = StyleSheet.create({
         padding: 16,
         borderRadius: 8,
         width: '100%',
-        marginBottom: 8,
+        marginBottom: 16,
     },
 
     touchableArea: {

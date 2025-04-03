@@ -4,22 +4,19 @@ import { IconButton } from "react-native-paper";
 import { AuthContext } from "../context/authContext";
 import AddPlantModal from "../components/home/AddPlantModal";
 import { usePlants } from "../context/plantsContext";
-import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import CardComponent from '../components/home/CardComponent';
 import { ThemeContext } from "../context/themeContext";
 import { searchMostRecentWatering } from '../utils/searchWaterUtils';
-import { formatDate } from '../utils/dateUtils';
 import ActionBar from "../components/home/ActionBar";
 
 const HomeScreen = () => {
     const { theme } = useContext(ThemeContext);
     const { user } = useContext(AuthContext);
-    const { t } = useTranslation();
     const { plants } = usePlants();
     const navigation = useNavigation();
+    const { alivePlants } = usePlants();
 
-    console.log("Plants: ", plants[1])
 
     const [modalVisible, setModalVisible] = useState(false);
     const [isTwoColumns, setIsTwoColumns] = useState(true);
@@ -28,7 +25,7 @@ const HomeScreen = () => {
     const [selectedType, setSelectedType] = useState("all")
 
     const filteredPlants = useMemo(() => {
-        return plants
+        return alivePlants
             .filter((item) =>
                 item.givenName.toLowerCase().includes(searchQuery.toLowerCase()) &&
                 (selectedType === "all" || item.plantType === selectedType)
@@ -57,7 +54,7 @@ const HomeScreen = () => {
                 }
                 return 0;
             });
-    }, [plants, searchQuery, selectedType, sortOption]);
+    }, [alivePlants, plants, searchQuery, selectedType, sortOption]);
 
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>

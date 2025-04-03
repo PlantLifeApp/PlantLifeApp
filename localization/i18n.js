@@ -48,6 +48,7 @@ const resources = {
                     watering: "Watering",
                     fertilization: "Fertilizing",
                     pruning: "Pruning",
+                    repotting: "Repotting",
                     type: "Plant Type",
                     justWatered: "Just Watered",
                     justFertilized: "Just Fertilized",
@@ -59,10 +60,10 @@ const resources = {
                     lastPruned: "Last pruned",
                     lastRepotted: "Last repotted",
                     plantNotFound: "Plant not found",
-                    noCareHistory: "No care history yet",
-                    neverWatered: "No waterings yet!",
-                    neverFertilized: "No fertilizations yet!",
-                    neverPruned: "No prunings yet!",
+                    noCareHistory: "No care history recorded",
+                    neverWatered: "No waterings recorded!",
+                    neverFertilized: "No fertilizations recorded!",
+                    neverPruned: "No prunings recorded!",
                     neverRepotted: "No repottings recorded!",
                     basedOnHistory: "Based on your recent care history...",
                     nextWateringEstimate: "Your plant might need water around",
@@ -90,7 +91,19 @@ const resources = {
                     confirmGraveyardTitle: "Move to Graveyard",
                     confirmGraveyard: "This action will mark your plant as dead and move it to the Graveyard, which you can access from the Options menu. This action cannot be undone.",
                     errorKilling: "Error marking plant as dead",
-                    plantKilled: "RIP, Plant!"
+                    plantKilled: "RIP, Plant!",
+                    selectCause: "Select Cause of Death",
+                    causesOfDeath: {
+                        overwatering: "Overwatering",
+                        underwatering: "Underwatering",
+                        pests: "Pests",
+                        disease: "Disease",
+                        lightStress: "Light Stress",
+                        temperatureStress: "Temperature Stress",
+                        humidityStress: "Humidity Stress",
+                        unknown: "Unknown",
+                        other: "Other"
+                    }
                 },
                 editCareHistory: {
                     title: "Edit Care History",
@@ -126,21 +139,34 @@ const resources = {
                 graveyard: {
                     title: "Plant Graveyard",
                     noPlants: "No plants in the graveyard yet",
-                    plantListEmpty: "No plants in the graveyard yet",
+                    empty: "No plants in the graveyard...yet!",
                     plantListEmptyDescription: "When a plant dies, it will be moved here. You can view its history and details, but you can't bring it back to life.",
-                    
+                    rip: "Rest in Peace",
+                    killedOn: "Time of Death",
+                    causeOfDeath: "Cause of Death",
+                    causesOfDeath: {
+                        overwatering: "Overwatering",
+                        underwatering: "Underwatering",
+                        pests: "Pests",
+                        disease: "Disease",
+                        lightStress: "Light Stress",
+                        temperatureStress: "Temperature Stress",
+                        humidityStress: "Humidity Stress",
+                        unknown: "Unknown",
+                        other: "Other",
+                    },
+                    gallery: {
+                        listEmpty: "No Images Available",
+                    },
+                    fab: {
+                        camera: "Take Photo",
+                        phoneGallery: "Choose Photo",
+                        requestPermissionHeader: "Permission Needed",
+                        requestMediaPermission: "Allow Access to Photos",
+                        requestCameraPermission: "Allow Access to Camera",
+                        choosePlantName: "Choose plant",
+                    },
                 },
-                gallery: {
-                    listEmpty: "No Images Available",
-                },
-                fab: {
-                    camera: "Take Photo",
-                    phoneGallery: "Choose Photo",
-                    requestPermissionHeader: "Permission Needed",
-                    requestMediaPermission: "Allow Access to Photos",
-                    requestCameraPermission: "Allow Access to Camera",
-                    choosePlantName: "Choose plant",
-                }
             },
             common: {
                 confirm: "Confirm",
@@ -201,9 +227,10 @@ const resources = {
                     watering: "kastelu",
                     fertilization: "lannoitus",
                     pruning: "leikkaus",
+                    repotting: "uudelleenistutus",
                     lastRepotted: "Viimeksi istutettu uudelleen",
-                    neverRepotted: "Ei vielä uudelleenistutuksia!",
-                    justRepotted: "Ruukutettu!", // repotettu vaihdettu
+                    neverRepotted: "Ei uudelleenistutettu!",
+                    justRepotted: "Ruukutettu!",
                     repotting: "uudelleenistutus",
                     type: "Kasvityyppi",
                     justWatered: "Kasteltu!",
@@ -215,10 +242,10 @@ const resources = {
                     lastPruned: "Viimeksi leikattu",
                     plantNotFound: "Kasvia ei löytynyt",
                     noCareHistory: "Ei hoitohistoriaa vielä",
-                    neverWatered: "Ei vielä kasteltu!",
-                    neverFertilized: "Ei vielä lannoitettu!",
-                    neverPruned: "Ei vielä leikattu!",
-                    neverRepotted: "Ei vielä istutettu uudelleen!",
+                    neverWatered: "Ei kasteltuja!",
+                    neverFertilized: "Ei lannoituksia!",
+                    neverPruned: "Ei leikkauksia!",
+                    neverRepotted: "Ei uudelleenistutuksia!",
                     basedOnHistory: "Perustuen viimeaikaiseen hoitohistoriaasi...",
                     nextWateringEstimate: "Kasvisi saattaa tarvita kastelua noin",
                     nextFertilizationEstimate: "Harkitse lannoittamista uudelleen noin",
@@ -245,7 +272,19 @@ const resources = {
                     confirmGraveyardTitle: "Siirrä hautausmaalle",
                     confirmGraveyard: "Tämä toiminto merkitsee kasvisi kuolleeksi ja siirtää sen hautausmaalle, johon pääset Valinnat-valikosta. Tätä toimintoa ei voi peruuttaa.",
                     errorKilling: "Virhe merkitessä kasvia kuolleeksi",
-                    plantKilled: "RIP, kasvi!"
+                    plantKilled: "RIP, kasvi!",
+                    selectCause: "Valitse kuolinsyy",
+                    causesOfDeath: {
+                        overwatering: "Liikakastelu",
+                        underwatering: "Alikastelu",
+                        pests: "Tuhoeläimet",
+                        disease: "Sairaus",
+                        lightStress: "Valostressi",
+                        temperatureStress: "Lämpöstressi",
+                        humidityStress: "Kosteusstressi",
+                        unknown: "Tuntematon",
+                        other: "Muu"
+                    }
                 },
                 editCareHistory: {
                     title: "Muokkaa hoitohistoriaa",
@@ -272,7 +311,31 @@ const resources = {
                     languagePlaceholder: "Valitse kieli",
                     logoutButton: "Kirjaudu ulos",
                     deleteAccountButton: "Poista käyttäjätunnus",
-                    signedInAs: "Kirjautuneena käyttäjänä"
+                    signedInAs: "Kirjautuneena käyttäjänä",
+                    confirmDeleteTitle: "Poista käyttäjätunnus",
+                    confirmDelete: "Oletko varma, että haluat poistaa käyttäjätunnuksesi? Tätä toimintoa ei voi peruuttaa.",
+                    errorDeleting: "Virhe poistaessa käyttäjätunnusta",
+                    visitGraveyard: "Vieraile hautausmaalla",
+                },
+                graveyard: {
+                    title: "Kasvien hautausmaa",
+                    noPlants: "Ei kasveja hautausmaalla vielä",
+                    empty: "Ei kasveja hautausmaalla...vielä!",
+                    plantListEmptyDescription: "Kun kasvi kuolee, se siirretään tänne. Voit tarkastella sen historiaa ja tietoja, mutta et voi herättää sitä henkiin.",
+                    rip: "Kevyet mullat",
+                    killedOn: "Kuolinpäivä",
+                    causeOfDeath: "Kuolinsyy",
+                    causesOfDeath: {
+                        overwatering: "liikakastelu",
+                        underwatering: "alikastelu",
+                        pests: "tuhoeläimet",
+                        disease: "sairaus",
+                        lightStress: "valostressi",
+                        temperatureStress: "lämpöstressi",
+                        humidityStress: "kosteusstressi",
+                        unknown: "tuntematon",
+                        other: "muu"
+                    }
                 },
                 gallery: {
                     listEmpty: "Ei kuvia saatavilla"
@@ -345,6 +408,7 @@ const resources = {
                     watering: "vattning",
                     fertilization: "gödsling",
                     pruning: "beskärning",
+                    repotting: "ompotning",
                     type: "Växttyp",
                     justWatered: "Vattnad!",
                     justFertilized: "Gödslad!",
@@ -355,10 +419,10 @@ const resources = {
                     lastPruned: "Senast beskuren",
                     plantNotFound: "Växten hittades inte",
                     noCareHistory: "Ingen vårdhistorik än",
-                    neverWatered: "Inga vattningar än!",
-                    neverFertilized: "Inga gödslingar än!",
-                    neverPruned: "Inga beskärningar än!",
-                    neverRepotted: "Inga ompotningar än!",
+                    neverWatered: "Inga vattningar!",
+                    neverFertilized: "Inga gödslingar!",
+                    neverPruned: "Inga beskärningar!",
+                    neverRepotted: "Inga ompotningar!",
                     basedOnHistory: "Baserat på din senaste vårdhistorik...",
                     nextWateringEstimate: "Din växt kan behöva vatten runt",
                     nextFertilizationEstimate: "Överväg att gödsla igen runt",
@@ -385,7 +449,19 @@ const resources = {
                     confirmGraveyardTitle: "Flytta till kyrkogården",
                     confirmGraveyard: "Denna åtgärd markerar din växt som död och flyttar den till kyrkogården, som du kan komma åt från alternativmenyn. Denna åtgärd kan inte ångras.",
                     errorKilling: "Fel vid markering av växt som död",
-                    plantKilled: "RIP, växt!"
+                    plantKilled: "RIP, växt!",
+                    selectCause: "Välj dödsorsak",
+                    causesOfDeath: {
+                        overwatering: "Övervattning",
+                        underwatering: "Undervattning",
+                        pests: "Skadedjur",
+                        disease: "Sjukdom",
+                        lightStress: "Ljusstress",
+                        temperatureStress: "Temperaturstress",
+                        humidityStress: "Fuktighetsstress",
+                        unknown: "Okänd",
+                        other: "Annat"
+                    }
                 },
                 editCareHistory: {
                     title: "Redigera vårdhistorik",
@@ -413,6 +489,30 @@ const resources = {
                     logoutButton: "Logga ut",
                     deleteAccountButton: "Ta bort konto",
                     signedInAs: "Inloggad som",
+                    visitGraveyard: "Besök kyrkogården",
+                    confirmDeleteTitle: "Ta bort konto",
+                    confirmDelete: "Är du säker på att du vill ta bort ditt konto? Denna åtgärd kan inte ångras.",
+                    errorDeleting: "Fel vid borttagning av konto",
+                },
+                graveyard: {
+                    title: "Växtkyrkogården",
+                    noPlants: "Inga växter på kyrkogården än",
+                    empty: "Inga växter på kyrkogården...än!",
+                    plantListEmptyDescription: "När en växt dör flyttas den hit. Du kan se des historik och detaljer, men du kan inte väcka den till liv igen.",
+                    rip: "Vila i frid",
+                    killedOn: "Dödsdatum",
+                    causeOfDeath: "Dödsorsak",
+                    causesOfDeath: {
+                        overwatering: "övervattning",
+                        underwatering: "undervattning",
+                        pests: "skadedjur",
+                        disease: "sjukdom",
+                        lightStress: "ljusstress",
+                        temperatureStress: "temperaturstress",
+                        humidityStress: "fuktighetsstress",
+                        unknown: "okänd",
+                        other: "annat"
+                    }
                 },
                 gallery: {
                     listEmpty: "Inga bilder tillgängliga",
@@ -442,6 +542,7 @@ const resources = {
         }
     }
 }
+
 
 const getStoredLanguage = async () => {
     try {

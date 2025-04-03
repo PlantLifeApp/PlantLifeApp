@@ -12,12 +12,13 @@ import Toast from "react-native-toast-message"
 import { useTheme } from "react-native-paper"
 import { addCareEvent } from "../services/plantService"
 import { useFocusEffect } from "@react-navigation/native"
+import CarePredictions from "../components/plant/CarePredictions"
+import ItalicText from "../utils/italicText.js"
 
 const PlantScreen = ({ route }) => {
-
-    const { plantId, plantPreview } = route.params 
+    const { plantId, plantPreview } = route.params
     const { user } = useContext(AuthContext)
-    const { loadPlantDetails, refreshPlantInList } = usePlants()
+    const { updatePlantData } = usePlants()
     const { t } = useTranslation()
     const theme = useTheme()
 
@@ -25,43 +26,37 @@ const PlantScreen = ({ route }) => {
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
 
-    console.log("initialPlantData received in PlantScreen:", plantPreview);
+    const displayName = plant?.plant.givenName || plantPreview?.givenName || ""
+    const displayScientific = plant?.plant.scientificName || plantPreview?.scientificName || ""
 
-    // initial load using cached data (if available)
+    // Lataa alussa välimuistista
     useEffect(() => {
-        const fetchInitialData = async () => {
-            if (user?.uid) {
-                const data = await loadPlantDetails(plantId, false) // cached version
-                setPlant(data)
-                setLoading(false)
-            }
+        const loadInitial = async () => {
+            const data = await updatePlantData(plantId, false)
+            setPlant(data)
+            setLoading(false)
         }
-        fetchInitialData()
-    }, [plantId, user])
+        loadInitial()
+    }, [plantId])
 
-    // silent refresh of plant data when returning to screen
+    // Päivitä taustalla kun palaa näytölle
     useFocusEffect(
         useCallback(() => {
-            const refreshPlant = async () => {
-                if (user?.uid) {
-                    const updated = await loadPlantDetails(plantId, true) // force refresh
-                    setPlant(updated)
-                }
+            const refresh = async () => {
+                const updated = await updatePlantData(plantId, true)
+                setPlant(updated)
             }
-            refreshPlant()
-        }, [plantId, user])
+            refresh()
+        }, [plantId])
     )
 
     const handleAddCareEvent = async (eventType) => {
         setSaving(true)
-
         try {
             await addCareEvent(user.uid, plantId, eventType)
 
-            // full refresh of plant data only after mutation
-            const updatedData = await loadPlantDetails(plantId, true)
+            const updatedData = await updatePlantData(plantId, true)
             setPlant(updatedData)
-            await refreshPlantInList(plantId)
 
             Toast.show({
                 type: "success",
@@ -82,16 +77,13 @@ const PlantScreen = ({ route }) => {
         }
     }
 
-    const displayName = plant?.plant.givenName || plantPreview?.givenName || ""
-    const displayScientific = plant?.plant.scientificName || plantPreview?.scientificName || ""
-
     return (
         <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>
             <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}>
 
                 <Surface style={styles.surface}>
                     <Text variant="headlineMedium">{displayName}</Text>
-                    <Text variant="bodyLarge" style={{ fontStyle: "italic" }}>{displayScientific}</Text>
+                    <ItalicText variant="bodyLarge">{displayScientific}</ItalicText>
                 </Surface>
 
                 {loading && (
@@ -102,10 +94,15 @@ const PlantScreen = ({ route }) => {
 
                 {!loading && plant && (
                     <>
-                        <CareButtons onAddCareEvent={handleAddCareEvent} saving={saving} />
+                        <CareButtons
+                            onAddCareEvent={handleAddCareEvent}
+                            saving={saving}
+                        />
                         <PlantDetails
                             plant={plant.plant}
                             careHistory={plant.careHistory}
+                        />
+                        <CarePredictions
                             nextWatering={plant.nextWatering}
                             nextFertilizing={plant.nextFertilizing}
                         />
