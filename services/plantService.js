@@ -1,6 +1,7 @@
 import { db } from "./firebaseConfig";
-import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp, deleteDoc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore"
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp,
+     deleteDoc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore"
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, listAll } from "firebase/storage"
 import { calculateNextWatering, calculateNextFertilizing } from "../utils/dateUtils"
 import { compressImage } from "../utils/compressImage";
 
@@ -185,6 +186,23 @@ export const deletePlant = async(userId, plantId) => {
     }
 
     try {
+        const storage = getStorage()
+        const plantFolderRef = ref(storage, `plants/${userId}/${plantId}`)
+        console.log('Deleting files from: ', plantFolderRef.fullPath)
+
+        const fileList = await listAll(plantFolderRef)
+        const deletePromises = fileList.items.map(async (itemRef) => {
+            try {
+              await deleteObject(itemRef)
+              console.log(`Deleted: ${itemRef.fullPath}`)
+            } catch (err) {
+              console.error(`Failed to delete ${itemRef.fullPath}:`, err)
+            }
+          })
+        await Promise.all(deletePromises)
+
+        console.log(`Deleted ${fileList.items.length} images from Storage`)
+
         // Reference to the plant document
         const plantRef = doc(db, "users", userId, "plants", plantId)
 
@@ -196,6 +214,39 @@ export const deletePlant = async(userId, plantId) => {
 
     } catch (error) {
         console.error(`Error deleting plant ${plantId}:`, error)
+        throw error
+    }
+}
+
+export const deleteAllPlants = async(userId) => {
+    if (!userId ) {
+        throw new Error("Missing required parameters (userId).")
+    }
+    try{
+        const plantsCollectionRef = collection(db, "users", userId, "plants")
+        const plantsSnapshot = await getDocs(plantsCollectionRef)
+
+        const deletePromises = plantsSnapshot.docs.map(async (plantDoc) => {
+            const plantId = plantDoc.id
+
+            // poista "careHistory" jokaselle kasville
+            const careHistoryCollectionRef = collection(db, "users", userId, "plants", plantId, "careHistory")
+            const careHistorySnapshot = await getDocs(careHistoryCollectionRef)
+
+            const careDeletePromises = careHistorySnapshot.docs.map((careDoc) =>
+                deleteDoc(doc(db, "users", userId, "plants", plantId, "careHistory", careDoc.id))
+            )
+            await Promise.all(careDeletePromises)
+
+            // poista kasvin dokumentti
+            await deletePlant(userId, plantId) // poistaa myös firebase storage tiedostot
+        })
+        await Promise.all(deletePromises)
+
+        console.log(`Plants of ${userId} has been deleted`)
+        return true
+    } catch(error) {
+        console.error('Error deleting plants: ', error)
         throw error
     }
 }

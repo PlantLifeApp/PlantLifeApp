@@ -10,6 +10,7 @@ import { Dropdown } from "react-native-paper-dropdown"
 import LANGUAGES from "../localization/languages"
 import { useNavigation } from "@react-navigation/native"
 import DeleteAccountModal from "../components/profile/deleteAccountModal"
+import { deleteAccount } from "../services/authService"
 
 export default function ProfileScreen() {
     const { user } = useContext(AuthContext)
@@ -26,6 +27,15 @@ export default function ProfileScreen() {
         i18n.changeLanguage(lng)
         setLanguage(lng)
         await AsyncStorage.setItem("language", lng)
+    }
+
+    const handleDelete = async (password) => {
+        try {
+            await deleteAccount(password)
+            alert('Account deleted!')
+        } catch (error){
+            alert('Error: '+ error.message)
+        }
     }
 
     return (
@@ -86,9 +96,9 @@ export default function ProfileScreen() {
             <DeleteAccountModal
                 visible={deleteModalVisible}
                 onCancel={() => setDeleteModalVisible(false)}
-                onConfirm={async () => {
+                onConfirm={(password) => {
                     try {
-                        
+                        handleDelete(password)
                         setDeleteModalVisible(false)
                         console.log("Pressed Delete Account")
                         navigation.navigate("Home")
