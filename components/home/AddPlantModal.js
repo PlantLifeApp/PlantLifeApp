@@ -6,15 +6,25 @@ import { Dropdown } from 'react-native-paper-dropdown';
 import { useTranslation } from 'react-i18next';
 import * as ImagePicker from 'expo-image-picker'
 import { useImages } from '../../context/imageContext';
+import Toast from 'react-native-toast-message';
 
 export default function AddPlantModal({ user, visible, onClose }) {
     const [plantType, setPlantType] = useState("");
     const [plantNickname, setPlantNickname] = useState("");
     const [scientificName, setScientificName] = useState("");
     const [plantImageUri, setPlantImageUri] = useState(null);
+    const [plantNicknameError, setPlantNicknameError] = useState(false)
+    const [plantTypeError, setPlantTypeError] = useState(false)
 
     const { t } = useTranslation()
     const { addImage } = useImages()
+
+    const TYPES = [
+        { label: t("screens.plant.cactus"), value: 'cactus' },
+        { label: t("screens.plant.succulent"), value: 'succulent' },
+        { label: t("screens.plant.general"), value: 'general' },
+        { label: t("screens.plant.utilitarian"), value: 'utilitarian' }
+    ]
 
     const onCloseFunction = () => {
         // Reset all values to default
@@ -23,10 +33,34 @@ export default function AddPlantModal({ user, visible, onClose }) {
         setPlantNickname("");
         setScientificName("");
         setPlantImageUri(null)
+        setPlantNicknameError(false)
+        setPlantTypeError(false)
     }
 
     const handleAddPlant = async () => {
-        const newPlantId =  await addPlant(plantNickname, scientificName, plantType, user.uid);
+
+        if (!plantNickname) {
+            setPlantNicknameError(true);
+        } else {
+            setPlantNicknameError(false);
+        }
+
+        if (!plantType) {
+            setPlantTypeError(true);
+        } else {
+            setPlantTypeError(false);
+        }
+        if (!plantNickname || !plantType) {
+            Toast.show({
+                type: "error",
+                text1: t("screens.addPlant.inputRequired"),
+                position: "bottom",
+                visibilityTime: 3000,
+            })
+            return;
+        }
+
+        const newPlantId = await addPlant(plantNickname, scientificName, plantType, user.uid);
 
         if (newPlantId && plantImageUri) {
             const imageUrl = await uploadPlantImage(user.uid, newPlantId, plantImageUri, true)  // Upload image to Firestorage
@@ -38,13 +72,6 @@ export default function AddPlantModal({ user, visible, onClose }) {
 
         onCloseFunction();
     }
-
-    const TYPES = [
-        { label: 'Cactus', value: 'cactus' },
-        { label: 'Succulent', value: 'succulent' },
-        { label: 'General', value: 'general' },
-        { label: 'Utilitarian', value: 'utilitarian' }
-    ]
 
     const handleOpenCamera = async () => {
         const permission = await ImagePicker.requestCameraPermissionsAsync()
@@ -81,26 +108,34 @@ export default function AddPlantModal({ user, visible, onClose }) {
                         {plantImageUri ? (
                             <Image source={{ uri: plantImageUri }} style={styles.imagePreview} />
                         ) : (
-                            <Icon source='camera' size={48} color='gray'/>
+                            <Icon source='camera' size={48} color='gray' />
                         )}
                     </TouchableOpacity>
 
+                    <Text variant="bodyMedium">{t("screens.addPlant.nickname")}*</Text>
                     <View style={styles.inputContainer}>
-                        <Text variant="bodyMedium">{t("screens.addPlant.nickname")}</Text>
-                        <TextInput style={styles.textInput} onChangeText={(text) => setPlantNickname(text)}></TextInput>
+                        <TextInput style={[styles.textInput, plantNicknameError && styles.errorInput]} onChangeText={(text) => {
+                            setPlantNickname(text)
+                            setPlantNicknameError(false)
+                        }}>
+                        </TextInput>
                     </View>
 
+                    <Text variant="bodyMedium">{t("screens.addPlant.scientificName")}</Text>
                     <View style={styles.inputContainer}>
-                        <Text variant="bodyMedium">{t("screens.addPlant.scientificName")}</Text>
                         <TextInput style={styles.textInput} onChangeText={(text) => setScientificName(text)}></TextInput>
                     </View>
 
-                    <View style={styles.inputContainer}>
+                    <Text variant="bodyMedium">{t("screens.addPlant.type")}*</Text>
+                    <View style={[styles.inputContainer, plantTypeError && styles.errorInput]}>
                         <Dropdown
                             placeholder={t("screens.addPlant.selectType")}
                             options={TYPES}
                             value={plantType}
-                            onSelect={setPlantType}
+                            onSelect={(value) => {
+                                setPlantType(value)
+                                setPlantTypeError(false)
+                            }}
                             style={styles.dropdown}
                         />
                     </View>
@@ -172,4 +207,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: "gray",
     },
+    errorInput: {
+        borderColor: 'red',
+        borderWidth: 1,
+    }
 })

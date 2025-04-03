@@ -8,7 +8,21 @@ import ItalicText from "../../utils/italicText"
 const GraveyardCard = ({ plant }) => {
     const { t } = useTranslation()
 
-    const plantImageUrl = plant.coverImageUrl ? plant.coverImageUrl : null
+    let plantImageUrl
+
+    if (!plant.coverImageUrl || plant.coverImageUrl.length <= 0) {
+        if (plant.plantType === "cactus") {
+            plantImageUrl = require("../../assets/plants/cactus-preview.png")
+        } else if (plant.plantType === "general") {
+            plantImageUrl = require("../../assets/plants/general-preview.png")
+        } else if (plant.plantType === "succulent") {
+            plantImageUrl = require("../../assets/plants/succulent-preview.png")
+        } else if (plant.plantType === "utilitarian") {
+            plantImageUrl = require("../../assets/plants/utilitarian-preview.png")
+        }
+    } else {
+        plantImageUrl = { uri: plant.coverImageUrl }
+    }
 
     // convert Timestamp to Date
     let killedAt = null
@@ -19,7 +33,7 @@ const GraveyardCard = ({ plant }) => {
     return (
         <Card style={styles.card}>
             <View style={styles.container}>
-                <Image style={styles.image} source={{ uri: plantImageUrl }} />
+                <Image style={styles.image} source={plantImageUrl} />
                 <Card.Content style={styles.content}>
                     <Text variant="titleLarge" style={styles.name} numberOfLines={1}>
                         {plant.givenName}
