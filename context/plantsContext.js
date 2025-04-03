@@ -11,7 +11,6 @@ export const PlantsProvider = ({ children }) => {
     const { user } = useContext(AuthContext)
 
     const [plants, setPlants] = useState([])
-    const [plantDetails, setPlantDetails] = useState({})
 
     useEffect(() => {
         if (!user?.uid) return
@@ -88,11 +87,6 @@ export const PlantsProvider = ({ children }) => {
         try {
             const fullPlantData = await fetchPlantData(user.uid, plantId)
 
-            setPlantDetails(prev => ({
-                ...prev,
-                [plantId]: fullPlantData
-            }))
-
             return fullPlantData
 
         } catch (error) {
@@ -103,8 +97,8 @@ export const PlantsProvider = ({ children }) => {
 
     const refreshPlantInList = async (plantId) => {
         try {
-            const plantDocRef = doc(db, "users", user.uid, "plants", plantId);
-            const plantSnap = await getDoc(plantDocRef);
+            const plantDocRef = doc(db, "users", user.uid, "plants", plantId)
+            const plantSnap = await getDoc(plantDocRef)
 
             const baseData = { ...plantSnap.data(), id: plantSnap.id }
 
@@ -116,7 +110,33 @@ export const PlantsProvider = ({ children }) => {
                 ...doc.data(),
             }))
 
-            const updatedPlant = { ...baseData, careHistory }
+            const careEntries = careHistory.map(entry => ({
+                ...entry,
+                date: entry.date?.toDate?.() ?? null,
+            })).filter(e => e.date)
+
+            careEntries.sort((a, b) => b.date - a.date)
+
+            const groupedHistory = {}
+            careEntries.forEach(entry => {
+                const dateKey = entry.date.toISOString().split("T")[0]
+                if (!groupedHistory[dateKey]) {
+                    groupedHistory[dateKey] = { date: entry.date, events: [] }
+                }
+                groupedHistory[dateKey].events.push(entry.type)
+            })
+
+            const sortedGroupedHistory = Object.values(groupedHistory)
+
+            const nextWatering = calculateNextWatering(sortedGroupedHistory)
+            const nextFertilizing = calculateNextFertilizing(sortedGroupedHistory)
+
+            const updatedPlant = {
+                ...baseData,
+                careHistory,
+                nextWatering,
+                nextFertilizing,
+            }
 
             setPlants(prev =>
                 prev.map(p => p.id === plantId ? updatedPlant : p)

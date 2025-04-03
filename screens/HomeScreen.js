@@ -19,6 +19,8 @@ const HomeScreen = () => {
     const { plants } = usePlants();
     const navigation = useNavigation();
 
+    console.log("Plants: ", plants[1])
+
     const [modalVisible, setModalVisible] = useState(false);
     const [isTwoColumns, setIsTwoColumns] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
