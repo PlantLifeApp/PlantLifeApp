@@ -363,7 +363,7 @@ const resources = {
                 delete: "Poista",
                 sort: "Järjestä",
                 alphabetical: "Nimi",
-                latestWatering: "Viimeksi kasteltu",
+                lastWatered: "Viimeksi kasteltu",
                 nextWatering: "Seuraava arvioitu kastelu",
                 all: "Kaikki"
             }
