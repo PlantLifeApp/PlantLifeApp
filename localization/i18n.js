@@ -8,7 +8,8 @@ const resources = {
             tabs: {
                 home: "Home",
                 options: "Options",
-                gallery: "Gallery"
+                gallery: "Gallery",
+                stats: "Stats"
             },
             screens: {
                 auth: {
@@ -170,6 +171,21 @@ const resources = {
                     requestCameraPermission: "Allow Access to Camera",
                     choosePlantName: "Choose plant",
                 },
+                stats: {
+                    daily: "Daily",
+                    monthly: "Monthly",
+                    yearly: "Yearly",
+                    overall: "Overall Stats",
+                    watering: "Watering",
+                    fertilizing: "Fertilizing",
+                    pruning: "Pruning",
+                    alivePlants: "Alive Plants",
+                    deadPlants: "Dead Plants",
+                    barChartTitle: "Stats",
+                    pieChartTitle: "Survival Statistics",
+                    alive: "Alive",
+                    dead: "Dead",
+                }
             },
             common: {
                 confirm: "Confirm",
@@ -182,6 +198,19 @@ const resources = {
                 lastWatered: "Last Watered",
                 nextWatering: "Next Estimated Watering",
                 all: "All",
+                january: "January",
+                february: "February",
+                march: "March",
+                april: "April",
+                may: "May",
+                june: "June",
+                july: "July",
+                august: "August",
+                september: "September",
+                october: "October",
+                november: "November",
+                december: "December",
+
             }
         }
     },
@@ -190,7 +219,8 @@ const resources = {
             tabs: {
                 home: "Koti",
                 options: "Valinnat",
-                gallery: "Galleria"
+                gallery: "Galleria",
+                stats: "Tilastot"
             },
             screens: {
                 auth: {
@@ -354,6 +384,21 @@ const resources = {
                     requestCameraPermission: "Anna sovellukselle pääsy kameraan",
                     choosePlantName: "Valitse kasvi",
                 },
+                stats: {
+                    daily: "Päivittäin",
+                    monthly: "Kuukausittain",
+                    yearly: "Vuosittain",
+                    overall: "Yleiset tilastot",
+                    watering: "Kastelu",
+                    fertilizing: "Lannoitus",
+                    pruning: "Leikkaus",
+                    alivePlants: "Elävät kasvit",
+                    deadPlants: "Kuolleet kasvit",
+                    barChartTitle: "Tilastot",
+                    pieChartTitle: "Elinvoima Tilastot",
+                    alive: "Elossa",
+                    dead: "Kuollut",
+                },
             },
             common: {
                 confirm: "Vahvista",
@@ -365,7 +410,18 @@ const resources = {
                 alphabetical: "Nimi",
                 lastWatered: "Viimeksi kasteltu",
                 nextWatering: "Seuraava arvioitu kastelu",
-                all: "Kaikki"
+                all: "Kaikki",
+                january: "Tammikuu",
+                february: "Helmikuu",
+                march: "Maaliskuu",
+                april: "Huhtikuu",
+                may: "Toukokuu",
+                june: "Kesäkuu",
+                july: "Heinäkuu",
+                august: "Elokuu",
+                september: "Syyskuu",
+                october: "Lokakuu",
+                december: "Joulukuu",
             }
         }
     },
@@ -374,7 +430,8 @@ const resources = {
             tabs: {
                 home: "Hem",
                 options: "Alternativ",
-                gallery: "Galleri"
+                gallery: "Galleri",
+                stats: "Statistik"
             },
             screens: {
                 auth: {
@@ -537,6 +594,21 @@ const resources = {
                     choosePlantName: "Välj en växt",
 
                 },
+                stats: {        //Nämä kaikki voisi tarkistaa
+                    daily: "Dagligen",
+                    monthly: "månatlig",
+                    yearly: "Årligen",
+                    overall: "Övergripande statistik",
+                    watering: "vattning",
+                    fertilizing: "gödsling",
+                    pruning: "beskärning",
+                    alivePlants: "Levande växter",
+                    deadPlants: "Döda växter",
+                    barChartTitle: "Statistik",
+                    pieChartTitle: "Överlevnadsstatistik",
+                    alive: "Levande",
+                    dead: "Död",
+                },      // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             },
             common: {
                 confirm: "Bekräfta",
@@ -549,6 +621,18 @@ const resources = {
                 latestWatered: "Senast vattnad",
                 nextWatering: "Beräknad nästa vattning",
                 all: "Alla",
+                january: "Januari", //--- Nämä voisi tarkistaa vvvvvvv
+                february: "Februari",
+                march: "Mars",
+                april: "April",
+                may: "Maj",
+                june: "Juni",
+                july: "Juli",
+                august: "Augusti",
+                september: "September",
+                october: "Oktober",
+                december: "December",//  ^^^^^^^^^^
+
             }
         }
     }
