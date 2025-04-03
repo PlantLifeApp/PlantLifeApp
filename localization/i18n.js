@@ -2,14 +2,14 @@ import i18n from "i18next"
 import { initReactI18next } from "react-i18next"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
-
 const resources = {
     en: {
         translation: {
             tabs: {
                 home: "Home",
                 options: "Options",
-                gallery: "Gallery"
+                gallery: "Gallery",
+                stats: "Stats"
             },
             screens: {
                 auth: {
@@ -87,11 +87,11 @@ const resources = {
                     errorDeleting: "Error deleting plant!",
                     confirmDeleteTitle: "Delete Plant",
                     confirmDelete: "Are you sure you want to delete this plant? This action cannot be undone.",
+                    successEditing: "Plant info updated!",
+                    errorEditing: "Error updating plant info",
                     killedPlant: "Plant Died",
                     confirmGraveyardTitle: "Move to Graveyard",
                     confirmGraveyard: "This action will mark your plant as dead and move it to the Graveyard, which you can access from the Options menu. This action cannot be undone.",
-                    errorKilling: "Error marking plant as dead",
-                    plantKilled: "RIP, Plant!",
                     selectCause: "Select Cause of Death",
                     causesOfDeath: {
                         overwatering: "Overwatering",
@@ -103,22 +103,26 @@ const resources = {
                         humidityStress: "Humidity Stress",
                         unknown: "Unknown",
                         other: "Other"
-                    }
+                    },
+                    errorKilling: "Error marking plant as dead",
+                    plantKilled: "RIP, Plant!",
                 },
                 editCareHistory: {
                     title: "Edit Care History",
                     editCareHistory: "Edit Care History",
                     date: "Date",
                     type: "Type",
-                    confirmDeleteTitle: "Delete Entry",
-                    confirmDeleteMessage: "Are you sure you want to delete this entry?",
-                    errorDeleting: "Error deleting entry",
-                    successDeleting: "Care entry deleted!",
                     watering: "Watering",
                     fertilizing: "Fertilizing",
                     fertilization: "Fertilizing",
                     pruning: "Pruning",
                     repotting: "Repotting",
+                    confirmDeleteTitle: "Delete Entry",
+                    confirmDeleteMessage: "Are you sure you want to delete this entry?",
+                    errorDeleting: "Error deleting entry",
+                    successDeleting: "Care entry deleted!",
+                    errorEditing: "Error editing entry",
+                    successEditing: "Care entry updated!",
                 },
                 options: {
                     themeHeader: "Theme",
@@ -155,18 +159,33 @@ const resources = {
                         unknown: "Unknown",
                         other: "Other",
                     },
-                    gallery: {
-                        listEmpty: "No Images Available",
-                    },
-                    fab: {
-                        camera: "Take Photo",
-                        phoneGallery: "Choose Photo",
-                        requestPermissionHeader: "Permission Needed",
-                        requestMediaPermission: "Allow Access to Photos",
-                        requestCameraPermission: "Allow Access to Camera",
-                        choosePlantName: "Choose plant",
-                    },
                 },
+                gallery: {
+                    listEmpty: "No Images Available",
+                },
+                fab: {
+                    camera: "Take Photo",
+                    phoneGallery: "Choose Photo",
+                    requestPermissionHeader: "Permission Needed",
+                    requestMediaPermission: "Allow Access to Photos",
+                    requestCameraPermission: "Allow Access to Camera",
+                    choosePlantName: "Choose plant",
+                },
+                stats: {
+                    daily: "Daily",
+                    monthly: "Monthly",
+                    yearly: "Yearly",
+                    overall: "Overall Stats",
+                    watering: "Watering",
+                    fertilizing: "Fertilizing",
+                    pruning: "Pruning",
+                    alivePlants: "Alive Plants",
+                    deadPlants: "Dead Plants",
+                    barChartTitle: "Stats",
+                    pieChartTitle: "Survival Statistics",
+                    alive: "Alive",
+                    dead: "Dead",
+                }
             },
             common: {
                 confirm: "Confirm",
@@ -176,9 +195,22 @@ const resources = {
                 delete: "Delete",
                 sort: "Sort By",
                 alphabetical: "By Name",
-                latestCare: "Latest Care",
+                lastWatered: "Last Watered",
                 nextWatering: "Next Estimated Watering",
                 all: "All",
+                january: "January",
+                february: "February",
+                march: "March",
+                april: "April",
+                may: "May",
+                june: "June",
+                july: "July",
+                august: "August",
+                september: "September",
+                october: "October",
+                november: "November",
+                december: "December",
+
             }
         }
     },
@@ -187,7 +219,8 @@ const resources = {
             tabs: {
                 home: "Koti",
                 options: "Valinnat",
-                gallery: "Galleria"
+                gallery: "Galleria",
+                stats: "Tilastot"
             },
             screens: {
                 auth: {
@@ -266,13 +299,12 @@ const resources = {
                     plantNotFound: "Kasvia ei löytynyt",
                     delete: "Poista kasvi",
                     errorDeleting: "Virhe poistaessa kasvia",
+                    successDeleting: "Kasvi poistettu!",
                     confirmDeleteTitle: "Poista kasvi",
                     confirmDelete: "Oletko varma, että haluat poistaa kasvin? Tätä toimintoa ei voi peruuttaa.",
                     killedPlant: "Kasvi kuoli",
                     confirmGraveyardTitle: "Siirrä hautausmaalle",
                     confirmGraveyard: "Tämä toiminto merkitsee kasvisi kuolleeksi ja siirtää sen hautausmaalle, johon pääset Valinnat-valikosta. Tätä toimintoa ei voi peruuttaa.",
-                    errorKilling: "Virhe merkitessä kasvia kuolleeksi",
-                    plantKilled: "RIP, kasvi!",
                     selectCause: "Valitse kuolinsyy",
                     causesOfDeath: {
                         overwatering: "Liikakastelu",
@@ -284,22 +316,26 @@ const resources = {
                         humidityStress: "Kosteusstressi",
                         unknown: "Tuntematon",
                         other: "Muu"
-                    }
+                    },
+                    errorKilling: "Virhe merkitessä kasvia kuolleeksi",
+                    plantKilled: "RIP, kasvi!",
                 },
                 editCareHistory: {
                     title: "Muokkaa hoitohistoriaa",
                     editCareHistory: "Muokkaa hoitohistoriaa",
                     date: "Päivämäärä",
                     type: "Tyyppi",
-                    confirmDeleteTitle: "Poista tapahtuma",
-                    confirmDeleteMessage: "Oletko varma, että haluat poistaa tämän tapahtuman?",
-                    errorDeleting: "Virhe poistaessa tapahtumaa",
-                    successDeleting: "Hoitotapahtuma poistettu!",
                     watering: "kastelu",
                     fertilizing: "lannoitus",
                     fertilization: "lannoitus",
                     pruning: "hoitoleikkaus",
-                    repotting: "multien uusiminen",
+                    repotting: "uudelleenistutus",
+                    confirmDeleteTitle: "Poista tapahtuma",
+                    confirmDeleteMessage: "Oletko varma, että haluat poistaa tämän tapahtuman?",
+                    errorDeleting: "Virhe poistaessa tapahtumaa",
+                    successDeleting: "Hoitotapahtuma poistettu!",
+                    errorEditing: "Virhe muokattaessa tapahtumaa",
+                    successEditing: "Hoitotapahtuma päivitetty!",
                 },
                 options: {
                     themeHeader: "Teema",
@@ -348,6 +384,21 @@ const resources = {
                     requestCameraPermission: "Anna sovellukselle pääsy kameraan",
                     choosePlantName: "Valitse kasvi",
                 },
+                stats: {
+                    daily: "Päivittäin",
+                    monthly: "Kuukausittain",
+                    yearly: "Vuosittain",
+                    overall: "Yleiset tilastot",
+                    watering: "Kastelu",
+                    fertilizing: "Lannoitus",
+                    pruning: "Leikkaus",
+                    alivePlants: "Elävät kasvit",
+                    deadPlants: "Kuolleet kasvit",
+                    barChartTitle: "Tilastot",
+                    pieChartTitle: "Elinvoima Tilastot",
+                    alive: "Elossa",
+                    dead: "Kuollut",
+                },
             },
             common: {
                 confirm: "Vahvista",
@@ -357,9 +408,20 @@ const resources = {
                 delete: "Poista",
                 sort: "Järjestä",
                 alphabetical: "Nimi",
-                latestCare: "Viimeisin toimenpide",
+                lastWatered: "Viimeksi kasteltu",
                 nextWatering: "Seuraava arvioitu kastelu",
-                all: "Kaikki"
+                all: "Kaikki",
+                january: "Tammikuu",
+                february: "Helmikuu",
+                march: "Maaliskuu",
+                april: "Huhtikuu",
+                may: "Toukokuu",
+                june: "Kesäkuu",
+                july: "Heinäkuu",
+                august: "Elokuu",
+                september: "Syyskuu",
+                october: "Lokakuu",
+                december: "Joulukuu",
             }
         }
     },
@@ -368,7 +430,8 @@ const resources = {
             tabs: {
                 home: "Hem",
                 options: "Alternativ",
-                gallery: "Galleri"
+                gallery: "Galleri",
+                stats: "Statistik"
             },
             screens: {
                 auth: {
@@ -386,7 +449,7 @@ const resources = {
                 home: {
                     noWateringHistory: "inga vattningar",
                     lastWatered: "Senast vattnad",
-                    nextWatering: "Nästa vattarnööraring", //<- Translate
+                    nextWatering: "Nästa vattning",
 
                 },
                 addPlant: {
@@ -444,12 +507,13 @@ const resources = {
                     delete: "Ta bort denna växt",
                     errorDeleting: "Fel vid borttagning av växt",
                     confirmDeleteTitle: "Ta bort växt",
+                    successDeleting: "Växten borttagen!",
                     confirmDeleteMessage: "Är du säker på att du vill ta bort denna växt? Denna åtgärd kan inte ångras.",
+                    errorEditing: "Fel vid redigering av växtinformation",
+                    successEditing: "Växtinformation uppdaterad!",
                     killedPlant: "Växten dog",
                     confirmGraveyardTitle: "Flytta till kyrkogården",
                     confirmGraveyard: "Denna åtgärd markerar din växt som död och flyttar den till kyrkogården, som du kan komma åt från alternativmenyn. Denna åtgärd kan inte ångras.",
-                    errorKilling: "Fel vid markering av växt som död",
-                    plantKilled: "RIP, växt!",
                     selectCause: "Välj dödsorsak",
                     causesOfDeath: {
                         overwatering: "Övervattning",
@@ -461,22 +525,26 @@ const resources = {
                         humidityStress: "Fuktighetsstress",
                         unknown: "Okänd",
                         other: "Annat"
-                    }
+                    },
+                    errorKilling: "Fel vid markering av växt som död",
+                    plantKilled: "RIP, växt!",
                 },
                 editCareHistory: {
                     title: "Redigera vårdhistorik",
                     editCareHistory: "Redigera vårdhistorik",
                     date: "Datum",
                     type: "Typ",
-                    confirmDeleteTitle: "Ta bort post",
-                    confirmDelete: "Är du säker på att du vill ta bort denna post?",
-                    errorDeleting: "Fel vid borttagning av post",
-                    successDeleting: "Vårdpost borttagen!",
                     watering: "vattning",
                     fertilizing: "gödsling",
                     fertilization: "gödsling",
                     pruning: "beskärning",
                     repotting: "ompotning",
+                    confirmDeleteTitle: "Ta bort post",
+                    confirmDelete: "Är du säker på att du vill ta bort denna post?",
+                    errorDeleting: "Fel vid borttagning av post",
+                    errorEditing: "Fel vid redigering av post",
+                    successEditing: "Vårdpost uppdaterad!",
+                    successDeleting: "Vårdpost borttagen!",
                 },
                 options: {
                     themeHeader: "Tema",
@@ -526,6 +594,21 @@ const resources = {
                     choosePlantName: "Välj en växt",
 
                 },
+                stats: {        //Nämä kaikki voisi tarkistaa
+                    daily: "Dagligen",
+                    monthly: "månatlig",
+                    yearly: "Årligen",
+                    overall: "Övergripande statistik",
+                    watering: "vattning",
+                    fertilizing: "gödsling",
+                    pruning: "beskärning",
+                    alivePlants: "Levande växter",
+                    deadPlants: "Döda växter",
+                    barChartTitle: "Statistik",
+                    pieChartTitle: "Överlevnadsstatistik",
+                    alive: "Levande",
+                    dead: "Död",
+                },      // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
             },
             common: {
                 confirm: "Bekräfta",
@@ -533,11 +616,23 @@ const resources = {
                 save: "Spara",
                 ok: "OK",
                 delete: "Ta bort",
-                sort: "Ordna",
-                alphabetical: "På Namn",
-                latestCare: "Sista action",     // <- check
-                nextWatering: "Nästa vattening", // <-Check
+                sort: "Sortera",
+                alphabetical: "Namn",
+                latestWatered: "Senast vattnad",
+                nextWatering: "Beräknad nästa vattning",
                 all: "Alla",
+                january: "Januari", //--- Nämä voisi tarkistaa vvvvvvv
+                february: "Februari",
+                march: "Mars",
+                april: "April",
+                may: "Maj",
+                june: "Juni",
+                july: "Juli",
+                august: "Augusti",
+                september: "September",
+                october: "Oktober",
+                december: "December",//  ^^^^^^^^^^
+
             }
         }
     }
