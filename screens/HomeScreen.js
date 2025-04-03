@@ -22,11 +22,11 @@ const HomeScreen = () => {
     const [sortOption, setSortOption] = useState("alphabetical");
     const [menuVisible, setMenuVisible] = useState(false);
 
-    const { plants } = usePlants();
+    const { alivePlants } = usePlants();
     const navigation = useNavigation();
 
     const filteredPlants = useMemo(() => {
-        return plants
+        return alivePlants
             .filter((item) =>
                 item.givenName.toLowerCase().includes(searchQuery.toLowerCase())
             )
@@ -40,7 +40,7 @@ const HomeScreen = () => {
                 }
                 return 0;
             });
-    }, [plants, searchQuery, sortOption]);
+    }, [alivePlants, searchQuery, sortOption]);
 
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
