@@ -1,10 +1,4 @@
-/* Notes:
-    - Do the translation options
-    - Filler data for dates that don't have data
-    - Switch years and months for each graph seperately (go back and forth)
-    - ChartData should take parameter
-    - Repotting data?
-*/
+
 import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, ScrollView } from 'react-native'
 import { Surface, useTheme, Text, Button, ToggleButton } from 'react-native-paper'
@@ -13,8 +7,7 @@ import { usePlants } from "../context/plantsContext"
 import BarChartComponent from '../components/stats/BarChart.js'
 import { Dropdown } from 'react-native-paper-dropdown';
 import PieChartComponent from '../components/stats/PieChart.js'
-import { LineChart } from 'react-native-chart-kit'
-import LineChartComponent from '../components/stats/LineChart.js'
+
 
 export default function StatsScreen() {
     const theme = useTheme();
@@ -33,9 +26,9 @@ export default function StatsScreen() {
     const [barChartFilterOption, setBarChartFilterOption] = useState('watering');
 
     const TYPES = [
-        { label: 'Daily', value: 'day' },
-        { label: 'Monthly', value: 'month' },
-        { label: 'Yearly', value: 'year' },
+        { label: t('screens.stats.daily'), value: 'day' },
+        { label: t('screens.stats.monthly'), value: 'month' },
+        { label: t('screens.stats.yearly'), value: 'year' },
     ];
 
     const BARCHARTTYPES = [
@@ -97,7 +90,20 @@ export default function StatsScreen() {
             setTotalDeadPlants(deadPlants);
 
             // Populate all dates for years with care events
-            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const months = [
+                t("common.january"),
+                t("common.february"),
+                t("common.march"),
+                t("common.april"),
+                t("common.may"),
+                t("common.june"),
+                t("common.july"),
+                t("common.august"),
+                t("common.september"),
+                t("common.october"),
+                t("common.november"),
+                t("common.december")
+            ];
             const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
 
             Object.keys(careEvents).forEach(eventType => {
@@ -222,18 +228,18 @@ export default function StatsScreen() {
             </View>
             <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}>
                 <Surface styles={styles.surface}>
-                    <Text variant="headlineMedium">General Stats</Text>
+                    <Text variant="headlineMedium">{t('screens.stats.overall')}</Text>
 
-                    <Text variant="titleMedium">💧 Waterings: {totalWaterings}</Text>
-                    <Text variant="titleMedium">✂️ Prunings: {totalPrunings} </Text>
-                    <Text variant="titleMedium">💥 Fertilizings: {totalFertilizings}</Text>
-                    <Text variant="titleMedium">🌱 Alive plants: {totalAlivePlants}</Text>
-                    <Text variant="titleMedium">💀 Dead plants: {totalDeadPlants}</Text>
+                    <Text variant="titleMedium">💧 {t('screens.stats.watering')}: {totalWaterings}</Text>
+                    <Text variant="titleMedium">✂️ {t('screens.stats.pruning')}: {totalPrunings}</Text>
+                    <Text variant="titleMedium">💥 {t('screens.stats.fertilizing')}: {totalFertilizings}</Text>
+                    <Text variant="titleMedium">🌱 {t('screens.stats.alivePlants')}: {totalAlivePlants}</Text>
+                    <Text variant="titleMedium">💀 {t('screens.stats.deadPlants')}: {totalDeadPlants}</Text>
                 </Surface>
 
                 <Surface styles={styles.surface}>
                     <View style={styles.barChartHeader}>
-                        <Text styles={styles.chartTitle} variant="titleMedium"> Stats</Text>
+                        <Text styles={styles.chartTitle} variant="titleMedium"> {t('screens.stats.barChartTitle')}</Text>
                         {BARCHARTTYPES.map((option) => (
                             <Button
                                 key={option.value}
@@ -252,9 +258,9 @@ export default function StatsScreen() {
                 </Surface>
 
                 <Surface styles={styles.surface}>
-                    <Text styles={styles.chartTitle} variant="headlineMedium">Graveyard Stats</Text>
+                    <Text styles={styles.chartTitle} variant="headlineMedium">{t('screens.stats.pieChartTitle')}</Text>
                     <PieChartComponent
-                        param_data={{ "Alive": totalAlivePlants, "Dead": totalDeadPlants }}
+                        param_data={{ [t('screens.stats.alive')]: totalAlivePlants, [t('screens.stats.dead')]: totalDeadPlants }}
                     />
 
                 </Surface>
