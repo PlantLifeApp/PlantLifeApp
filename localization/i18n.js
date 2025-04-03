@@ -158,17 +158,17 @@ const resources = {
                         unknown: "Unknown",
                         other: "Other",
                     },
-                    gallery: {
-                        listEmpty: "No Images Available",
-                    },
-                    fab: {
-                        camera: "Take Photo",
-                        phoneGallery: "Choose Photo",
-                        requestPermissionHeader: "Permission Needed",
-                        requestMediaPermission: "Allow Access to Photos",
-                        requestCameraPermission: "Allow Access to Camera",
-                        choosePlantName: "Choose plant",
-                    },
+                },
+                gallery: {
+                    listEmpty: "No Images Available",
+                },
+                fab: {
+                    camera: "Take Photo",
+                    phoneGallery: "Choose Photo",
+                    requestPermissionHeader: "Permission Needed",
+                    requestMediaPermission: "Allow Access to Photos",
+                    requestCameraPermission: "Allow Access to Camera",
+                    choosePlantName: "Choose plant",
                 },
             },
             common: {
@@ -179,7 +179,7 @@ const resources = {
                 delete: "Delete",
                 sort: "Sort By",
                 alphabetical: "By Name",
-                latestCare: "Latest Care",
+                lastWatered: "Last Watered",
                 nextWatering: "Next Estimated Watering",
                 all: "All",
             }
@@ -363,7 +363,7 @@ const resources = {
                 delete: "Poista",
                 sort: "Järjestä",
                 alphabetical: "Nimi",
-                latestCare: "Viimeisin toimenpide",
+                latestWatering: "Viimeksi kasteltu",
                 nextWatering: "Seuraava arvioitu kastelu",
                 all: "Kaikki"
             }
@@ -392,7 +392,7 @@ const resources = {
                 home: {
                     noWateringHistory: "inga vattningar",
                     lastWatered: "Senast vattnad",
-                    nextWatering: "Nästa vattarnööraring", //<- Translate
+                    nextWatering: "Nästa vattning",
 
                 },
                 addPlant: {
@@ -544,10 +544,10 @@ const resources = {
                 save: "Spara",
                 ok: "OK",
                 delete: "Ta bort",
-                sort: "Ordna",
-                alphabetical: "På Namn",
-                latestCare: "Sista action",     // <- check
-                nextWatering: "Nästa vattening", // <-Check
+                sort: "Sortera",
+                alphabetical: "Namn",
+                latestWatering: "Senast vattnad",
+                nextWatering: "Beräknad nästa vattning",
                 all: "Alla",
             }
         }
