@@ -1,6 +1,6 @@
-import { View, Text, FlatList, Modal, TouchableOpacity, StyleSheet } from "react-native";
+import { FlatList, StyleSheet, Image } from "react-native";
 import React, { useState, useCallback } from "react";
-import { Surface, Card, useTheme } from "react-native-paper";
+import { Text, Surface, Card, useTheme, TouchableRipple, Portal, Modal } from "react-native-paper";
 import { useImages } from "../context/imageContext";
 import FloatingButton from "../components/gallery/FloatingButton";
 import { useFocusEffect } from "@react-navigation/native";
@@ -40,26 +40,25 @@ export default function GalleryScreen() {
         columnWrapperStyle={styles.row}
         ListEmptyComponent={() => <Text style={styles.noImagesText}>{t("screens.gallery.listEmpty")}</Text>}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handleImagePress(item)}>
+          <TouchableRipple onPress={() => handleImagePress(item)}>
             <Card style={styles.card}>
-              <Card.Cover source={{ uri: item }} style={styles.cardImage} />
+              <Image source={{ uri: item }} style={styles.cardImage} />
             </Card>
-          </TouchableOpacity>
+          </TouchableRipple>
         )}
       />
       {/* Opens full picture*/}
-      <Modal visible={modalVisible} transparent={true} animationType='fade'>
-        <View style={styles.modalContainer}>
-          <TouchableOpacity
-            onPress={() => { setTimeout(() => setModalVisible(false), 100) }}
-          >
-            <Card style={styles.modalCard}>
-              <Card.Cover source={{ uri: selectedImage }} style={styles.fullscreenImage} />
-            </Card>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-
+      <Portal>
+        <Modal visible={modalVisible} transparent={true} animationType='fade'>
+            <TouchableRipple
+              onPress={() => { setTimeout(() => setModalVisible(false), 100) }}
+            >
+              <Card style={styles.modalCard}>
+                <Image source={{ uri: selectedImage }} style={styles.fullscreenImage} />
+              </Card>
+            </TouchableRipple>
+        </Modal>
+      </Portal>
       {/* set fab*/}
       {fabVisible && <FloatingButton />}
     </Surface>
@@ -112,5 +111,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 'auto',
     aspectRatio: 1,
+    borderRadius: 10,
   },
 });
