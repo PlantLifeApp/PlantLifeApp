@@ -11,6 +11,7 @@ import { deletePlant, fetchPlantData, updatePlant } from "../services/plantServi
 import DeletePlantModal from "../components/editPlant/DeletePlantModal"
 import PlantKilledModal from "../components/editPlant/PlantKilledModal"
 import EditPlantDetails from "../components/editPlant/EditPlantDetails"
+import { Timestamp } from "firebase/firestore"
 
 export default function EditPlantScreen({ route }) {
 
@@ -136,11 +137,15 @@ export default function EditPlantScreen({ route }) {
             <PlantKilledModal
                 visible={graveyardModalVisible}
                 onCancel={() => setGraveyardModalVisible(false)}
-                onConfirm={async() => {
+                onConfirm={async(causeOfDeath) => {
                     try {
 
-                        await updatePlant(user.uid, plantId, { isDead: true })
-                        await fetchPlantData(user.uid, plantId)
+                        await updatePlant(user.uid, plantId, { 
+                            isDead: true, 
+                            killedAt: Timestamp.now(),
+                            causeOfDeath: causeOfDeath,})
+                        await loadPlantDetails(plantId, true)
+                        // await fetchPlantData(user.uid, plantId)
                         await refreshPlantInList(plantId)
                         navigation.navigate("HomeScreen")
                         setGraveyardModalVisible(false)

@@ -3,6 +3,7 @@ import { onSnapshot, collection, getDocs, getDoc, doc } from "firebase/firestore
 import { AuthContext } from "./authContext"
 import { fetchPlantData } from "../services/plantService"
 import { db } from "../services/firebaseConfig"
+import { calculateNextWatering, calculateNextFertilizing } from "../utils/dateUtils"
 
 const PlantsContext = createContext()
 
@@ -16,42 +17,66 @@ export const PlantsProvider = ({ children }) => {
     // this full fetch is only done automatically once on app start (or user login)
     useEffect(() => {
         if (!user?.uid) return
-
+    
         const plantsRef = collection(db, "users", user.uid, "plants")
-
+    
         const unsubscribe = onSnapshot(plantsRef, async (querySnapshot) => {
             try {
                 const plantDocs = querySnapshot.docs
-
-                // Fetch careHistory for all plants in parallel
-
+    
                 const plantPromises = plantDocs.map(async (doc) => {
                     const baseData = { ...doc.data(), id: doc.id }
-
+    
                     const careHistoryRef = collection(db, "users", user.uid, "plants", doc.id, "careHistory")
                     const careHistorySnap = await getDocs(careHistoryRef)
-
+    
                     const careHistory = careHistorySnap.docs.map(careDoc => ({
                         id: careDoc.id,
                         ...careDoc.data(),
                     }))
-
+    
+                    // convert to js dates + sort care entries to remove any that have invalid/null date
+                    const careEntries = careHistory.map(entry => ({
+                        ...entry,
+                        date: entry.date?.toDate?.() ?? null,
+                    })).filter(e => e.date)
+    
+                    careEntries.sort((a, b) => b.date - a.date)
+    
+                    // group by date bc that's what the util function expects
+                    const groupedHistory = {}
+                    careEntries.forEach(entry => {
+                        const dateKey = entry.date.toISOString().split("T")[0]
+                        if (!groupedHistory[dateKey]) {
+                            groupedHistory[dateKey] = { date: entry.date, events: [] }
+                        }
+                        groupedHistory[dateKey].events.push(entry.type)
+                    })
+    
+                    const sortedGroupedHistory = Object.values(groupedHistory)
+    
+                    // calculate predictions
+                    const nextWatering = calculateNextWatering(sortedGroupedHistory)
+                    const nextFertilizing = calculateNextFertilizing(sortedGroupedHistory)
+    
+                    // include the predictions in the plant data
                     return {
                         ...baseData,
                         careHistory,
+                        nextWatering,
+                        nextFertilizing,
                     }
                 })
-
-                const plantsWithCareHistory = await Promise.all(plantPromises) // wait for all promises to resolve
+    
+                const plantsWithCareHistory = await Promise.all(plantPromises)
                 setPlants(plantsWithCareHistory)
-
+    
             } catch (error) {
                 console.error("Error fetching plant list with care history:", error)
             }
         })
-
+    
         return () => unsubscribe()
-
     }, [user?.uid])
 
     // fetch full detail for a single plant, including grouped history + predictions
