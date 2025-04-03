@@ -13,6 +13,7 @@ import GalleryScreen from "../screens/GalleryScreen"
 import { ImagesProvider } from "../context/imageContext"
 import EditPlantScreen from "../screens/EditPlantScreen"
 import EditCareHistory from "../screens/EditCareHistoryScreen"
+import StatsScreen from "../screens/StatsScreen"
 import GraveyardScreen from "../screens/GraveyardScreen"
 import DeadPlantScreen from "../screens/DeadPlantScreen"
 
@@ -22,8 +23,8 @@ const Stack = createNativeStackNavigator()
 
 const HomeStackNavigator = () => {
     const paperTheme = useTheme(); // Get theme colors
-    const {t} = useTranslation()
-    
+    const { t } = useTranslation()
+
     return (
         <Stack.Navigator
             screenOptions={{
@@ -92,6 +93,18 @@ export default function TabNavigator() {
                             tabBarLabel: t("tabs.options"),
                             tabBarIcon: ({ color, size }) => (
                                 <Ionicons name="cog" color={color} size={size} />
+                            ),
+                        }}
+                    />
+
+                    <Tab.Screen
+                        name="Stats"
+                        component={StatsScreen}
+                        options={{
+                            title: t("tabs.stats"),
+                            tabBarLabel: t("tabs.stats"),
+                            tabBarIcon: ({ color, size }) => (
+                                <Ionicons name="stats-chart" color={color} size={size} />
                             ),
                         }}
                     />

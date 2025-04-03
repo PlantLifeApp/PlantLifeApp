@@ -8,7 +8,8 @@ const resources = {
             tabs: {
                 home: "Home",
                 options: "Options",
-                gallery: "Gallery"
+                gallery: "Gallery",
+                stats: "Stats"
             },
             screens: {
                 auth: {
@@ -190,7 +191,8 @@ const resources = {
             tabs: {
                 home: "Koti",
                 options: "Valinnat",
-                gallery: "Galleria"
+                gallery: "Galleria",
+                stats: "Tilastot"
             },
             screens: {
                 auth: {
@@ -374,7 +376,8 @@ const resources = {
             tabs: {
                 home: "Hem",
                 options: "Alternativ",
-                gallery: "Galleri"
+                gallery: "Galleri",
+                stats: "Statistik"
             },
             screens: {
                 auth: {
