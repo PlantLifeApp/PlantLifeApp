@@ -91,24 +91,40 @@ export default function StatsScreen() {
 
             // Populate all dates for years with care events
             const months = [
-                t("common.january"),
-                t("common.february"),
-                t("common.march"),
-                t("common.april"),
-                t("common.may"),
-                t("common.june"),
-                t("common.july"),
-                t("common.august"),
-                t("common.september"),
-                t("common.october"),
-                t("common.november"),
-                t("common.december")
+                { label: t("common.january") },
+                { label: t("common.february") },
+                { label: t("common.march") },
+                { label: t("common.april") },
+                { label: t("common.may") },
+                { label: t("common.june") },
+                { label: t("common.july") },
+                { label: t("common.august") },
+                { label: t("common.september") },
+                { label: t("common.october") },
+                { label: t("common.november") },
+                { label: t("common.december") }
             ];
+
+            const monthsStatic = [
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December'
+            ];
+
             const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
 
             Object.keys(careEvents).forEach(eventType => {
                 Object.keys(careEvents[eventType]).forEach(year => {
-                    months.forEach(month => {
+                    monthsStatic.forEach((month, index) => {
                         if (!careEvents[eventType][year][month]) {
                             careEvents[eventType][year][month] = {};
                         }
@@ -120,12 +136,11 @@ export default function StatsScreen() {
                     });
                 });
             });
-
             // Sort the months and days in the correct order
             Object.keys(careEvents).forEach(eventType => {
                 Object.keys(careEvents[eventType]).forEach(year => {
                     const sortedCareEvents = {};
-                    months.forEach(month => {
+                    monthsStatic.forEach(month => {
                         if (careEvents[eventType][year][month]) {
                             const sortedDays = Object.keys(careEvents[eventType][year][month]).map(Number).sort((a, b) => a - b);
                             sortedCareEvents[month] = {};
