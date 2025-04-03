@@ -546,7 +546,7 @@ const resources = {
                 delete: "Ta bort",
                 sort: "Sortera",
                 alphabetical: "Namn",
-                latestWatering: "Senast vattnad",
+                latestWatered: "Senast vattnad",
                 nextWatering: "Beräknad nästa vattning",
                 all: "Alla",
             }
