@@ -1,12 +1,12 @@
 import React, {useState} from 'react'
 import { StyleSheet, TouchableOpacity } from 'react-native'
 import { Text, Surface, IconButton } from 'react-native-paper'
-import { formatDate } from '../../utils/dateUtils'
+import { formatDate, formatRelativeDate } from '../../utils/dateUtils'
 import { useTranslation } from "react-i18next"
 import { View } from 'react-native'
 import ItalicText from '../../utils/italicText'
 
-const PlantDetails = ({ plant, careHistory }) => {
+const PlantDetails = ({ plant, careHistory, showRelativeTime = false }) => {
 
     //console.log("nextWatering received in PlantDetails:", nextWatering);
     //console.log("Care history receivedin PlantDetails:", careHistory);
@@ -17,6 +17,19 @@ const PlantDetails = ({ plant, careHistory }) => {
     const lastFertilization = careHistory.find(entry => entry.events.includes("fertilizing"))
     const lastPruning = careHistory.find(entry => entry.events.includes("pruning"))
     const lastRepotting = careHistory.find(entry => entry.events.includes("repotting"))
+
+    const isRecent = (date) => {
+        const now = new Date()
+        const d = date instanceof Date ? date : new Date(date)
+        return (now - d) < 7 * 24 * 60 * 60 * 1000
+    }
+
+    const formatSmart = (date) => {
+        return showRelativeTime && isRecent(date)
+            ? formatRelativeDate(date, t)
+            : formatDate(date)
+    }
+
 
     const getPlantEmoji = (plantType) => {
         switch (plantType) {
@@ -40,7 +53,7 @@ const PlantDetails = ({ plant, careHistory }) => {
 
             {lastWatering ? (
                 <Text variant="bodyMedium">
-                    💧 {t("screens.plant.lastWatered")}: {formatDate(lastWatering.date)}
+                    💧 {t("screens.plant.lastWatered")}: {formatSmart(lastWatering.date)}
                 </Text>
                 ) : (
                 <ItalicText variant="bodyMedium">
@@ -49,7 +62,7 @@ const PlantDetails = ({ plant, careHistory }) => {
             )}
             {lastFertilization ? (
                 <Text variant="bodyMedium">
-                    💥 {t("screens.plant.lastFertilized")}: {formatDate(lastFertilization.date)}
+                    💥 {t("screens.plant.lastFertilized")}: {formatSmart(lastFertilization.date)}
                 </Text>
                 ) : (
                 <ItalicText variant="bodyMedium">
@@ -59,7 +72,7 @@ const PlantDetails = ({ plant, careHistory }) => {
 
             {lastPruning ? (
                 <Text variant="bodyMedium">
-                    ✂️ {t("screens.plant.lastPruned")}: {formatDate(lastPruning.date)}
+                    ✂️ {t("screens.plant.lastPruned")}: {formatSmart(lastPruning.date)}
                 </Text>
                 ) : (
                 <ItalicText variant="bodyMedium">
@@ -69,7 +82,7 @@ const PlantDetails = ({ plant, careHistory }) => {
 
             {lastRepotting ? (
                 <Text variant="bodyMedium">
-                    🪴 {t("screens.plant.lastRepotted")}: {formatDate(lastRepotting.date)}
+                    🪴 {t("screens.plant.lastRepotted")}: {formatSmart(lastRepotting.date)}
                 </Text>
                 ) : (
                 <ItalicText variant="bodyMedium">
