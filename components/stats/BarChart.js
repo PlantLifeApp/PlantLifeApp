@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import { BarChart } from "react-native-chart-kit";
 import { Dimensions, StyleSheet } from "react-native";
-import { useTheme } from "react-native-paper";
 import { ThemeContext } from "../../context/themeContext";
 
 export default function BarChartComponent({ param_data, filterType }) {
-    const { isDarkMode } = useContext(ThemeContext)
+    const { theme } = useContext(ThemeContext);
+    console.log(param_data)
     const screenWidth = Dimensions.get("window").width;
     // Transform param_data into the format expected by the BarChart
     //const labels = Object.keys(param_data).map(label => label.charAt(0));;
@@ -31,11 +31,11 @@ export default function BarChartComponent({ param_data, filterType }) {
 
 
     const chartConfig = {
-        backgroundGradientFrom: isDarkMode ? "#333333" : "#ffffff",
+        backgroundGradientFrom: theme.colors.barChartGradient,
         backgroundGradientFromOpacity: 0,
-        backgroundGradientTo: isDarkMode ? "#333333" : "#ffffff",
+        backgroundGradientTo: theme.colors.barChartGradient,
         backgroundGradientToOpacity: 0.5,
-        color: (opacity = 1) => isDarkMode ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
+        color: () => theme.colors.barChartColor, // Ensure this is a function
         strokeWidth: 2, // optional, default 3
         barPercentage: 0.2,
         useShadowColorFromDataset: false, // optional
