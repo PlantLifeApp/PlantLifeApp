@@ -608,19 +608,19 @@ const resources = {
 
                 },
                 stats: {
-                    "daily": "Dagligen",
-                    "monthly": "Månadsvis",
-                    "yearly": "Årsvis",
-                    "overall": "Övergripande statistik",
-                    "watering": "Vattning",
-                    "fertilizing": "Gödsling",
-                    "pruning": "Beskärning",
-                    "alivePlants": "Levande växter",
-                    "deadPlants": "Döda växter",
-                    "barChartTitle": "Statistik",
-                    "pieChartTitle": "Överlevnadsstatistik",
-                    "alive": "Levande",
-                    "dead": "Död"
+                    daily: "Dagligen",
+                    monthly: "Månadsvis",
+                    yearly: "Årsvis",
+                    overall: "Övergripande statistik",
+                    watering: "Vattning",
+                    fertilizing: "Gödsling",
+                    pruning: "Beskärning",
+                    alivePlants: "Levande växter",
+                    deadPlants: "Döda växter",
+                    barChartTitle: "Statistik",
+                    pieChartTitle: "Överlevnadsstatistik",
+                    alive: "Levande",
+                    dead: "Död"
                 },
             },
             common: {
