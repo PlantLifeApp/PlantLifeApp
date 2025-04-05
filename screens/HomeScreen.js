@@ -1,6 +1,6 @@
 import React, { useContext, useState, useMemo } from "react";
 import { StyleSheet, FlatList, TouchableOpacity, View } from "react-native";
-import { IconButton } from "react-native-paper";
+import { Button, IconButton } from "react-native-paper";
 import { AuthContext } from "../context/authContext";
 import AddPlantModal from "../components/home/AddPlantModal";
 import { usePlants } from "../context/plantsContext";
@@ -26,9 +26,10 @@ const HomeScreen = () => {
     const [selectedType, setSelectedType] = useState("all")
     const [careMenuVisible, setCareMenuVisible] = useState(false)
     const [selectedPlantId, setSelectedPlantId] = useState(null)
+    const [isReversed, setIsReversed] = useState(false)
 
     const filteredPlants = useMemo(() => {
-        return alivePlants
+        const sorted = [...alivePlants]
             .filter((item) =>
                 item.givenName.toLowerCase().includes(searchQuery.toLowerCase()) &&
                 (selectedType === "all" || item.plantType === selectedType)
@@ -38,7 +39,7 @@ const HomeScreen = () => {
                     return a.givenName.localeCompare(b.givenName);
                 } else if (sortOption === "scientificName") {
                     return a.scientificName.localeCompare(b.scientificName)
-                } else if (sortOption === "latestCare") {
+                } else if (sortOption === "lastWatered") {
                     const dateA = a.careHistory.length > 0 ? searchMostRecentWatering(a.careHistory) : null;
                     const dateB = b.careHistory.length > 0 ? searchMostRecentWatering(b.careHistory) : null;
 
@@ -58,8 +59,9 @@ const HomeScreen = () => {
                     return dateA - dateB
                 }
                 return 0;
-            });
-    }, [alivePlants, plants, searchQuery, selectedType, sortOption]);
+            })
+        return isReversed ? sorted.reverse() : sorted
+    }, [alivePlants, plants, searchQuery, selectedType, sortOption, isReversed]);
 
     const handleOpenCareMenu = (plantId) => {
         setSelectedPlantId(plantId)
@@ -73,9 +75,12 @@ const HomeScreen = () => {
                 setIsTwoColumns={setIsTwoColumns}
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
+                sortOption={sortOption}
                 setSortOption={setSortOption}
                 selectedType={selectedType}
                 setSelectedType={setSelectedType}
+                isReversed={isReversed}
+                setIsReversed={setIsReversed}
             />
 
             <FlatList
