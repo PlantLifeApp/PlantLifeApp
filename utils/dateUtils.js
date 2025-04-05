@@ -6,6 +6,22 @@ export const formatDate = (date) => {
     return d.toLocaleDateString()
 }
 
+export const formatRelativeDate = (date, t) => {
+    if (!date || typeof t !== "function") return ""
+
+    const now = new Date()
+    const target = date instanceof Date ? date : new Date(date)
+
+    const diffInMs = target - now
+    const diffInDays = Math.round(diffInMs / (1000 * 60 * 60 * 24))
+
+    if (diffInDays === 0) return t("relativeTime.today")
+    if (diffInDays === -1) return t("relativeTime.yesterday")
+    if (diffInDays === 1) return t("relativeTime.tomorrow")
+    if (diffInDays < 0) return t("relativeTime.daysAgo", { count: Math.abs(diffInDays) })
+    return t("relativeTime.inDays", { count: diffInDays })
+}
+
 export const calculateNextWatering = (careHistory) => {
 
     // first filter out all watering events

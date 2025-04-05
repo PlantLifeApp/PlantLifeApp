@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useCallback } from "react"
 import { View, ScrollView, StyleSheet } from "react-native"
-import { Text, ActivityIndicator, Surface } from "react-native-paper"
+import { Text, ActivityIndicator, Surface, FAB } from "react-native-paper"
 import { AuthContext } from "../context/authContext"
 import { useTranslation } from "react-i18next"
 import { usePlants } from "../context/plantsContext"
@@ -14,22 +14,26 @@ import { addCareEvent } from "../services/plantService"
 import { useFocusEffect } from "@react-navigation/native"
 import CarePredictions from "../components/plant/CarePredictions"
 import ItalicText from "../utils/italicText.js"
+import { useNavigation } from "@react-navigation/native"
 
 const PlantScreen = ({ route }) => {
+
     const { plantId, plantPreview } = route.params
     const { user } = useContext(AuthContext)
     const { updatePlantData } = usePlants()
     const { t } = useTranslation()
     const theme = useTheme()
+    const navigation = useNavigation()
 
     const [plant, setPlant] = useState(null)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
+    const [fabOpen, setFabOpen] = useState(false)
 
     const displayName = plant?.plant.givenName || plantPreview?.givenName || ""
     const displayScientific = plant?.plant.scientificName || plantPreview?.scientificName || ""
 
-    // Lataa alussa välimuistista
+    // load from cache when available
     useEffect(() => {
         const loadInitial = async () => {
             const data = await updatePlantData(plantId, false)
@@ -39,7 +43,8 @@ const PlantScreen = ({ route }) => {
         loadInitial()
     }, [plantId])
 
-    // Päivitä taustalla kun palaa näytölle
+    // soft refresh when screen is focused
+    // this is to ensure that the data is up to date when the user comes back to the screen
     useFocusEffect(
         useCallback(() => {
             const refresh = async () => {
@@ -101,13 +106,13 @@ const PlantScreen = ({ route }) => {
                         <PlantDetails
                             plant={plant.plant}
                             careHistory={plant.careHistory}
+                            showRelativeTime={true}
                         />
                         <CarePredictions
                             nextWatering={plant.nextWatering}
                             nextFertilizing={plant.nextFertilizing}
                         />
                         <CareHistory careHistory={plant.careHistory} />
-                        <EditButtons plant={plant.plant} />
                     </>
                 )}
 
@@ -117,6 +122,33 @@ const PlantScreen = ({ route }) => {
                     </View>
                 )}
             </ScrollView>
+
+            <FAB.Group
+                open={fabOpen}
+                icon={fabOpen ? "close" : "pencil"}
+                actions={[
+                    {
+                        icon: "file-document-edit",
+                        label: t("screens.plant.editHistory"),
+                        onPress: () => navigation.navigate("EditCareHistory", { plant: plant.plant }),
+                    },
+                    {
+                        icon: "leaf",
+                        label: t("screens.plant.editPlant"),
+                        onPress: () => navigation.navigate("EditPlant", { plant: plant.plant }),
+                    },
+                ]}
+                onStateChange={({ open }) => setFabOpen(open)}
+                visible={!!plant}
+                fabStyle={{
+                    backgroundColor: theme.colors.secondaryContainer,
+                    position: "absolute",
+                    bottom: -32,
+                    right: 0,
+                    margin: 0,
+                }}
+            />
+
         </View>
     )
 }

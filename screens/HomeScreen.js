@@ -9,6 +9,7 @@ import CardComponent from '../components/home/CardComponent';
 import { ThemeContext } from "../context/themeContext";
 import { searchMostRecentWatering } from '../utils/searchWaterUtils';
 import ActionBar from "../components/home/ActionBar";
+import QuickCareMenu from "../components/home/QuickCareMenu";
 
 const HomeScreen = () => {
     const { theme } = useContext(ThemeContext);
@@ -23,6 +24,8 @@ const HomeScreen = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [sortOption, setSortOption] = useState("alphabetical");
     const [selectedType, setSelectedType] = useState("all")
+    const [careMenuVisible, setCareMenuVisible] = useState(false)
+    const [selectedPlantId, setSelectedPlantId] = useState(null)
 
     const filteredPlants = useMemo(() => {
         return alivePlants
@@ -56,6 +59,11 @@ const HomeScreen = () => {
             });
     }, [alivePlants, plants, searchQuery, selectedType, sortOption]);
 
+    const handleOpenCareMenu = (plantId) => {
+        setSelectedPlantId(plantId)
+        setCareMenuVisible(true)
+    }
+
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <ActionBar
@@ -78,6 +86,7 @@ const HomeScreen = () => {
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={isTwoColumns ? styles.itemContainerSimple : styles.itemContainerComplex}
+                        onLongPress={() => handleOpenCareMenu(item.id)}
                         onPress={() => navigation.navigate("PlantScreen", {
                             plantId: item.id,
                             plantPreview: {
@@ -91,6 +100,7 @@ const HomeScreen = () => {
                     </TouchableOpacity>
                 )}
             />
+            <QuickCareMenu plantId={selectedPlantId} menuVisible={careMenuVisible} setMenuVisible={setCareMenuVisible} />
 
             <View style={styles.addPlantButtonContainer}>
                 <IconButton

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Card, Icon, Text } from 'react-native-paper';
 import { View, Image, StyleSheet } from 'react-native';
 import { useTranslation } from "react-i18next"
@@ -54,16 +54,17 @@ const CardComponent = ({ item, isTwoColumns }) => {
                         <Text style={{ alignSelf: "left", fontWeight: 'bold' }} variant="titleLarge" numberOfLines={2} ellipsizeMode="tail">{item.givenName}</Text>
                         <Text variant="bodyMedium" numberOfLines={2} ellipsizeMode="tail">{item.scientificName}</Text>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
+                            <Icon source="water" size={15} />
                             <Text variant="bodySmall">
                                 {item.careHistory.length == 0 ? t("screens.home.lastWatered") + " " + t("screens.home.noWateringHistory") : t("screens.home.lastWatered") + " " + formatDate(searchMostRecentWatering(item.careHistory))}
                             </Text>
-                            <Icon source="water" size={15} color="grey" />
                         </View>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
+                            <Icon source="calendar" size={15} />
                             <Text style={{ alignSelf: "center" }} variant="bodySmall">
                                 {item.nextWatering ? t("screens.home.nextWatering") + " " + formatDate(item.nextWatering) : t("screens.home.nextWatering") + " " + "--"}
                             </Text>
-                            <Icon source="water" size={15} color="grey" />
+                            
                         </View>
                     </Card.Content>
                 </View>
