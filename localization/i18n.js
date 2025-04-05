@@ -210,8 +210,14 @@ const resources = {
                 october: "October",
                 november: "November",
                 december: "December",
-
-            }
+            },
+            relativeTime: {
+                today: "Today!",
+                yesterday: "Yesterday!",
+                tomorrow: "Tomorrow",
+                daysAgo: "{{count}} days ago",
+                inDays: "In {{count}} days",
+            },
         }
     },
     fi: {
@@ -422,7 +428,14 @@ const resources = {
                 september: "Syyskuu",
                 october: "Lokakuu",
                 december: "Joulukuu",
-            }
+            },
+            relativeTime: {
+                today: "tänään!",
+                yesterday: "eilen!",
+                tomorrow: "huomenna",
+                daysAgo: "{{count}} päivää sitten",
+                inDays: "{{count}} päivän päästä",
+            },
         }
     },
     sv: {
@@ -594,21 +607,21 @@ const resources = {
                     choosePlantName: "Välj en växt",
 
                 },
-                stats: {        //Nämä kaikki voisi tarkistaa
+                stats: {
                     daily: "Dagligen",
-                    monthly: "månatlig",
-                    yearly: "Årligen",
+                    monthly: "Månadsvis",
+                    yearly: "Årsvis",
                     overall: "Övergripande statistik",
-                    watering: "vattning",
-                    fertilizing: "gödsling",
-                    pruning: "beskärning",
+                    watering: "Vattning",
+                    fertilizing: "Gödsling",
+                    pruning: "Beskärning",
                     alivePlants: "Levande växter",
                     deadPlants: "Döda växter",
                     barChartTitle: "Statistik",
                     pieChartTitle: "Överlevnadsstatistik",
                     alive: "Levande",
-                    dead: "Död",
-                },      // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    dead: "Död"
+                },
             },
             common: {
                 confirm: "Bekräfta",
@@ -621,7 +634,7 @@ const resources = {
                 latestWatered: "Senast vattnad",
                 nextWatering: "Beräknad nästa vattning",
                 all: "Alla",
-                january: "Januari", //--- Nämä voisi tarkistaa vvvvvvv
+                january: "Januari",
                 february: "Februari",
                 march: "Mars",
                 april: "April",
@@ -631,9 +644,15 @@ const resources = {
                 august: "Augusti",
                 september: "September",
                 october: "Oktober",
-                december: "December",//  ^^^^^^^^^^
-
-            }
+                december: "December",
+            },
+            relativeTime: {
+                today: "idag!",
+                yesterday: "igår!",
+                tomorrow: "imorgon",
+                daysAgo: "{{count}} dagar sedan",
+                inDays: "{{count}} dagar kvar",
+            },
         }
     }
 }

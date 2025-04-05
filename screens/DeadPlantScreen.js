@@ -85,6 +85,7 @@ export default function DeadPlantScreen({ route }) {
                 <PlantDetails
                     plant={plant}
                     careHistory={groupedCareHistory}
+                    showRelativeTime={false}
                 />
                 <CareHistory careHistory={groupedCareHistory} />
             </ScrollView>
