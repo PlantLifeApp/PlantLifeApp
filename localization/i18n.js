@@ -194,7 +194,8 @@ const resources = {
                 ok: "OK",
                 delete: "Delete",
                 sort: "Sort By",
-                alphabetical: "By Name",
+                alphabetical: "Name",
+                scientificName: "Scientific Name",
                 lastWatered: "Last Watered",
                 nextWatering: "Next Estimated Watering",
                 all: "All",
@@ -414,6 +415,7 @@ const resources = {
                 delete: "Poista",
                 sort: "Järjestä",
                 alphabetical: "Nimi",
+                scientificName: "Tieteellinen nimi",
                 lastWatered: "Viimeksi kasteltu",
                 nextWatering: "Seuraava arvioitu kastelu",
                 all: "Kaikki",
@@ -427,6 +429,7 @@ const resources = {
                 august: "Elokuu",
                 september: "Syyskuu",
                 october: "Lokakuu",
+                november: "Marraskuu",
                 december: "Joulukuu",
             },
             relativeTime: {
@@ -631,6 +634,7 @@ const resources = {
                 delete: "Ta bort",
                 sort: "Sortera",
                 alphabetical: "Namn",
+                scientificName: "Vetenskapligt namn",    // Check
                 latestWatered: "Senast vattnad",
                 nextWatering: "Beräknad nästa vattning",
                 all: "Alla",
@@ -644,6 +648,7 @@ const resources = {
                 august: "Augusti",
                 september: "September",
                 october: "Oktober",
+                november: "November",
                 december: "December",
             },
             relativeTime: {

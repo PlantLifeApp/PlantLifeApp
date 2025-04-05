@@ -36,6 +36,8 @@ const HomeScreen = () => {
             .sort((a, b) => {
                 if (sortOption === "alphabetical") {
                     return a.givenName.localeCompare(b.givenName);
+                } else if (sortOption === "scientificName") {
+                    return a.scientificName.localeCompare(b.scientificName)
                 } else if (sortOption === "latestCare") {
                     const dateA = a.careHistory.length > 0 ? searchMostRecentWatering(a.careHistory) : null;
                     const dateB = b.careHistory.length > 0 ? searchMostRecentWatering(b.careHistory) : null;

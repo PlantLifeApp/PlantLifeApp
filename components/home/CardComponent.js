@@ -4,6 +4,7 @@ import { View, Image, StyleSheet } from 'react-native';
 import { useTranslation } from "react-i18next"
 import { searchMostRecentWatering } from '../../utils/searchWaterUtils.js';
 import { formatDate } from '../../utils/dateUtils.js';
+import ItalicText from '../../utils/italicText.js';
 
 const CardComponent = ({ item, isTwoColumns }) => {
 
@@ -27,12 +28,12 @@ const CardComponent = ({ item, isTwoColumns }) => {
 
     return (
         <Card>
-            {isTwoColumns ? (
+            {isTwoColumns ? (   /* Two Columns, Grid View */
                 <View style={styles.container}>
                     <Image style={styles.image} source={plantImageUrl} />
                     <Card.Content style={styles.content}>
                         <Text style={{ alignSelf: "center" }} variant="titleMedium" numberOfLines={1} ellipsizeMode="tail">{item.givenName}</Text>
-                        <Text style={{ alignSelf: "center" }} variant="bodySmall" numberOfLines={1} ellipsizeMode="tail">{item.scientificName}</Text>
+                        <ItalicText style={{ alignSelf: "center" }} variant="bodySmall" numberOfLines={1} ellipsizeMode="tail">{item.scientificName}</ItalicText>
                         <View style={{ flexDirection: "row", alignItems: "center", alignSelf: 'center' }}>
                             <Icon source="water" size={15} />
                             <Text style={{ alignSelf: "center" }} variant="bodySmall">
@@ -47,12 +48,12 @@ const CardComponent = ({ item, isTwoColumns }) => {
                         </View>
                     </Card.Content>
                 </View>
-            ) : (
+            ) : (   /* One Column, List View*/
                 <View style={styles.containerRow}>
                     <Image style={styles.imageRow} source={plantImageUrl} />
                     <Card.Content style={styles.contentRow}>
                         <Text style={{ alignSelf: "left", fontWeight: 'bold' }} variant="titleLarge" numberOfLines={2} ellipsizeMode="tail">{item.givenName}</Text>
-                        <Text variant="bodyMedium" numberOfLines={2} ellipsizeMode="tail">{item.scientificName}</Text>
+                        <ItalicText variant="bodyMedium" numberOfLines={2} ellipsizeMode="tail">{item.scientificName}</ItalicText>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
                             <Icon source="water" size={15} />
                             <Text variant="bodySmall">
@@ -64,7 +65,6 @@ const CardComponent = ({ item, isTwoColumns }) => {
                             <Text style={{ alignSelf: "center" }} variant="bodySmall">
                                 {item.nextWatering ? t("screens.home.nextWatering") + " " + formatDate(item.nextWatering) : t("screens.home.nextWatering") + " " + "--"}
                             </Text>
-                            
                         </View>
                     </Card.Content>
                 </View>

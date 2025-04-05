@@ -59,6 +59,7 @@ export default function ActionBar({ isTwoColumns, setIsTwoColumns, searchQuery, 
                         }
                     >
                         <Menu.Item onPress={() => { setSortOption("alphabetical"), setMenuVisible(false) }} title={t("common.alphabetical")} />
+                        <Menu.Item onPress={() => { setSortOption("scientificName"), setMenuVisible(false) }} title={t("common.scientificName")} />
                         <Menu.Item onPress={() => { setSortOption("latestCare"), setMenuVisible(false) }} title={t("common.lastWatered")} />
                         <Menu.Item onPress={() => { setSortOption("nextWatering"), setMenuVisible(false) }} title={t("common.nextWatering")} />
                     </Menu>
