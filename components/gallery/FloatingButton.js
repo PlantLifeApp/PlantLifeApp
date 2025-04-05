@@ -75,6 +75,9 @@ export default function FloatingButton({ plantId }) {
   const uploadImageToPlant = async (plantId, imageUri) => {
     try {
       const downloadUrl = await uploadPlantImage(user.uid, plantId, imageUri)
+      if (!downloadUrl || typeof downloadUrl !== "string") {
+        throw new Error("Invalid download URL: must be a string");
+      }
       console.log("Floatingbutton:✅ Image uploaded successfully:", downloadUrl)
       addImage(plantId, downloadUrl)
     } catch (error) {

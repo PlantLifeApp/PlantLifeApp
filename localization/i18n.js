@@ -380,7 +380,10 @@ const resources = {
                     }
                 },
                 gallery: {
-                    listEmpty: "Ei kuvia saatavilla"
+                    listEmpty: "Ei kuvia saatavilla",
+                    search: "Etsi",
+                    plantName: "Kasvin nimi",
+                    plantType: "Kasvityyppi"
                 },
                 fab: {
                     camera: "Ota kuva",
@@ -597,6 +600,9 @@ const resources = {
                 },
                 gallery: {
                     listEmpty: "Inga bilder tillgängliga",
+                    search: "Söka",
+                    plantName: "Växtnamn",
+                    plantType: "Växttyp"
                 },
                 fab: {
                     camera: "Ta foto",
