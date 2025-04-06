@@ -94,8 +94,12 @@ export default function EditPlantScreen({ route }) {
         try {
             setDeleteModalVisible(false)
             await deletePlant(user.uid, plantId)
-            await updatePlantData(plantId, true)
             navigation.navigate("HomeScreen")
+            Toast.show({
+                type: "success",
+                text1: t("screens.editPlant.successDeleting"),
+                position: "bottom",
+            })
         } catch (error) {
             console.error("Error deleting plant:", error)
             Toast.show({
