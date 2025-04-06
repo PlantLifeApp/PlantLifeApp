@@ -139,6 +139,9 @@ const resources = {
                     confirmDeleteTitle: "Delete Account",
                     confirmDelete: "Are you sure you want to delete your account? This action cannot be undone.",
                     errorDeleting: "Error deleting account",
+                    passwordToDelete: "Enter password to delete",
+                    wrongPassword: "Wrong password",
+                    tooManyRequest: "Account locked for too many wrong attempts. Try again later",
                 },
                 graveyard: {
                     title: "Plant Graveyard",
@@ -358,6 +361,9 @@ const resources = {
                     confirmDelete: "Oletko varma, että haluat poistaa käyttäjätunnuksesi? Tätä toimintoa ei voi peruuttaa.",
                     errorDeleting: "Virhe poistaessa käyttäjätunnusta",
                     visitGraveyard: "Vieraile hautausmaalla",
+                    passwordToDelete: "Lisää salasana poistaaksesi tili",
+                    wrongPassword: "Väärä salasana",
+                    tooManyRequest: "Tili lukittu liian monen väärän yrityksen takia. Yritä myöhemmin uudelleen.",
                 },
                 graveyard: {
                     title: "Kasvien hautausmaa",
@@ -577,6 +583,9 @@ const resources = {
                     confirmDeleteTitle: "Ta bort konto",
                     confirmDelete: "Är du säker på att du vill ta bort ditt konto? Denna åtgärd kan inte ångras.",
                     errorDeleting: "Fel vid borttagning av konto",
+                    passwordToDelete: "Lägg till lösenord för att radera konto",
+                    wrongPassword: "Fel lösenord",
+                    tooManyRequest: "Kontot låst för för många felaktiga försök. Försök igen senare.",
                 },
                 graveyard: {
                     title: "Växtkyrkogården",

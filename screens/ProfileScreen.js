@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react"
-import { Surface, Text, Button, SegmentedButtons } from "react-native-paper"
+import { Surface, Text, Button, SegmentedButtons, Portal, Dialog } from "react-native-paper"
 import { StyleSheet, View } from "react-native"
 import { getAuth, signOut } from "firebase/auth"
 import { AuthContext } from "../context/authContext"
@@ -22,6 +22,8 @@ export default function ProfileScreen() {
     const { useSystemTheme, setUseSystemTheme, isDarkMode, setIsDarkMode } = useContext(ThemeContext)
 
     const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+    const [dialogMessage, setDialogMessage] = useState('')
+    const [dialogVisible, setDialogVisible] = useState(false)
 
     const changeLanguage = async (lng) => {
         i18n.changeLanguage(lng)
@@ -42,14 +44,28 @@ export default function ProfileScreen() {
     const handleDelete = async (password) => {
         try {
             await deleteAccount(password)
-            alert('Account deleted!')
-        } catch (error){
-            alert('Error: '+ error.message)
+            console.log('account deleted')
+            
+        } catch (error) {
+            if ( error.code === 'auth/invalid-credential') {
+                setDialogMessage(t("screens.options.wrongPassword"))
+            }
+            else if(error.code === 'auth/too-many-requests') {
+                setDialogMessage(t("screens.options.tooManyRequest"))
+            }
+            else{
+                setDialogMessage(`${t("screens.options.errorDeleting")}: ${error.message}`)
+            }
+             setDialogVisible(true)
+
+            setTimeout(() => {
+                setDialogVisible(false)
+            }, 7000)
         }
     }
 
     return (
-        
+
         <Surface style={styles.container}>
             <View style={styles.topContent}>
                 <Text variant="bodyMedium">{t("screens.options.signedInAs")}:</Text>
@@ -96,26 +112,22 @@ export default function ProfileScreen() {
                 </View>
             </View>
 
-            <DeleteAccountModal
-                visible={deleteModalVisible}
-                onCancel={() => setDeleteModalVisible(false)}
-                onConfirm={(password) => {
-                    try {
-                        handleDelete(password)
-                        setDeleteModalVisible(false)
-                        console.log("Pressed Delete Account")
-                        navigation.navigate("Home")
-
-                    } catch (error) {
-                        console.error("Error deleting account:", error)
-                        Toast.show({
-                            type: "error",
-                            text1: t("screens.options.errorDeleting"),
-                            position: "bottom",
-                        })
-                    }
-                }}
-            />
+            <Portal>
+            <Dialog visible={dialogVisible} onDismiss={() => setDialogVisible(false)}>
+                <Dialog.Content style={{alignItems: 'center'}}>
+                    <Text >{dialogMessage}</Text>
+                </Dialog.Content>
+            </Dialog>
+        </Portal>
+        
+        <DeleteAccountModal
+            visible={deleteModalVisible}
+            onCancel={() => setDeleteModalVisible(false)}
+            onConfirm={(password) => {
+                handleDelete(password);
+                setDeleteModalVisible(false);
+            }}
+        />
 
         </Surface>
     )
