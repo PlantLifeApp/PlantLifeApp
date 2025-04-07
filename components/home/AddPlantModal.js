@@ -65,7 +65,7 @@ export default function AddPlantModal({ user, visible, onClose }) {
         // Format price to number if given by user. If price not numeric, then it must be null
         let formattedPrice = plantPrice ? parseFloat(typeof plantPrice === "string" ? plantPrice.replace(",", ".") : plantPrice) : null
         if (isNaN(formattedPrice)) formattedPrice = 0.0
-        
+
         const newPlantId = await addPlant(plantNickname, scientificName, formattedPrice, plantType, user.uid);
 
         if (newPlantId && plantImageUri) {
@@ -127,16 +127,21 @@ export default function AddPlantModal({ user, visible, onClose }) {
 
                         <Text variant="bodyMedium">{t("screens.addPlant.nickname")}*</Text>
                         <View style={styles.inputContainer}>
-                            <TextInput style={[styles.textInput, plantNicknameError && styles.errorInput]} onChangeText={(text) => {
-                                setPlantNickname(text)
-                                setPlantNicknameError(false)
-                            }}>
-                            </TextInput>
+                            <TextInput
+                                style={[styles.textInput, plantNicknameError && styles.errorInput]}
+                                onChangeText={(text) => {
+                                    setPlantNickname(text)
+                                    setPlantNicknameError(false)
+                                }}
+                            />
                         </View>
 
                         <Text variant="bodyMedium">{t("screens.addPlant.scientificName")}</Text>
                         <View style={styles.inputContainer}>
-                            <TextInput style={styles.textInput} onChangeText={(text) => setScientificName(text)}></TextInput>
+                            <TextInput
+                                style={styles.textInput}
+                                onChangeText={(text) => setScientificName(text)}
+                            />
                         </View>
 
                         <Text variant="bodyMedium">{t("screens.addPlant.price")} €</Text>
@@ -191,8 +196,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     textInput: {
+        flex: 1,
         width: "100%",
-        height: 40,
+        //height: 40,
         borderColor: "gray",
         borderWidth: 1,
         marginBottom: 10,
