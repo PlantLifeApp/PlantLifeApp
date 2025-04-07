@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 import { Button, Modal, Surface, Text, TextInput, Portal, Icon } from 'react-native-paper'
 import { addPlant, uploadPlantImage } from '../../services/plantService';
 import { Dropdown } from 'react-native-paper-dropdown';
@@ -12,6 +12,7 @@ export default function AddPlantModal({ user, visible, onClose }) {
     const [plantType, setPlantType] = useState("");
     const [plantNickname, setPlantNickname] = useState("");
     const [scientificName, setScientificName] = useState("");
+    const [plantPrice, setPlantPrice] = useState(null)
     const [plantImageUri, setPlantImageUri] = useState(null);
     const [plantNicknameError, setPlantNicknameError] = useState(false)
     const [plantTypeError, setPlantTypeError] = useState(false)
@@ -28,10 +29,11 @@ export default function AddPlantModal({ user, visible, onClose }) {
 
     const onCloseFunction = () => {
         // Reset all values to default
-        onClose();
-        setPlantType("");
-        setPlantNickname("");
-        setScientificName("");
+        onClose()
+        setPlantType("")
+        setPlantNickname("")
+        setScientificName("")
+        setPlantPrice(null)
         setPlantImageUri(null)
         setPlantNicknameError(false)
         setPlantTypeError(false)
@@ -60,7 +62,11 @@ export default function AddPlantModal({ user, visible, onClose }) {
             return;
         }
 
-        const newPlantId = await addPlant(plantNickname, scientificName, plantType, user.uid);
+        // Format price to number if given by user. If price not numeric, then it must be null
+        let formattedPrice = plantPrice ? parseFloat(typeof plantPrice === "string" ? plantPrice.replace(",", ".") : plantPrice) : null
+        if (isNaN(formattedPrice)) formattedPrice = 0.0
+
+        const newPlantId = await addPlant(plantNickname, scientificName, formattedPrice, plantType, user.uid);
 
         if (newPlantId && plantImageUri) {
             const imageUrl = await uploadPlantImage(user.uid, newPlantId, plantImageUri, true)  // Upload image to Firestorage
@@ -70,6 +76,12 @@ export default function AddPlantModal({ user, visible, onClose }) {
             }
         }
 
+        Toast.show({
+            type: "success",
+            text1: t("screens.addPlant.addSuccess"),
+            position: "bottom",
+            visibilityTime: 3000,
+        })
         onCloseFunction();
     }
 
@@ -101,51 +113,63 @@ export default function AddPlantModal({ user, visible, onClose }) {
                 onRequsetClose={onClose}
                 style={styles.modalContainer}
             >
-                <Surface style={styles.modalSurface}>
-                    <Text variant="bodyLarge" style={styles.title}>{t("screens.addPlant.title")}</Text>
+                <ScrollView>
+                    <Surface style={styles.modalSurface}>
+                        <Text variant="bodyLarge" style={styles.title}>{t("screens.addPlant.title")}</Text>
 
-                    <TouchableOpacity onPress={handleOpenCamera} style={styles.imagePicker}>
-                        {plantImageUri ? (
-                            <Image source={{ uri: plantImageUri }} style={styles.imagePreview} />
-                        ) : (
-                            <Icon source='camera' size={48} color='gray' />
-                        )}
-                    </TouchableOpacity>
+                        <TouchableOpacity onPress={handleOpenCamera} style={styles.imagePicker}>
+                            {plantImageUri ? (
+                                <Image source={{ uri: plantImageUri }} style={styles.imagePreview} />
+                            ) : (
+                                <Icon source='camera' size={48} color='gray' />
+                            )}
+                        </TouchableOpacity>
 
-                    <Text variant="bodyMedium">{t("screens.addPlant.nickname")}*</Text>
-                    <View style={styles.inputContainer}>
-                        <TextInput style={[styles.textInput, plantNicknameError && styles.errorInput]} onChangeText={(text) => {
-                            setPlantNickname(text)
-                            setPlantNicknameError(false)
-                        }}>
-                        </TextInput>
-                    </View>
+                        <Text variant="bodyMedium">{t("screens.addPlant.nickname")}*</Text>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={[styles.textInput, plantNicknameError && styles.errorInput]}
+                                onChangeText={(text) => {
+                                    setPlantNickname(text)
+                                    setPlantNicknameError(false)
+                                }}
+                            />
+                        </View>
 
-                    <Text variant="bodyMedium">{t("screens.addPlant.scientificName")}</Text>
-                    <View style={styles.inputContainer}>
-                        <TextInput style={styles.textInput} onChangeText={(text) => setScientificName(text)}></TextInput>
-                    </View>
+                        <Text variant="bodyMedium">{t("screens.addPlant.scientificName")}</Text>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={styles.textInput}
+                                onChangeText={(text) => setScientificName(text)}
+                            />
+                        </View>
 
-                    <Text variant="bodyMedium">{t("screens.addPlant.type")}*</Text>
-                    <View style={[styles.inputContainer, plantTypeError && styles.errorInput]}>
-                        <Dropdown
-                            placeholder={t("screens.addPlant.selectType")}
-                            options={TYPES}
-                            value={plantType}
-                            onSelect={(value) => {
-                                setPlantType(value)
-                                setPlantTypeError(false)
-                            }}
-                            style={styles.dropdown}
-                        />
-                    </View>
+                        <Text variant="bodyMedium">{t("screens.addPlant.price")} €</Text>
+                        <View style={styles.inputContainer}>
+                            <TextInput style={styles.textInput} keyboardType='numeric' onChangeText={(text) => setPlantPrice(text)}></TextInput>
+                        </View>
 
-                    <Button style={styles.button} mode="contained" onPress={handleAddPlant} >{t("screens.addPlant.addButton")}</Button>
-                    <Button style={styles.button} mode="contained" onPress={onCloseFunction} >{t("screens.addPlant.cancelButton")}</Button>
+                        <Text variant="bodyMedium">{t("screens.addPlant.type")}*</Text>
+                        <View style={[styles.inputContainer, plantTypeError && styles.errorInput]}>
+                            <Dropdown
+                                placeholder={t("screens.addPlant.selectType")}
+                                options={TYPES}
+                                value={plantType}
+                                onSelect={(value) => {
+                                    setPlantType(value)
+                                    setPlantTypeError(false)
+                                }}
+                                style={styles.dropdown}
+                            />
+                        </View>
 
-                </Surface>
+                        <Button style={styles.button} mode="contained" onPress={handleAddPlant} >{t("screens.addPlant.addButton")}</Button>
+                        <Button style={styles.button} mode="contained" onPress={onCloseFunction} >{t("screens.addPlant.cancelButton")}</Button>
+
+                    </Surface>
+                </ScrollView>
             </Modal>
-        </Portal>
+        </Portal >
     );
 }
 
@@ -172,8 +196,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     textInput: {
+        flex: 1,
         width: "100%",
-        height: 40,
+        //height: 40,
         borderColor: "gray",
         borderWidth: 1,
         marginBottom: 10,

@@ -1,21 +1,26 @@
 import { db } from "./firebaseConfig";
-import { getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp,
-     deleteDoc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore"
+import {
+    getFirestore, collection, doc, setDoc, getDoc, getDocs, serverTimestamp,
+    deleteDoc, updateDoc, arrayUnion, Timestamp
+} from "firebase/firestore"
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject, listAll } from "firebase/storage"
 import { calculateNextWatering, calculateNextFertilizing } from "../utils/dateUtils"
 import { compressImage } from "../utils/compressImage";
 
 // ADD PLANT
-export const addPlant = async (givenName, scientificName, plantType, userId) => {
+export const addPlant = async (givenName, scientificName, plantPrice, plantType, userId) => {
     try {
         const db = getFirestore();
         const plantRef = doc(collection(db, "users", userId, "plants"))
+
         const plantData = {
             givenName,
             scientificName,
+            plantPrice: plantPrice,
             plantType,
             coverImageUrl: null,
-            images: []
+            images: [],
+            createdAt: serverTimestamp()
         }
         await setDoc(plantRef, plantData)
         console.log("Plant added successfully with ID:", plantRef.id)
@@ -157,12 +162,12 @@ export const deletePlant = async (userId, plantId) => {
         const fileList = await listAll(plantFolderRef)
         const deletePromises = fileList.items.map(async (itemRef) => {
             try {
-              await deleteObject(itemRef)
-              console.log(`Deleted: ${itemRef.fullPath}`)
+                await deleteObject(itemRef)
+                console.log(`Deleted: ${itemRef.fullPath}`)
             } catch (err) {
-              console.error(`Failed to delete ${itemRef.fullPath}:`, err)
+                console.error(`Failed to delete ${itemRef.fullPath}:`, err)
             }
-          })
+        })
         await Promise.all(deletePromises)
 
         console.log(`Deleted ${fileList.items.length} images from Storage`)
@@ -178,11 +183,11 @@ export const deletePlant = async (userId, plantId) => {
     }
 }
 
-export const deleteAllPlants = async(userId) => {
-    if (!userId ) {
+export const deleteAllPlants = async (userId) => {
+    if (!userId) {
         throw new Error("Missing required parameters (userId).")
     }
-    try{
+    try {
         const plantsCollectionRef = collection(db, "users", userId, "plants")
         const plantsSnapshot = await getDocs(plantsCollectionRef)
 
@@ -205,7 +210,7 @@ export const deleteAllPlants = async(userId) => {
 
         console.log(`Plants of ${userId} has been deleted`)
         return true
-    } catch(error) {
+    } catch (error) {
         console.error('Error deleting plants: ', error)
         throw error
     }

@@ -15,7 +15,7 @@ export const ImagesProvider = ({ children }) => {
         const storedImages = await AsyncStorage.getItem("plantImages")
         if (storedImages) {
           setImages(JSON.parse(storedImages))
-          console.log("✅ Images loaded from AsyncStorage:", JSON.parse(storedImages));
+          //console.log("✅ Images loaded from AsyncStorage:", JSON.parse(storedImages));
         }
       } catch (error) {
         console.error("Error loading images from storage: ", error)
