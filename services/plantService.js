@@ -145,33 +145,46 @@ export const addCareEvent = async (userId, plantId, eventType) => {
 
 // DELETE PLANT
 export const deletePlant = async (userId, plantId) => {
+
     if (!userId || !plantId) {
         throw new Error("Missing required parameters (userId, plantId).")
     }
 
     try {
-        const storage = getStorage()
+
+        const storage = getStorage();
         const plantFolderRef = ref(storage, `plants/${userId}/${plantId}`)
-        console.log('Deleting files from: ', plantFolderRef.fullPath)
+        console.log("Deleting files from:", plantFolderRef.fullPath)
 
-        const fileList = await listAll(plantFolderRef)
-        const deletePromises = fileList.items.map(async (itemRef) => {
+        // delete all files from Storage
+        const fileList = await listAll(plantFolderRef);
+        const deleteImagePromises = fileList.items.map(async (itemRef) => {
             try {
-              await deleteObject(itemRef)
-              console.log(`Deleted: ${itemRef.fullPath}`)
+                await deleteObject(itemRef)
+                console.log(`Deleted: ${itemRef.fullPath}`)
             } catch (err) {
-              console.error(`Failed to delete ${itemRef.fullPath}:`, err)
+                console.error(`Failed to delete ${itemRef.fullPath}:`, err)
             }
-          })
-        await Promise.all(deletePromises)
-
+        })
+        await Promise.all(deleteImagePromises)
         console.log(`Deleted ${fileList.items.length} images from Storage`)
 
-        // Reference to the plant document
+        // delete all care history entries
+        const careHistoryCollectionRef = collection(db, "users", userId, "plants", plantId, "careHistory")
+        const careHistorySnapshot = await getDocs(careHistoryCollectionRef)
+        const careDeletePromises = careHistorySnapshot.docs.map((careDoc) =>
+            deleteDoc(doc(db, "users", userId, "plants", plantId, "careHistory", careDoc.id))
+        )
+        await Promise.all(careDeletePromises)
+        console.log(`Deleted ${careDeletePromises.length} care history events`)
+
+        // delete the plant document itself
         const plantRef = doc(db, "users", userId, "plants", plantId)
         await deleteDoc(plantRef)
         console.log(`Deleted plant ${plantId}`)
+
         return true
+        
     } catch (error) {
         console.error(`Error deleting plant ${plantId}:`, error)
         throw error
