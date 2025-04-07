@@ -107,7 +107,7 @@ export const fetchFullPlantData = async (userId, plantId) => {
 
         const sortedGroupedHistory = Object.values(groupedHistory)
         const nextWatering = calculateNextWatering(sortedGroupedHistory)
-        const nextFertilizing = calculateNextFertilizing(sortedGroupedHistory)
+        const nextFertilizing = await calculateNextFertilizing(sortedGroupedHistory)
 
         return {
             plant: plantData,
@@ -184,13 +184,14 @@ export const deletePlant = async (userId, plantId) => {
         console.log(`Deleted plant ${plantId}`)
 
         return true
-        
+
     } catch (error) {
         console.error(`Error deleting plant ${plantId}:`, error)
         throw error
     }
 }
 
+// DELETE ALL PLANTS
 export const deleteAllPlants = async(userId) => {
     if (!userId ) {
         throw new Error("Missing required parameters (userId).")
@@ -224,6 +225,7 @@ export const deleteAllPlants = async(userId) => {
     }
 }
 
+// UPDATE PLANT
 export const updatePlant = async (userId, plantId, updatedData) => {
     try {
         const plantRef = doc(db, "users", userId, "plants", plantId)

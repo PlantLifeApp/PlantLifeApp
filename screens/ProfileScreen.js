@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useState, useEffect } from "react"
 import { Surface, Text, Button, SegmentedButtons } from "react-native-paper"
 import { StyleSheet, View } from "react-native"
 import { getAuth, signOut } from "firebase/auth"
@@ -11,6 +11,9 @@ import LANGUAGES from "../localization/languages"
 import { useNavigation } from "@react-navigation/native"
 import DeleteAccountModal from "../components/profile/deleteAccountModal"
 import { deleteAccount } from "../services/authService"
+import { getWinterMonths, setWinterMonths, getMonthName } from "../utils/dateUtils"
+import WinterModal from "../components/profile/WinterModal"
+import Toast from "react-native-toast-message"
 
 export default function ProfileScreen() {
     const { user } = useContext(AuthContext)
@@ -22,6 +25,51 @@ export default function ProfileScreen() {
     const { useSystemTheme, setUseSystemTheme, isDarkMode, setIsDarkMode } = useContext(ThemeContext)
 
     const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+    const [winterStart, setWinterStart] = useState(11) // default: November
+    const [winterEnd, setWinterEnd] = useState(3) // default: March
+    const [savedWinterStart, setSavedWinterStart] = useState(11)
+    const [savedWinterEnd, setSavedWinterEnd] = useState(3)
+    const [winterMode, setWinterMode] = useState("default")
+    const [winterModalVisible, setWinterModalVisible] = useState(false)
+
+    const MONTH_OPTIONS = Array.from({ length: 12 }, (_, i) => ({
+        label: new Date(2000, i).toLocaleString(i18n.language, { month: 'long' }),
+        value: i + 1,
+    }))
+
+    useEffect(() => {
+        getWinterMonths().then(({ start, end }) => {
+            setSavedWinterStart(start)
+            setSavedWinterEnd(end)
+            setWinterStart(start)
+            setWinterEnd(end)
+        
+            if (start === 11 && end === 3) {
+                setWinterMode("default")
+            } else {
+                setWinterMode("custom")
+            }
+        })
+    }, [])
+
+    const handleSaveWinterMonths = async () => {
+        await setWinterMonths(winterStart, winterEnd)
+        setSavedWinterStart(winterStart)
+        setSavedWinterEnd(winterEnd)
+        setWinterMode(
+            winterStart === 11 && winterEnd === 3 ? "default" : "custom"
+        )
+        setWinterModalVisible(false)
+    }
+
+    const handleCancelWinterModal = () => {
+        setWinterStart(savedWinterStart)
+        setWinterEnd(savedWinterEnd)
+        setWinterMode(
+            savedWinterStart === 11 && savedWinterEnd === 3 ? "default" : "custom"
+        )
+        setWinterModalVisible(false)
+    }
 
     const changeLanguage = async (lng) => {
         i18n.changeLanguage(lng)
@@ -84,6 +132,39 @@ export default function ProfileScreen() {
                 />
             </View>
 
+            <View style={styles.winterContainer}>
+                <Text variant="bodyMedium">{t("screens.options.winterMonthsHeader")}</Text>
+
+                <SegmentedButtons
+                    value={winterMode}
+                    onValueChange={(value) => {
+                        setWinterMode(value)
+                        if (value === "default") {
+                            setWinterStart(11)
+                            setWinterEnd(3)
+                            setWinterMonths(11, 3)
+                        } else if (value === "custom") {
+                            setWinterModalVisible(true)
+                        }
+                    }}
+                    buttons={[
+                        { value: "default", label: t("screens.options.useDefault") },
+                        { value: "custom", label: t("screens.options.setCustom") },
+                    ]}
+                />
+            </View>
+
+            <WinterModal
+                visible={winterModalVisible}
+                onClose={handleCancelWinterModal}
+                winterStart={winterStart}
+                winterEnd={winterEnd}
+                setWinterStart={setWinterStart}
+                setWinterEnd={setWinterEnd}
+                onSave={handleSaveWinterMonths}
+                monthOptions={MONTH_OPTIONS}
+            />
+
             <View style={styles.bottomContent}>
                 <View style={styles.doubleButtonRow}>
                     <Button style={styles.mainButton} mode="contained" onPress={() => signOut(auth)}>
@@ -127,6 +208,12 @@ const styles = StyleSheet.create({
         padding: 20,
         height: "100%",
         justifyContent: "space-between",
+    },
+
+    winterContainer: {
+        width: "100%",
+        alignSelf: "center",
+        marginBottom: 20,
     },
 
     topContent: {
