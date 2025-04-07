@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react"
-import { Surface, Text, Button, SegmentedButtons } from "react-native-paper"
+import { Surface, Text, Button, SegmentedButtons, Portal, Dialog } from "react-native-paper"
 import { StyleSheet, View } from "react-native"
 import { getAuth, signOut } from "firebase/auth"
 import { AuthContext } from "../context/authContext"
@@ -11,9 +11,8 @@ import LANGUAGES from "../localization/languages"
 import { useNavigation } from "@react-navigation/native"
 import DeleteAccountModal from "../components/profile/deleteAccountModal"
 import { deleteAccount } from "../services/authService"
-import { getWinterMonths, setWinterMonths, getMonthName } from "../utils/dateUtils"
+import { getWinterMonths, setWinterMonths } from "../utils/dateUtils"
 import WinterModal from "../components/profile/WinterModal"
-import Toast from "react-native-toast-message"
 
 export default function ProfileScreen() {
     const { user } = useContext(AuthContext)
@@ -70,6 +69,8 @@ export default function ProfileScreen() {
         )
         setWinterModalVisible(false)
     }
+    const [dialogMessage, setDialogMessage] = useState('')
+    const [dialogVisible, setDialogVisible] = useState(false)
 
     const changeLanguage = async (lng) => {
         i18n.changeLanguage(lng)
@@ -90,26 +91,34 @@ export default function ProfileScreen() {
     const handleDelete = async (password) => {
         try {
             await deleteAccount(password)
-            alert('Account deleted!')
-        } catch (error){
-            alert('Error: '+ error.message)
+            console.log('account deleted')
+            
+        } catch (error) {
+            if ( error.code === 'auth/invalid-credential') {
+                setDialogMessage(t("screens.options.wrongPassword"))
+            }
+            else if(error.code === 'auth/too-many-requests') {
+                setDialogMessage(t("screens.options.tooManyRequest"))
+            }
+            else{
+                setDialogMessage(`${t("screens.options.errorDeleting")}: ${error.message}`)
+            }
+             setDialogVisible(true)
+
+            setTimeout(() => {
+                setDialogVisible(false)
+            }, 7000)
         }
     }
 
     return (
-        
+
         <Surface style={styles.container}>
             <View style={styles.topContent}>
-                <Text variant="bodyMedium">{t("screens.options.signedInAs")}:</Text>
+                <Text variant="bodyMedium">{t("screens.options.signedInAs")}</Text>
                 <Text variant="bodyLarge" style={styles.sectionEnd}>{user?.email}</Text>
 
-                <Button style={styles.singleButtonRow} mode="contained" onPress={() => 
-                    navigation.navigate("Home", {
-                        screen: "GraveyardScreen",
-                    })}>{t("screens.options.visitGraveyard")}
-                </Button>
-
-                <Text variant="bodyMedium">{t("screens.options.themeHeader")}</Text>
+                <Text variant="bodyLarge">{t("screens.options.themeHeader")}</Text>
                 <SegmentedButtons
                     value={useSystemTheme ? "system" : isDarkMode ? "dark" : "light"}
                     onValueChange={(value) => changeTheme(value)}
@@ -119,53 +128,66 @@ export default function ProfileScreen() {
                         { value: "dark", label: t("screens.options.dark") },
                     ]}
                 />
-            </View>
+            
+                <View style={{height: 12}} />
 
-            <View style={styles.languageContainer}>
-                <Text variant="bodyMedium">{t("screens.options.languageHeader")}</Text>
-                <Dropdown
-                    placeholder={t("screens.options.languagePlaceHolder")}
-                    options={LANGUAGES}
-                    value={language}
-                    onSelect={(lng) => changeLanguage(lng)}
-                    style={styles.dropdown}
+                <View style={styles.winterContainer}>
+                    <Text style={{alignSelf: "center"}} variant="bodyLarge">{t("screens.options.winterMonthsHeader")}</Text>
+
+                    <SegmentedButtons
+                        value={winterMode}
+                        onValueChange={(value) => {
+                            setWinterMode(value)
+                            if (value === "default") {
+                                setWinterStart(11)
+                                setWinterEnd(3)
+                                setWinterMonths(11, 3)
+                            } else if (value === "custom") {
+                                setWinterModalVisible(true)
+                            }
+                        }}
+                        buttons={[
+                            { value: "default", label: t("screens.options.useDefault") },
+                            { value: "custom", label: t("screens.options.setCustom") },
+                        ]}
+                    />
+                </View>
+
+                <Text style={{alignSelf: "center"}} variant="bodyLarge">{t("screens.options.graveyardHeading")}</Text>
+                <Button style={styles.singleButtonRow} mode="contained" onPress={() => 
+                    navigation.navigate("Home", {
+                        screen: "GraveyardScreen",
+                    })}>{t("screens.options.visitGraveyard")}
+                </Button>
+
+                <View style={{height: 12}} />
+
+                <View style={styles.languageContainer}>
+                    <Text variant="bodyMedium">{t("screens.options.languageHeader")}</Text>
+                    <Dropdown
+                        placeholder={t("screens.options.languagePlaceHolder")}
+                        options={LANGUAGES}
+                        value={language}
+                        onSelect={(lng) => changeLanguage(lng)}
+                        style={styles.dropdown}
+                    />
+                </View>
+
+                <WinterModal
+                    visible={winterModalVisible}
+                    onClose={handleCancelWinterModal}
+                    winterStart={winterStart}
+                    winterEnd={winterEnd}
+                    setWinterStart={setWinterStart}
+                    setWinterEnd={setWinterEnd}
+                    onSave={handleSaveWinterMonths}
+                    monthOptions={MONTH_OPTIONS}
                 />
+
             </View>
-
-            <View style={styles.winterContainer}>
-                <Text variant="bodyMedium">{t("screens.options.winterMonthsHeader")}</Text>
-
-                <SegmentedButtons
-                    value={winterMode}
-                    onValueChange={(value) => {
-                        setWinterMode(value)
-                        if (value === "default") {
-                            setWinterStart(11)
-                            setWinterEnd(3)
-                            setWinterMonths(11, 3)
-                        } else if (value === "custom") {
-                            setWinterModalVisible(true)
-                        }
-                    }}
-                    buttons={[
-                        { value: "default", label: t("screens.options.useDefault") },
-                        { value: "custom", label: t("screens.options.setCustom") },
-                    ]}
-                />
-            </View>
-
-            <WinterModal
-                visible={winterModalVisible}
-                onClose={handleCancelWinterModal}
-                winterStart={winterStart}
-                winterEnd={winterEnd}
-                setWinterStart={setWinterStart}
-                setWinterEnd={setWinterEnd}
-                onSave={handleSaveWinterMonths}
-                monthOptions={MONTH_OPTIONS}
-            />
 
             <View style={styles.bottomContent}>
+
                 <View style={styles.doubleButtonRow}>
                     <Button style={styles.mainButton} mode="contained" onPress={() => signOut(auth)}>
                         {t("screens.options.logoutButton")}
@@ -177,26 +199,22 @@ export default function ProfileScreen() {
                 </View>
             </View>
 
-            <DeleteAccountModal
-                visible={deleteModalVisible}
-                onCancel={() => setDeleteModalVisible(false)}
-                onConfirm={(password) => {
-                    try {
-                        handleDelete(password)
-                        setDeleteModalVisible(false)
-                        console.log("Pressed Delete Account")
-                        navigation.navigate("Home")
-
-                    } catch (error) {
-                        console.error("Error deleting account:", error)
-                        Toast.show({
-                            type: "error",
-                            text1: t("screens.options.errorDeleting"),
-                            position: "bottom",
-                        })
-                    }
-                }}
-            />
+            <Portal>
+            <Dialog visible={dialogVisible} onDismiss={() => setDialogVisible(false)}>
+                <Dialog.Content style={{alignItems: 'center'}}>
+                    <Text >{dialogMessage}</Text>
+                </Dialog.Content>
+            </Dialog>
+        </Portal>
+        
+        <DeleteAccountModal
+            visible={deleteModalVisible}
+            onCancel={() => setDeleteModalVisible(false)}
+            onConfirm={(password) => {
+                handleDelete(password)
+                setDeleteModalVisible(false)
+            }}
+        />
 
         </Surface>
     )
