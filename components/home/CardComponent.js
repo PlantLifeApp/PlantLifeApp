@@ -57,7 +57,7 @@ const CardComponent = ({ item, isTwoColumns }) => {
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
                             <Icon source="water" size={15} />
                             <Text variant="bodySmall">
-                                {item.careHistory.length == 0 ? t("screens.home.lastWatered") + " " + t("screens.home.noWateringHistory") : t("screens.home.lastWatered") + " " + formatDate(searchMostRecentWatering(item.careHistory))}
+                                {item.careHistory.length == 0 ? t("screens.home.noWateringHistory") : t("screens.home.lastWatered") + " " + formatDate(searchMostRecentWatering(item.careHistory))}
                             </Text>
                         </View>
                         <View style={{ flexDirection: "row", alignItems: "center" }}>
