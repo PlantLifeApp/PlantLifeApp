@@ -19,7 +19,8 @@ export const addPlant = async (givenName, scientificName, plantPrice, plantType,
             plantPrice: plantPrice,
             plantType,
             coverImageUrl: null,
-            images: []
+            images: [],
+            createdAt: serverTimestamp()
         }
         await setDoc(plantRef, plantData)
         console.log("Plant added successfully with ID:", plantRef.id)
