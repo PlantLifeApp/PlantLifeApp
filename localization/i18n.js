@@ -197,6 +197,7 @@ const resources = {
                 delete: "Delete",
                 sort: "Sort By",
                 alphabetical: "Name",
+                newestPlant: "Newest Plant",
                 scientificName: "Scientific Name",
                 lastWatered: "Last Watered",
                 nextWatering: "Next Watering",
@@ -422,6 +423,7 @@ const resources = {
                 delete: "Poista",
                 sort: "Järjestä",
                 alphabetical: "Nimi",
+                newestPlant: "Uusin kasvi",
                 scientificName: "Tieteellinen nimi",
                 lastWatered: "Viimeksi kasteltu",
                 nextWatering: "Seuraava kastelu",
@@ -646,6 +648,7 @@ const resources = {
                 delete: "Ta bort",
                 sort: "Sortera",
                 alphabetical: "Namn",
+                newestPlant: "Nyaste växten",
                 scientificName: "Vetenskapligt namn",    // Check
                 latestWatered: "Senast vattnad",
                 nextWatering: "Nästa vattning",

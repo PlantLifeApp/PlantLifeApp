@@ -19,6 +19,7 @@ export default function ActionBar({ isTwoColumns, isReversed, setIsReversed, set
     ]
     const SORTOPTIONS = [
         { label: t("common.alphabetical"), value: 'alphabetical' },
+        { label: t("common.newestPlant"), value: 'newestPlant'},
         { label: t("common.scientificName"), value: 'scientificName' },
         { label: t("common.lastWatered"), value: 'lastWatered' },
         { label: t("common.nextWatering"), value: 'nextWatering' }

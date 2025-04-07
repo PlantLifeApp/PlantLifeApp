@@ -57,6 +57,13 @@ const HomeScreen = () => {
                     if (!dateB) return -1;
 
                     return dateA - dateB
+                } else if (sortOption === "newestPlant") {
+                    const dateA = a.createdAt ? a.createdAt : null
+                    const dateB = b.createdAt ? b.createdAt : null
+
+                    if (!dateA && ! dateB) return 0
+                    if (!dateA) return 1
+                    if(!dateB) return -1
                 }
                 return 0;
             })
