@@ -1,6 +1,6 @@
 import React, { useContext, useState, useMemo } from "react";
 import { StyleSheet, FlatList, TouchableOpacity, View } from "react-native";
-import { Button, IconButton } from "react-native-paper";
+import { IconButton } from "react-native-paper";
 import { AuthContext } from "../context/authContext";
 import AddPlantModal from "../components/home/AddPlantModal";
 import { usePlants } from "../context/plantsContext";

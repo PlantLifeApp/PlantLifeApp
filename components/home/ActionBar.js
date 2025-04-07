@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Button, IconButton, Menu, TextInput } from "react-native-paper";
+import { IconButton, TextInput } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { Dropdown } from "react-native-paper-dropdown";
 
 export default function ActionBar({ isTwoColumns, isReversed, setIsReversed, setIsTwoColumns, searchQuery, setSearchQuery, sortOption, setSortOption, selectedType, setSelectedType }) {
-    const [isSearchVisible, setIsSearchVisible] = useState(false);
-    const [menuVisible, setMenuVisible] = useState(false);
+    const [isSearchVisible, setIsSearchVisible] = useState(false)
     const [typeMenuVisible, setTypeMenuVisible] = useState(false)
 
     const { t } = useTranslation();
@@ -122,7 +121,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         gap: 8,
-        marginVertical:4,
+        marginVertical: 4,
     },
     sortIcon: {
         padding: 0,
