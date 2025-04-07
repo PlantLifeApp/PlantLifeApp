@@ -38,7 +38,8 @@ const resources = {
                     selectType: "Select Type",
                     addButton: "Add Plant",
                     cancelButton: "Cancel",
-                    inputRequired: "Plant nickname and type are required"
+                    inputRequired: "Plant nickname and type are required",
+                    addSuccess: "Plant added successfully"
                 },
                 plant: {
                     title: "Plant Info",
@@ -259,6 +260,7 @@ const resources = {
                     addButton: "Lisää kasvi",
                     cancelButton: "Peruuta",
                     inputRequired: "Kasvin lempinimi ja tyyppi vaaditaan",
+                    addSuccess: "Kasvi lisätty onnistuneesti"
                 },
                 plant: {
                     title: "Kasvin tiedot",
@@ -483,6 +485,7 @@ const resources = {
                     addButton: "Lägg till växt",
                     cancelButton: "Avbryt",
                     inputRequired: "Växtens smeknamn och typ är obligatoriska",
+                    addSuccess: "Växten lades till"
                 },
                 plant: {
                     title: "Växtinfo",

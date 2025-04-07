@@ -76,6 +76,12 @@ export default function AddPlantModal({ user, visible, onClose }) {
             }
         }
 
+        Toast.show({
+            type: "success",
+            text1: t("screens.addPlant.addSuccess"),
+            position: "bottom",
+            visibilityTime: 3000,
+        })
         onCloseFunction();
     }
 
