@@ -142,7 +142,6 @@ const PlantScreen = ({ route }) => {
                 visible={!!plant}
                 fabStyle={{
                     backgroundColor: theme.colors.secondaryContainer,
-                    position: "absolute",
                     bottom: -32,
                     right: 0,
                     margin: 0,
