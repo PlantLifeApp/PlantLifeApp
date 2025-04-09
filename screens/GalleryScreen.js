@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Image, TouchableOpacity, View } from "react-native";
-import React, { useState, useCallback, useMemo, useRef } from "react";
+import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { Text, Surface, Card, useTheme, Portal, Modal, Chip, Switch, Button } from "react-native-paper";
 import { useImages } from "../context/imageContext";
 import FloatingButton from "../components/gallery/FloatingButton";
