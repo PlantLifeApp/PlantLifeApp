@@ -10,6 +10,9 @@ const CarePredictions = ({ nextWatering, nextFertilizing }) => {
     const { t } = useTranslation()
     const [infoVisible, setInfoVisible] = useState(false)
 
+    //console.log("nextWatering received in CarePredictions:", nextWatering);
+    //console.log("nextFertilizing received in CarePredictions:", nextFertilizing);
+
     return (
         <Surface style={styles.detailsContainer}>
             <TouchableOpacity 
@@ -39,7 +42,7 @@ const CarePredictions = ({ nextWatering, nextFertilizing }) => {
             <Text variant="bodyMedium">
                 💥 {t("screens.plant.nextFertilizationEstimate")}:
             </Text>
-            {nextFertilizing ? (
+            {nextFertilizing instanceof Date && !isNaN(nextFertilizing.getTime()) ? (
                 <Text variant="bodyMedium">
                     {"      "}{formatDate(nextFertilizing)}
                 </Text>

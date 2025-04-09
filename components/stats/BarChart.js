@@ -5,7 +5,7 @@ import { ThemeContext } from "../../context/themeContext";
 
 export default function BarChartComponent({ param_data, filterType }) {
     const { theme } = useContext(ThemeContext);
-    console.log(param_data)
+    //console.log(param_data)
     const screenWidth = Dimensions.get("window").width;
     // Transform param_data into the format expected by the BarChart
     //const labels = Object.keys(param_data).map(label => label.charAt(0));;
