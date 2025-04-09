@@ -188,6 +188,8 @@ const resources = {
                         unknown: "Unknown",
                         other: "Other",
                     },
+                    deletePermanently: "Delete Permanently",
+                    deleted: "Plant deleted permanently",
                 },
                 gallery: {
                     listEmpty: "No Images Available",
@@ -441,7 +443,9 @@ const resources = {
                         humidityStress: "kosteusstressi",
                         unknown: "tuntematon",
                         other: "muu"
-                    }
+                    },
+                    deletePermanently: "Poista pysyvästi",
+                    deleted: "Kasvi poistettu pysyvästi",
                 },
                 gallery: {
                     listEmpty: "Ei kuvia saatavilla",
@@ -688,7 +692,9 @@ const resources = {
                         humidityStress: "fuktighetsstress",
                         unknown: "okänd",
                         other: "annat"
-                    }
+                    },
+                    deletePermanently: "Ta bort permanent",
+                    deleted: "Växten borttagen permanent",
                 },
                 gallery: {
                     listEmpty: "Inga bilder tillgängliga",
