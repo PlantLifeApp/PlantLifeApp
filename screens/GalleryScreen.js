@@ -6,9 +6,13 @@ import FloatingButton from "../components/gallery/FloatingButton";
 import { useFocusEffect } from "@react-navigation/native";
 import { useTranslation } from "react-i18next"
 import { usePlants } from "../context/plantsContext";
-
+import { useRoute } from "@react-navigation/native"
 
 export default function GalleryScreen() {
+
+  const route = useRoute()
+  const { preselectedPlantID } = route.params || {}
+
   const { images } = useImages()
   const [selectedImage, setSelectedImage] = useState(null)
   const [modalVisible, setModalVisible] = useState(false)
@@ -20,6 +24,13 @@ export default function GalleryScreen() {
   const [isSwitchOn, setIsSwitchOn] = useState(false)
 
   const { alivePlants } = usePlants()
+
+  useEffect(() => {
+    if (preselectedPlantID) {
+      setSelectedPlantId(preselectedPlantID)
+      setIsSwitchOn(false)
+    }
+  }, [preselectedPlantID])
 
   // Open picture 
   const handleImagePress = (item) => {

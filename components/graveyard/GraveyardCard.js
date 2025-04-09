@@ -29,6 +29,11 @@ const GraveyardCard = ({ plant }) => {
     if (plant.killedAt && typeof plant.killedAt.toDate === "function") {
         killedAt = plant.killedAt.toDate()
     }
+    // convert Timestamp to Date
+    let createdAt = null
+    if (plant.createdAt && typeof plant.createdAt.toDate === "function") {
+        createdAt = plant.createdAt.toDate()
+    }
 
     return (
         <Card style={styles.card}>
@@ -41,9 +46,13 @@ const GraveyardCard = ({ plant }) => {
                     <ItalicText variant="bodyLarge" numberOfLines={2}>
                         {plant.scientificName}
                     </ItalicText>
-                    <Text variant="bodyMedium" style={styles.deathDate}>
-                        🪦 {killedAt ? formatDate(killedAt) : t("screens.graveyard.unknownDeath")}
+                    {(createdAt || killedAt) && (
+                    <Text variant="bodyMedium" style={styles.lifeSpan}>
+                        🪦{" "}
+                        {createdAt ? formatDate(createdAt) : "?"} –{" "}
+                        {killedAt ? formatDate(killedAt) : "?"}
                     </Text>
+                )}
                 </Card.Content>
             </View>
         </Card>
