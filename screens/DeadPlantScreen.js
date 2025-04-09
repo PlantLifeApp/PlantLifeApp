@@ -1,12 +1,18 @@
-import React from "react"
+import React, { useState } from "react"
 import { View, ScrollView, StyleSheet, Image } from "react-native"
-import { Text, Surface } from "react-native-paper"
+import { Text, Surface, FAB } from "react-native-paper"
 import { useTranslation } from "react-i18next"
 import { useTheme } from "react-native-paper"
 import { formatDate } from "../utils/dateUtils"
 import PlantDetails from "../components/plant/PlantDetails"
 import CareHistory from "../components/plant/CareHistory"
 import ItalicText from "../utils/italicText"
+import { deletePlant } from "../services/plantService"
+import { useNavigation } from "@react-navigation/native"
+import Toast from "react-native-toast-message"
+import DeletePlantModal from "../components/editPlant/DeletePlantModal"
+import { AuthContext } from "../context/authContext"
+import { useContext } from "react"
 
 export default function DeadPlantScreen({ route }) {
 
@@ -14,7 +20,32 @@ export default function DeadPlantScreen({ route }) {
 
     const { plant } = route.params
     const { t } = useTranslation()
+    const { user } = useContext(AuthContext)
     const theme = useTheme()
+    const navigation = useNavigation()
+
+    const [fabOpen, setFabOpen] = useState(false)
+    const [deleteModalVisible, setDeleteModalVisible] = useState(false)
+
+    const handleDelete = async () => {
+        setDeleteModalVisible(false)
+        try {
+            await deletePlant(user.uid, plant.id)
+            Toast.show({
+                type: "success",
+                text1: t("screens.graveyard.deleted"),
+                position: "bottom",
+            })
+            navigation.goBack()
+        } catch (error) {
+            console.error("Failed to delete plant:", error)
+            Toast.show({
+                type: "error",
+                text1: t("screens.graveyard.deleteFailed"),
+                position: "bottom",
+            })
+        }
+    }
 
     // normalize the care history to ensure dates are Date objects and events are arrays
     const normalizedCareHistory = plant.careHistory.map(entry => {
@@ -48,10 +79,16 @@ export default function DeadPlantScreen({ route }) {
     const groupedCareHistory = Object.values(groupedByDate).sort((a, b) => b.date - a.date)
 
     const killedAt = plant.killedAt?.toDate?.() ?? null
+    const createdAt = plant.createdAt?.toDate?.() ?? null
     const causeOfDeathKey = plant.causeOfDeath ?? "unknown"
     
-    console.log("Cause of Death in DeadPlantScreen:", causeOfDeathKey)
-    console.log("Killed At in DeadPlantScreen:", killedAt)
+    //console.log("Cause of Death in DeadPlantScreen:", causeOfDeathKey)
+    //console.log("Killed At in DeadPlantScreen:", killedAt)
+
+    const lifespan =
+    createdAt || killedAt
+        ? `${createdAt ? formatDate(createdAt) : "?"} — ${killedAt ? formatDate(killedAt) : "?"}`
+        : null
 
     return (
         <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>
@@ -69,14 +106,14 @@ export default function DeadPlantScreen({ route }) {
                             source={{ uri: plant.coverImageUrl }}
                         />
                         <Text variant="bodyMedium" style={styles.killedText}>
-                            {t("screens.graveyard.killedOn")}: {killedAt ? formatDate(killedAt) : t("screens.graveyard.unknownDeath")}{"\n"}
+                            {lifespan ? `${lifespan}\n` : ""}
                             {t("screens.graveyard.causeOfDeath")}: {t(`screens.graveyard.causesOfDeath.${causeOfDeathKey}`)}
                         </Text>
                     </Surface>
                 ) : (
                     <Surface style={styles.surface}>
                         <Text variant="bodyMedium" style={styles.killedText}>
-                            {t("screens.graveyard.killedOn")}: {killedAt ? formatDate(killedAt) : t("screens.graveyard.unknownDeath")}{"\n"}
+                            {lifespan ? `${lifespan}\n` : ""}
                             {t("screens.graveyard.causeOfDeath")}: {t(`screens.graveyard.causesOfDeath.${causeOfDeathKey}`)}
                         </Text>
                     </Surface>
@@ -88,7 +125,34 @@ export default function DeadPlantScreen({ route }) {
                     showRelativeTime={false}
                 />
                 <CareHistory careHistory={groupedCareHistory} />
+
             </ScrollView>
+
+            <FAB.Group
+                open={fabOpen}
+                visible={true}
+                icon={fabOpen ? "close" : "delete-empty"}
+                onStateChange={({ open }) => setFabOpen(open)}
+                fabStyle={{
+                    backgroundColor: theme.colors.errorContainer,
+                    bottom: -32,
+                }}
+                actions={[
+                    {
+                        icon: "delete-forever",
+                        label: t("screens.graveyard.deletePermanently"),
+                        style: { backgroundColor: theme.colors.error },
+                        onPress: () => setDeleteModalVisible(true),
+                    },
+                ]}
+            />
+
+            <DeletePlantModal
+                visible={deleteModalVisible}
+                onCancel={() => setDeleteModalVisible(false)}
+                onConfirm={handleDelete}
+            />
+
         </View>
     )
 }
