@@ -15,7 +15,7 @@ export const ImagesProvider = ({ children }) => {
         const storedImages = await AsyncStorage.getItem("plantImages")
         if (storedImages) {
           setImages(JSON.parse(storedImages))
-          console.log("✅ Images loaded from AsyncStorage:", JSON.parse(storedImages));
+         // console.log("✅ Images loaded from AsyncStorage:", JSON.parse(storedImages));
         }
       } catch (error) {
         console.error("Error loading images from storage: ", error)
@@ -43,6 +43,7 @@ export const ImagesProvider = ({ children }) => {
   };
 
   const addImage = async (plantId, imageUrl, plantType, isDead = false) => {
+    console.log('Ei saisi tulla tänne')
     try {
 
       // Haetaan nykyiset kuvat AsyncStoragesta
@@ -66,7 +67,7 @@ export const ImagesProvider = ({ children }) => {
       setImages(updatedImages);
       await AsyncStorage.setItem("plantImages", JSON.stringify(updatedImages));
 
-      console.log("✅ Image saved to AsyncStorage:", updatedImages);
+      //console.log("✅ Image saved to AsyncStorage:", updatedImages);
     } catch (error) {
       console.error("Error saving image: ", error)
     }

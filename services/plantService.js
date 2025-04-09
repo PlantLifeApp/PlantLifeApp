@@ -50,6 +50,39 @@ export const uploadPlantImage = async (userId, plantId, imageUri, setAsCover = f
     }
 }
 
+export const updateCoverImage = async (userId, plantId, imageUri) => {
+    try {
+        console.log("SetNewCoverImage - Plant ID:", plantId);
+        console.log("SetNewCoverImage - Image URI:", imageUri);
+
+        const db = getFirestore()
+        const plantRef = doc(db, "users", userId, "plants", plantId)
+
+        // ----------------
+        const plantSnap = await getDoc(plantRef)
+        if(!plantSnap.exists()) {
+            console.error('No plant found error')
+            return
+        }
+        const plantData = plantSnap.data()
+        const images = plantData.images || []
+
+        if(!images.includes(imageUri)) {
+            console.error('VALittu url ei ole osa kasvin kuva')
+            return
+        }
+        //-------
+        await updateDoc(plantRef, {
+            coverImageUrl: imageUri
+        })
+        console.log('Cover Image ✅ updated', imageUri)
+        return true
+    } catch (error) {
+        console.log('updateCoverimage, error: ', error)
+        throw error
+    }
+}
+
 // FETCH IMAGES
 export const getUserPlantImages = async (userId) => {
     try {

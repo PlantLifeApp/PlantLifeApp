@@ -165,6 +165,12 @@ const resources = {
                 },
                 gallery: {
                     listEmpty: "No Images Available",
+                    search: "Search",
+                    plantName: "Name",
+                    plantType: "Type",
+                    successAdd: "Changed plant cover image.",
+                    errorAdd: "Error adding event. Please try again.",
+                    changeMenuTitle: "Set to cover image",
                 },
                 fab: {
                     camera: "Take Photo",
@@ -389,7 +395,8 @@ const resources = {
                     listEmpty: "Ei kuvia saatavilla",
                     search: "Etsi",
                     plantName: "Kasvin nimi",
-                    plantType: "Kasvityyppi"
+                    plantType: "Kasvityyppi",
+                    //
                 },
                 fab: {
                     camera: "Ota kuva",
@@ -611,7 +618,8 @@ const resources = {
                     listEmpty: "Inga bilder tillgängliga",
                     search: "Söka",
                     plantName: "Växtnamn",
-                    plantType: "Växttyp"
+                    plantType: "Växttyp",
+                    //
                 },
                 fab: {
                     camera: "Ta foto",

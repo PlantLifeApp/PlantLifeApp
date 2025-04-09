@@ -1,11 +1,14 @@
 import { FlatList, StyleSheet, Image, TouchableOpacity, View } from "react-native";
-import React, { useState, useCallback, useMemo, useEffect } from "react";
+import React, { useState, useCallback, useMemo, useRef } from "react";
 import { Text, Surface, Card, useTheme, Portal, Modal, Chip, Switch } from "react-native-paper";
 import { useImages } from "../context/imageContext";
 import FloatingButton from "../components/gallery/FloatingButton";
 import { useFocusEffect } from "@react-navigation/native";
 import { useTranslation } from "react-i18next"
 import { usePlants } from "../context/plantsContext";
+import NewCoverImage from "../components/gallery/NewCoverImage";
+
+
 
 
 export default function GalleryScreen() {
@@ -18,6 +21,10 @@ export default function GalleryScreen() {
   const [selectedType, setSelectedType] = useState("all")
   const [selectedPlantId, setSelectedPlantId] = useState('')
   const [isSwitchOn, setIsSwitchOn] = useState(false)
+  const [menuVisible, setMenuVisible] = useState(false)
+  const [selectedPlantIdCover, setSelectedPlantIdCover] = useState('')
+  const [menuAnchor, setMenuAnchor] = useState({ x: 0, y: 0 });
+  const imageRefs = useRef({});
 
   const { alivePlants } = usePlants()
 
@@ -25,9 +32,26 @@ export default function GalleryScreen() {
   const handleImagePress = (item) => {
 
     setSelectedImage(item) // Avaa valittu kuva
-    console.log("GalleryScreen: Selected image Uri:", item)
+    //console.log("GalleryScreen: Selected image Uri:", item)
     setModalVisible(true)
   }
+  const handleLongPress = (plantId, imageUri, index) => {
+    const ref = imageRefs.current[index];
+    if (ref) {
+      ref.measureInWindow((x, y, width, height) => {
+        setMenuAnchor({ x, y });
+        setSelectedPlantIdCover(plantId);
+        setSelectedImage(imageUri);
+        setMenuVisible(true);
+      });
+    }
+  };
+  // const handleLongPress = (plantId, imageUri) => {
+  //   setSelectedPlantIdCover(plantId)
+  //   setSelectedImage({ uri: imageUri })
+  //   setMenuVisible(true)
+  //   // console.log('Täää ny perkl, ', selectedImage)
+  // }
 
   // FAB "only" on this screen
   useFocusEffect(
@@ -36,12 +60,6 @@ export default function GalleryScreen() {
       return () => setFabVisible(false)
     }, [])
   )
-  // No empty gallery if pushed refesh button from "<Dropdown/>"
-  useEffect(() => {
-    if (!selectedType) {
-      setSelectedType("all");
-    }
-  }, [selectedType]);
 
   const onToggleSwitch = () =>
     setIsSwitchOn(!isSwitchOn)
@@ -56,10 +74,12 @@ export default function GalleryScreen() {
   ]
 
   const plantNames = useMemo(() => {
-    return alivePlants.map((plant) => ({
+    return alivePlants
+    .map((plant) => ({
       label: plant.givenName,
       value: plant.id
     }))
+    .sort((a,b) => a.label.localeCompare(b.label)) //Chip sort by name
   }, [alivePlants])
 
   const filteredImages = useMemo(() => {
@@ -82,9 +102,12 @@ export default function GalleryScreen() {
             plantName: plant?.givenName || "Unknown Plant",
             plantType: plant?.plantType || "unknown",
           };
-        })
-      });
+        });
+      })
+      .sort((a,b) => a.plantName.localeCompare(b.plantName)); //flatlist sort by name
   }, [images, alivePlants, selectedType, selectedPlantId]);
+
+
 
   return (
     <Surface style={[styles.container, { backgroundColor: 'theme.colors.background' }]}>
@@ -141,13 +164,24 @@ export default function GalleryScreen() {
           )
         }
         ListEmptyComponent={() => <Text style={styles.noImagesText}>{t("screens.gallery.listEmpty")}</Text>}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handleImagePress(item)}>
+        renderItem={({ item, index }) => (
+          <TouchableOpacity 
+          ref={(ref) => (imageRefs.current[index] = ref)}
+          onPress={() => handleImagePress(item)} 
+          onLongPress={() => handleLongPress(item.plantId, item.uri, index)}>
             <Card style={styles.card}>
               <Image source={{ uri: item?.uri }} style={styles.cardImage} />
             </Card>
           </TouchableOpacity>
         )}
+      />
+      {/* setNewCoverImage valikko */}
+      <NewCoverImage
+        plantId={selectedPlantIdCover}
+        imageUri={selectedImage}
+        menuVisible={menuVisible}
+        setMenuVisible={setMenuVisible}
+        anchor={menuAnchor}
       />
 
       {/* Opens full picture*/}
