@@ -50,8 +50,8 @@ export default function DeadPlantScreen({ route }) {
     const killedAt = plant.killedAt?.toDate?.() ?? null
     const causeOfDeathKey = plant.causeOfDeath ?? "unknown"
     
-    console.log("Cause of Death in DeadPlantScreen:", causeOfDeathKey)
-    console.log("Killed At in DeadPlantScreen:", killedAt)
+    //console.log("Cause of Death in DeadPlantScreen:", causeOfDeathKey)
+    //console.log("Killed At in DeadPlantScreen:", killedAt)
 
     return (
         <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>

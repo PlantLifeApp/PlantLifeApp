@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, useCallback } from "react"
-import { View, ScrollView, StyleSheet } from "react-native"
+import { View, ScrollView, StyleSheet, Image } from "react-native"
 import { Text, ActivityIndicator, Surface, FAB } from "react-native-paper"
 import { AuthContext } from "../context/authContext"
 import { useTranslation } from "react-i18next"
@@ -15,6 +15,9 @@ import { useFocusEffect } from "@react-navigation/native"
 import CarePredictions from "../components/plant/CarePredictions"
 import ItalicText from "../utils/italicText.js"
 import { useNavigation } from "@react-navigation/native"
+import { formatDate } from "../utils/dateUtils"
+import CareFAB from "../components/plant/CareFAB.js"
+import PlantFAB from "../components/plant/PlantFAB.js"
 
 const PlantScreen = ({ route }) => {
 
@@ -82,6 +85,8 @@ const PlantScreen = ({ route }) => {
         }
     }
 
+    console.log(plant?.plant)
+
     return (
         <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>
             <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -91,6 +96,7 @@ const PlantScreen = ({ route }) => {
                     <ItalicText variant="bodyLarge">{displayScientific}</ItalicText>
                 </Surface>
 
+
                 {loading && (
                     <View style={styles.centered}>
                         <ActivityIndicator animating size="large" />
@@ -99,10 +105,33 @@ const PlantScreen = ({ route }) => {
 
                 {!loading && plant && (
                     <>
-                        <CareButtons
+                        {/* <CareButtons
                             onAddCareEvent={handleAddCareEvent}
                             saving={saving}
-                        />
+                        /> */}
+
+                        {plant?.plant.coverImageUrl || plant?.plant.createdAt || plant?.plant.plantPrice ? (
+                            <Surface style={styles.imageSurface}>
+                                {plant.plant.coverImageUrl && (
+                                    <Image
+                                        source={{ uri: plant.plant.coverImageUrl }}
+                                        style={styles.image}
+                                    />
+                                )}
+
+                                <Text variant="bodyMedium" style={styles.plantMetaText}>
+                                    {plant.plant.createdAt
+                                        ? `${t("screens.plant.createdAt")}: ${formatDate(
+                                            plant.plant.createdAt.toDate?.() ?? plant.plant.createdAt
+                                        )}\n`
+                                        : ""}
+                                    {plant.plant.plantPrice
+                                        ? `${t("screens.plant.price")}: ${plant.plant.plantPrice} €`
+                                        : ""}
+                                </Text>
+                            </Surface>
+                        ) : null}
+
                         <PlantDetails
                             plant={plant.plant}
                             careHistory={plant.careHistory}
@@ -123,30 +152,7 @@ const PlantScreen = ({ route }) => {
                 )}
             </ScrollView>
 
-            <FAB.Group
-                open={fabOpen}
-                icon={fabOpen ? "close" : "pencil"}
-                actions={[
-                    {
-                        icon: "file-document-edit",
-                        label: t("screens.plant.editHistory"),
-                        onPress: () => navigation.navigate("EditCareHistory", { plant: plant.plant }),
-                    },
-                    {
-                        icon: "leaf",
-                        label: t("screens.plant.editPlant"),
-                        onPress: () => navigation.navigate("EditPlant", { plant: plant.plant }),
-                    },
-                ]}
-                onStateChange={({ open }) => setFabOpen(open)}
-                visible={!!plant}
-                fabStyle={{
-                    backgroundColor: theme.colors.secondaryContainer,
-                    bottom: -32,
-                    right: 0,
-                    margin: 0,
-                }}
-            />
+            <PlantFAB onAddCareEvent={handleAddCareEvent} plant={plant?.plant} />
 
         </View>
     )
@@ -169,9 +175,25 @@ const styles = StyleSheet.create({
         padding: 16,
         width: "100%",
         alignItems: "center",
-        marginTop: 16,
+        marginTop: 8,
         marginBottom: 16,
         borderRadius: 8,
+    },
+    imageSurface: {
+        padding: 16,
+        width: "100%",
+        alignItems: "center",
+        marginBottom: 16,
+        borderRadius: 8,
+    },
+    image: {
+        width: "100%",
+        aspectRatio: 1,
+        borderRadius: 8,
+        marginBottom: 16,
+    },
+    plantMetaText: {
+        textAlign: "center",
     },
 })
 
