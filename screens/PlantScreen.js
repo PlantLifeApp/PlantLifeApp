@@ -4,10 +4,8 @@ import { Text, ActivityIndicator, Surface, FAB } from "react-native-paper"
 import { AuthContext } from "../context/authContext"
 import { useTranslation } from "react-i18next"
 import { usePlants } from "../context/plantsContext"
-import CareButtons from "../components/plant/CareButtons"
 import PlantDetails from "../components/plant/PlantDetails"
 import CareHistory from "../components/plant/CareHistory"
-import EditButtons from "../components/plant/EditButtons"
 import Toast from "react-native-toast-message"
 import { useTheme } from "react-native-paper"
 import { addCareEvent } from "../services/plantService"
@@ -16,7 +14,6 @@ import CarePredictions from "../components/plant/CarePredictions"
 import ItalicText from "../utils/italicText.js"
 import { useNavigation } from "@react-navigation/native"
 import { formatDate } from "../utils/dateUtils"
-import CareFAB from "../components/plant/CareFAB.js"
 import PlantFAB from "../components/plant/PlantFAB.js"
 
 const PlantScreen = ({ route }) => {
@@ -105,11 +102,6 @@ const PlantScreen = ({ route }) => {
 
                 {!loading && plant && (
                     <>
-                        {/* <CareButtons
-                            onAddCareEvent={handleAddCareEvent}
-                            saving={saving}
-                        /> */}
-
                         {plant?.plant.coverImageUrl || plant?.plant.createdAt || plant?.plant.plantPrice ? (
                             <Surface style={styles.imageSurface}>
                                 {plant.plant.coverImageUrl && (
@@ -119,16 +111,18 @@ const PlantScreen = ({ route }) => {
                                     />
                                 )}
 
-                                <Text variant="bodyMedium" style={styles.plantMetaText}>
-                                    {plant.plant.createdAt
-                                        ? `${t("screens.plant.createdAt")}: ${formatDate(
-                                            plant.plant.createdAt.toDate?.() ?? plant.plant.createdAt
-                                        )}\n`
-                                        : ""}
-                                    {plant.plant.plantPrice
-                                        ? `${t("screens.plant.price")}: ${plant.plant.plantPrice} €`
-                                        : ""}
-                                </Text>
+                            {(plant.plant.createdAt || plant.plant.plantPrice) && (
+                            <Text variant="bodyMedium" style={styles.plantMetaText}>
+                                {plant.plant.createdAt
+                                ? `${t("screens.plant.createdAt")}: ${formatDate(
+                                    plant.plant.createdAt.toDate?.() ?? plant.plant.createdAt
+                                    )}\n`
+                                : ""}
+                                {plant.plant.plantPrice
+                                ? `${t("screens.plant.price")}: ${plant.plant.plantPrice} €`
+                                : ""}
+                            </Text>
+                            )}
                             </Surface>
                         ) : null}
 
@@ -190,7 +184,7 @@ const styles = StyleSheet.create({
         width: "100%",
         aspectRatio: 1,
         borderRadius: 8,
-        marginBottom: 16,
+        paddingBottom: 8,
     },
     plantMetaText: {
         textAlign: "center",
