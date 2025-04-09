@@ -128,7 +128,7 @@ export default function GalleryScreen() {
               onPress={onDeadButtonPress}
               mode='outlined'
             >
-              {deadSwitch ? 'elävä' : 'hautaus '}
+              {deadSwitch ? t("screens.gallery.toAlivePlant") : t("screens.gallery.toGraveYard")}
             </Chip>)}
         </View>
         <View style={styles.switchRightContainer}>
@@ -228,8 +228,6 @@ export default function GalleryScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 10,
     alignItems: 'stretch',
     justifyContent: "center",
   },
