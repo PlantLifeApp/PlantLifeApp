@@ -8,46 +8,52 @@ const CareButtons = ({ onAddCareEvent, saving }) => {
 
     return (
         <View style={styles.buttonContainer}>
-            <View style={styles.singleButtonRow}>
+            <View style={styles.row}>
                 <Button
                     mode="contained"
+                    compact
                     onPress={() => onAddCareEvent("watering")}
                     loading={saving}
                     disabled={saving}
                     style={styles.button}
+                    labelStyle={styles.label}
                 >
-                    {t("screens.plant.justWatered")} 💦
+                    {t("screens.plant.wateredShort")} 💦
                 </Button>
-            </View>
-            <View style={styles.singleButtonRow}>
                 <Button
                     mode="contained"
+                    compact
                     onPress={() => onAddCareEvent("fertilizing")}
                     loading={saving}
                     disabled={saving}
                     style={styles.button}
+                    labelStyle={styles.label}
                 >
-                    {t("screens.plant.justFertilized")} 💥
+                    💥 {t("screens.plant.fertilizedShort")}
                 </Button>
             </View>
-            <View style={styles.doubleButtonRow}>
+            <View style={styles.row}>
                 <Button
                     mode="contained"
+                    compact
                     onPress={() => onAddCareEvent("pruning")}
                     loading={saving}
                     disabled={saving}
                     style={styles.button}
+                    labelStyle={styles.label}
                 >
-                    {t("screens.plant.justPruned")} ✂️
+                    {t("screens.plant.prunedShort")} ✂️
                 </Button>
                 <Button
                     mode="contained"
+                    compact
                     onPress={() => onAddCareEvent("repotting")}
                     loading={saving}
                     disabled={saving}
                     style={styles.button}
+                    labelStyle={styles.label}
                 >
-                    {t("screens.plant.justRepotted")} 🪴
+                    🪴 {t("screens.plant.repottedShort")}
                 </Button>
             </View>
         </View>
@@ -57,21 +63,13 @@ const CareButtons = ({ onAddCareEvent, saving }) => {
 const styles = StyleSheet.create({
     buttonContainer: {
         width: '100%',
-        alignItems: 'center',
         marginTop: 8,
-        marginBottom: 16,
-    },
-    singleButtonRow: {
-        width: '100%',
-        flexDirection: 'row',
-        justifyContent: 'center',
         marginBottom: 8,
     },
-    doubleButtonRow: {
-        width: '100%',
+    row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 8,
+        marginBottom: 6,
     },
     button: {
         flex: 1,

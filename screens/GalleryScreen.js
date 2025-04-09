@@ -9,9 +9,13 @@ import { usePlants } from "../context/plantsContext";
 import NewCoverImage from "../components/gallery/NewCoverImage";
 
 
-
+import { useRoute } from "@react-navigation/native"
 
 export default function GalleryScreen() {
+
+  const route = useRoute()
+  const { preselectedPlantID } = route.params || {}
+
   const { images } = useImages()
   const [selectedImage, setSelectedImage] = useState(null)
   const [modalVisible, setModalVisible] = useState(false)
@@ -28,6 +32,13 @@ export default function GalleryScreen() {
   const [deadSwitch, setDeadSwitch] = useState(false)
 
   const { alivePlants, deadPlants } = usePlants()
+
+  useEffect(() => {
+    if (preselectedPlantID) {
+      setSelectedPlantId(preselectedPlantID)
+      setIsSwitchOn(false)
+    }
+  }, [preselectedPlantID])
 
   // Open picture 
   const handleImagePress = (item) => {
