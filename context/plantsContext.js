@@ -52,7 +52,10 @@ export const PlantsProvider = ({ children }) => {
 
                     const sortedGroupedHistory = Object.values(groupedHistory)
                     const nextWatering = calculateNextWatering(sortedGroupedHistory)
-                    const nextFertilizing = calculateNextFertilizing(sortedGroupedHistory)
+                    const nextFertilizing = await calculateNextFertilizing(sortedGroupedHistory)
+
+                    //console.log(baseData.givenName || baseData.scientificName || baseData.id)
+                    //console.log("  ↳ nextFertilizing:", nextFertilizing)
 
                     return {
                         ...baseData,
@@ -91,7 +94,7 @@ export const PlantsProvider = ({ children }) => {
                     date: entry.date instanceof Date ? entry.date : entry.date.toDate?.() ?? null,
                 })),
                 nextWatering: data.nextWatering,
-                nextFertilizing: data.nextFertilizing,
+                nextFertilizing: await data.nextFertilizing,
             }
 
             // update full details cache
