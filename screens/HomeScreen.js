@@ -1,6 +1,6 @@
 import React, { useContext, useState, useMemo } from "react";
 import { StyleSheet, FlatList, TouchableOpacity, View } from "react-native";
-import { IconButton } from "react-native-paper";
+import { FAB, IconButton } from "react-native-paper";
 import { AuthContext } from "../context/authContext";
 import AddPlantModal from "../components/home/AddPlantModal";
 import { usePlants } from "../context/plantsContext";
@@ -10,23 +10,25 @@ import { ThemeContext } from "../context/themeContext";
 import { searchMostRecentWatering } from '../utils/searchWaterUtils';
 import ActionBar from "../components/home/ActionBar";
 import QuickCareMenu from "../components/home/QuickCareMenu";
+import { useTranslation } from "react-i18next";
 
 const HomeScreen = () => {
-    const { theme } = useContext(ThemeContext);
-    const { user } = useContext(AuthContext);
-    const { plants } = usePlants();
-    const navigation = useNavigation();
-    const { alivePlants } = usePlants();
+    const { theme } = useContext(ThemeContext)
+    const { user } = useContext(AuthContext)
+    const { plants } = usePlants()
+    const navigation = useNavigation()
+    const { alivePlants } = usePlants()
+    const { t } = useTranslation()
 
-
-    const [modalVisible, setModalVisible] = useState(false);
-    const [isTwoColumns, setIsTwoColumns] = useState(true);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [sortOption, setSortOption] = useState("alphabetical");
+    const [modalVisible, setModalVisible] = useState(false)
+    const [isTwoColumns, setIsTwoColumns] = useState(true)
+    const [searchQuery, setSearchQuery] = useState("")
+    const [sortOption, setSortOption] = useState("alphabetical")
     const [selectedType, setSelectedType] = useState("all")
     const [careMenuVisible, setCareMenuVisible] = useState(false)
     const [selectedPlantId, setSelectedPlantId] = useState(null)
     const [isReversed, setIsReversed] = useState(false)
+    const [fabOpen, setFabOpen] = useState(false)
 
     const filteredPlants = useMemo(() => {
         const sorted = [...alivePlants]
@@ -61,9 +63,9 @@ const HomeScreen = () => {
                     const dateA = a.createdAt ? a.createdAt : null
                     const dateB = b.createdAt ? b.createdAt : null
 
-                    if (!dateA && ! dateB) return 0
+                    if (!dateA && !dateB) return 0
                     if (!dateA) return 1
-                    if(!dateB) return -1
+                    if (!dateB) return -1
                 }
                 return 0;
             })
@@ -116,14 +118,24 @@ const HomeScreen = () => {
             />
             <QuickCareMenu plantId={selectedPlantId} menuVisible={careMenuVisible} setMenuVisible={setCareMenuVisible} />
 
-            <View style={styles.addPlantButtonContainer}>
-                <IconButton
-                    icon="plus"
-                    size={24}
-                    style={[styles.addIcon, { backgroundColor: theme.colors.primaryContainer }]}
-                    onPress={() => setModalVisible(true)}
-                />
-            </View>
+            <FAB.Group
+                open={fabOpen}
+                icon={fabOpen ? "close" : "plus"}
+                actions={[
+                    {
+                        icon: "plus",
+                        label: t("screens.addPlant.addButton"),
+                        onPress: () => setModalVisible(true)
+                    },
+                ]}
+                onStateChange={({ open }) => setFabOpen(open)}
+                fabStyle={{
+                    backgroundColor: theme.colors.secondaryContainer,
+                    bottom: -32,
+                    right: 0,
+                    margin: 0,
+                }}
+            />
 
             <AddPlantModal user={user} visible={modalVisible} onClose={() => setModalVisible(false)} />
         </View>
@@ -135,11 +147,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        margin: 10,
     },
     itemContainerSimple: {
         flex: 1,
-        padding: 10,
+        paddingBottom: 20,
+        paddingHorizontal: 10,
         maxWidth: '50%',
         alignSelf: 'stretch',
     },
@@ -151,18 +163,6 @@ const styles = StyleSheet.create({
     row: {
         flex: 1,
         justifyContent: "flex-start",
-    },
-    addPlantButtonContainer: {
-        width: "100%",
-        bottom: 20,
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        height: 0,
-    },
-    addIcon: {
-        borderRadius: 50,
-        elevation: 5,
     },
 });
 
