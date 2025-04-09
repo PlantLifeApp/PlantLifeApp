@@ -1,11 +1,14 @@
 import { FlatList, StyleSheet, Image, TouchableOpacity, View } from "react-native";
-import React, { useState, useCallback, useMemo, useEffect } from "react";
-import { Text, Surface, Card, useTheme, Portal, Modal, Chip, Switch } from "react-native-paper";
+import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
+import { Text, Surface, Card, useTheme, Portal, Modal, Chip, Switch, Button } from "react-native-paper";
 import { useImages } from "../context/imageContext";
 import FloatingButton from "../components/gallery/FloatingButton";
 import { useFocusEffect } from "@react-navigation/native";
 import { useTranslation } from "react-i18next"
 import { usePlants } from "../context/plantsContext";
+import NewCoverImage from "../components/gallery/NewCoverImage";
+
+
 import { useRoute } from "@react-navigation/native"
 
 export default function GalleryScreen() {
@@ -22,8 +25,13 @@ export default function GalleryScreen() {
   const [selectedType, setSelectedType] = useState("all")
   const [selectedPlantId, setSelectedPlantId] = useState('')
   const [isSwitchOn, setIsSwitchOn] = useState(false)
+  const [menuVisible, setMenuVisible] = useState(false)
+  const [selectedPlantIdCover, setSelectedPlantIdCover] = useState('')
+  const [menuAnchor, setMenuAnchor] = useState({ x: 0, y: 0 });
+  const imageRefs = useRef({});
+  const [deadSwitch, setDeadSwitch] = useState(false)
 
-  const { alivePlants } = usePlants()
+  const { alivePlants, deadPlants } = usePlants()
 
   useEffect(() => {
     if (preselectedPlantID) {
@@ -36,9 +44,26 @@ export default function GalleryScreen() {
   const handleImagePress = (item) => {
 
     setSelectedImage(item) // Avaa valittu kuva
-    console.log("GalleryScreen: Selected image Uri:", item)
+    //console.log("GalleryScreen: Selected image Uri:", item)
     setModalVisible(true)
   }
+  const handleLongPress = (plantId, imageUri, index) => {
+    const ref = imageRefs.current[index];
+    if (ref) {
+      ref.measureInWindow((x, y, width, height) => {
+        setMenuAnchor({ x, y });
+        setSelectedPlantIdCover(plantId);
+        setSelectedImage(imageUri);
+        setMenuVisible(true);
+      });
+    }
+  };
+  // const handleLongPress = (plantId, imageUri) => {
+  //   setSelectedPlantIdCover(plantId)
+  //   setSelectedImage({ uri: imageUri })
+  //   setMenuVisible(true)
+  //   // console.log('Täää ny perkl, ', selectedImage)
+  // }
 
   // FAB "only" on this screen
   useFocusEffect(
@@ -47,15 +72,13 @@ export default function GalleryScreen() {
       return () => setFabVisible(false)
     }, [])
   )
-  // No empty gallery if pushed refesh button from "<Dropdown/>"
-  useEffect(() => {
-    if (!selectedType) {
-      setSelectedType("all");
-    }
-  }, [selectedType]);
 
   const onToggleSwitch = () =>
     setIsSwitchOn(!isSwitchOn)
+
+  const onDeadButtonPress = () => {
+    setSelectedPlantId('')
+    setDeadSwitch(prev => !prev)}
 
 
   const TYPES = [
@@ -66,17 +89,22 @@ export default function GalleryScreen() {
     { label: t("screens.plant.utilitarian"), value: 'utilitarian' }
   ]
 
+  const selectedPlants = deadSwitch ? deadPlants : alivePlants
+
+
   const plantNames = useMemo(() => {
-    return alivePlants.map((plant) => ({
-      label: plant.givenName,
-      value: plant.id
-    }))
-  }, [alivePlants])
+    return selectedPlants
+      .map((plant) => ({
+        label: plant.givenName,
+        value: plant.id
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label)) //Chip sort by name
+  }, [selectedPlants])
 
   const filteredImages = useMemo(() => {
     return Object.entries(images)
       .filter(([plantId]) =>
-        alivePlants.some((plant) => {
+        selectedPlants.some((plant) => {
           const isMatch = plant.id === plantId;
           const typeMatch = selectedType === "all" || plant.plantType === selectedType;
           const plantMatch = !selectedPlantId || plant.id === selectedPlantId;
@@ -84,7 +112,7 @@ export default function GalleryScreen() {
         })
       )
       .flatMap(([plantId, imageUrls]) => {
-        const plant = alivePlants.find((plant) => plant.id === plantId);
+        const plant = selectedPlants.find((plant) => plant.id === plantId);
         return imageUrls.map((imageObj) => {
           const uri = typeof imageObj === 'string' ? imageObj : imageObj.uri;
           return {
@@ -93,19 +121,34 @@ export default function GalleryScreen() {
             plantName: plant?.givenName || "Unknown Plant",
             plantType: plant?.plantType || "unknown",
           };
-        })
-      });
-  }, [images, alivePlants, selectedType, selectedPlantId]);
+        });
+      })
+      .sort((a, b) => a.plantName.localeCompare(b.plantName)); //flatlist sort by name
+  }, [images, alivePlants, deadPlants, selectedType, selectedPlantId, selectedPlants]);
+
+
 
   return (
     <Surface style={[styles.container, { backgroundColor: 'theme.colors.background' }]}>
       {/* List of pictures, 2colums, touchable pictures*/}
       <View style={styles.switchSearch}>
-        <Text variant="labelMedium" >{t("screens.gallery.search")}</Text> 
-      <Switch
-        value={isSwitchOn}
-        onValueChange={onToggleSwitch}
-      />
+        <View style={styles.deadSwitchContainer}>
+          {isSwitchOn && (
+            <Chip
+              icon='cross'
+              onPress={onDeadButtonPress}
+              mode='outlined'
+            >
+              {deadSwitch ? t("screens.gallery.toAlivePlant") : t("screens.gallery.toGraveYard")}
+            </Chip>)}
+        </View>
+        <View style={styles.switchRightContainer}>
+          <Text variant="labelMedium" >{t("screens.gallery.search")}</Text>
+          <Switch
+            value={isSwitchOn}
+            onValueChange={onToggleSwitch}
+          />
+        </View>
       </View>
 
       <FlatList
@@ -115,63 +158,74 @@ export default function GalleryScreen() {
         columnWrapperStyle={styles.row}
         ListHeaderComponent={
 
-          isSwitchOn && ( <View style={styles.chipContainer}>
-          <Text style={styles.chipLabel}>{t("screens.gallery.plantName")}</Text>              
-          <View
-            style={styles.chipGroup} 
-          >
-            {plantNames.map((plant) => (
-              <Chip
-                key={plant.value}
-                visible={true}
-                selected={selectedPlantId === plant.value}
-                onPress={() => setSelectedPlantId(plant.value === selectedPlantId ? "" : plant.value)} // empty name if pressed again
-                style={styles.chip}
-                disabled={selectedType !== 'all'}
-              >
-                {plant.label}
-              </Chip>
-            ))}
+          isSwitchOn && (<View style={styles.chipContainer}>
+            <Text style={styles.chipLabel}>{t("screens.gallery.plantName")}</Text>
+            <View
+              style={styles.chipGroup}
+            >
+              {plantNames.map((plant) => (
+                <Chip
+                  key={plant.value}
+                  visible={true}
+                  selected={selectedPlantId === plant.value}
+                  onPress={() => setSelectedPlantId(plant.value === selectedPlantId ? "" : plant.value)} // empty name if pressed again
+                  style={styles.chip}
+                  disabled={selectedType !== 'all'}
+                >
+                  {plant.label}
+                </Chip>
+              ))}
+            </View>
+            {/* Kasvityypin valinta ryhmä */}
+            <Text style={styles.chipLabel}>{t("screens.gallery.plantType")}</Text>
+            <View style={styles.chipGroup}>
+              {TYPES.map((type) => (
+                <Chip
+                  key={type.value}
+                  selected={selectedType === type.value}
+                  onPress={() => setSelectedType(type.value)}
+                  style={styles.chip}
+                  disabled={selectedPlantId !== ""}
+                >
+                  {type.label}
+                </Chip>
+              ))}
+            </View>
           </View>
-          {/* Kasvityypin valinta ryhmä */}
-          <Text style={styles.chipLabel}>{t("screens.gallery.plantType")}</Text>
-          <View style={styles.chipGroup}>
-            {TYPES.map((type) => ( 
-              <Chip
-                key={type.value}
-                selected={selectedType === type.value}
-                onPress={() => setSelectedType(type.value)}
-                style={styles.chip}
-                disabled={selectedPlantId !== ""}
-              >
-                {type.label}
-              </Chip>
-            ))}
-          </View>
-        </View>
           )
         }
         ListEmptyComponent={() => <Text style={styles.noImagesText}>{t("screens.gallery.listEmpty")}</Text>}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => handleImagePress(item)}>
+        renderItem={({ item, index }) => (
+          <TouchableOpacity
+            ref={(ref) => (imageRefs.current[index] = ref)}
+            onPress={() => handleImagePress(item)}
+            onLongPress={() => handleLongPress(item.plantId, item.uri, index)}>
             <Card style={styles.card}>
               <Image source={{ uri: item?.uri }} style={styles.cardImage} />
             </Card>
           </TouchableOpacity>
         )}
       />
+      {/* setNewCoverImage valikko */}
+      <NewCoverImage
+        plantId={selectedPlantIdCover}
+        imageUri={selectedImage}
+        menuVisible={menuVisible}
+        setMenuVisible={setMenuVisible}
+        anchor={menuAnchor}
+      />
 
       {/* Opens full picture*/}
       <Portal>
         <Modal visible={modalVisible} transparent={true} animationType='fade'>
           <TouchableOpacity
-          activeOpacity={1}
+            activeOpacity={1}
             onPress={() => { setTimeout(() => setModalVisible(false)) }}
           >
             <Card style={styles.modalCard}>
-              <Image source={selectedImage?.uri ? { uri: selectedImage?.uri } : null} 
-              style={styles.fullscreenImage}
-              onError={(error) => console.error('error image load galleryScreen', error.nativeEvent)}
+              <Image source={selectedImage?.uri ? { uri: selectedImage?.uri } : null}
+                style={styles.fullscreenImage}
+                onError={(error) => console.error('error image load galleryScreen', error.nativeEvent)}
               />
             </Card>
           </TouchableOpacity>
@@ -185,8 +239,6 @@ export default function GalleryScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 10,
     alignItems: 'stretch',
     justifyContent: "center",
   },
@@ -243,6 +295,19 @@ const styles = StyleSheet.create({
   switchSearch: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end'
-  }
-});
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  deadSwitchContainer: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  switchRightContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: 6,
+  },
+}
+);

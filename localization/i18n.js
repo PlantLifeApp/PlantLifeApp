@@ -193,6 +193,14 @@ const resources = {
                 },
                 gallery: {
                     listEmpty: "No Images Available",
+                    search: "Show search filters",
+                    plantName: "Name",
+                    plantType: "Type",
+                    successAdd: "Changed plant cover image.",
+                    errorAdd: "Error adding event. Please try again.",
+                    changeMenuTitle: "Set to cover image",
+                    toGraveYard: "To graveyard",
+                    toAlivePlant: "To the living",
                 },
                 fab: {
                     camera: "Take Photo",
@@ -449,9 +457,14 @@ const resources = {
                 },
                 gallery: {
                     listEmpty: "Ei kuvia saatavilla",
-                    search: "Etsi",
+                    search: "Näytä hakusuodattimet",
                     plantName: "Kasvin nimi",
-                    plantType: "Kasvityyppi"
+                    plantType: "Kasvityyppi",
+                    successAdd: "Onnistuneesti vaihdettu kasvin kansikuva",
+                    errorAdd: "Virhe lisättäessä tapahtumaa. Yritä uudelleen.",
+                    changeMenuTitle: "Valitse kansikuvaksi",
+                    toGraveYard: "Hautausmaalle",
+                    toAlivePlant: "Elossa oleviin",
                 },
                 fab: {
                     camera: "Ota kuva",
@@ -698,9 +711,14 @@ const resources = {
                 },
                 gallery: {
                     listEmpty: "Inga bilder tillgängliga",
-                    search: "Söka",
+                    search: "Visa sökfilter",
                     plantName: "Växtnamn",
-                    plantType: "Växttyp"
+                    plantType: "Växttyp",
+                    successAdd: "Ändrat växtomslagsbild",
+                    errorAdd: "Det gick inte att lägga till händelse. Försök igen.",
+                    changeMenuTitle: "Välj som omslagsbild",
+                    toGraveYard: "Kyrkogård",
+                    toAlivePlant: "Till de levande",
                 },
                 fab: {
                     camera: "Ta foto",
