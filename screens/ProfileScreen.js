@@ -198,7 +198,7 @@ export default function ProfileScreen() {
                     },
                 ]}
                 mode="contained"
-                onPress={() => navigation.navigate("Home", { screen: "GraveyardScreen" })}
+                onPress={() => navigation.navigate("GraveyardScreen")}
                 >
                 {t("screens.options.rip")} 🌿
             </Button>
@@ -285,6 +285,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,  // This was missing!
     shadowRadius: 4,      // Optional but makes the shadow softer
-    elevation: 2,         // Needed for Android shadow
+    elevation: 4,         // Needed for Android shadow
   }
 })

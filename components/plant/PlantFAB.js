@@ -1,14 +1,22 @@
 import React, { useState } from "react"
+import { Platform } from "react-native"
 import { FAB, useTheme } from "react-native-paper"
 import { useTranslation } from "react-i18next"
 import { useNavigation } from "@react-navigation/native"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 const PlantFAB = ({ onAddCareEvent, plant }) => {
     const [open, setOpen] = useState(false)
     const { t } = useTranslation()
     const theme = useTheme()
     const navigation = useNavigation()
+    const insets = useSafeAreaInsets()
 
+    // fab positioning based on OS
+    const bottomOffset = Platform.OS === "ios"
+        ? -32 
+        : insets.bottom + 8
+    
     return (
         <FAB.Group
             open={open}
@@ -40,9 +48,10 @@ const PlantFAB = ({ onAddCareEvent, plant }) => {
                     icon: "image-multiple",
                     label: t("screens.plant.viewPhotos"),
                     onPress: () =>
-                      navigation.navigate("Gallery", {
-                        preselectedPlantID: plant.id,
-                      }),
+                        navigation.navigate("Gallery", {
+                            screen: "GalleryScreen",
+                            params: { preselectedPlantID: plant.id },
+                          }),
                   },
                 {
                     icon: "file-document-edit",
@@ -57,7 +66,7 @@ const PlantFAB = ({ onAddCareEvent, plant }) => {
             ]}
             fabStyle={{
                 backgroundColor: theme.colors.secondaryContainer,
-                bottom: -32,
+                bottom: bottomOffset,
             }}
         />
     )
