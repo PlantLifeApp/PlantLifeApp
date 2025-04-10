@@ -14,6 +14,7 @@ import EditPlantDetails from "../components/editPlant/EditPlantDetails"
 import { Timestamp } from "firebase/firestore"
 
 export default function EditPlantScreen({ route }) {
+
     const { t } = useTranslation()
     const theme = useTheme()
     const navigation = useNavigation()
@@ -32,6 +33,7 @@ export default function EditPlantScreen({ route }) {
         givenName: plant.givenName,
         scientificName: plant.scientificName,
         plantType: plant.plantType,
+        plantPrice: plant.plantPrice,
     })
 
     useEffect(() => {
@@ -127,8 +129,10 @@ export default function EditPlantScreen({ route }) {
     return (
         <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>
             <ScrollView contentContainerStyle={styles.container}>
+
                 <Surface style={styles.surface}>
-                    <Text variant="bodyLarge">Editing {plantData?.plant?.givenName}</Text>
+                    <Text variant="bodyLarge">{t("screens.editPlant.editing")}:</Text>
+                    <Text variant="headlineSmall">{plantData?.plant?.givenName}</Text>
                 </Surface>
 
                 <EditPlantDetails plant={plantData.plant} onChange={setEditedPlant} />
@@ -158,6 +162,7 @@ export default function EditPlantScreen({ route }) {
                     onCancel={() => setGraveyardModalVisible(false)}
                     onConfirm={handleKillPlant}
                 />
+
             </ScrollView>
         </View>
     )

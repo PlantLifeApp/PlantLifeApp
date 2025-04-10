@@ -63,8 +63,15 @@ export default function AddPlantModal({ user, visible, onClose }) {
         }
 
         // Format price to number if given by user. If price not numeric, then it must be null
-        let formattedPrice = plantPrice ? parseFloat(typeof plantPrice === "string" ? plantPrice.replace(",", ".") : plantPrice) : null
-        if (isNaN(formattedPrice)) formattedPrice = 0.0
+        let formattedPrice = plantPrice 
+            ? parseFloat(typeof plantPrice === "string" 
+                ? plantPrice.replace(",", ".") 
+                : plantPrice)
+            : null
+
+            if (isNaN(formattedPrice)) {
+            formattedPrice = null
+            }
 
         const newPlantId = await addPlant(plantNickname, scientificName, formattedPrice, plantType, user.uid);
 
@@ -110,7 +117,7 @@ export default function AddPlantModal({ user, visible, onClose }) {
                 animationType="slide"
                 transparent={true}
                 visible={visible}
-                onRequsetClose={onClose}
+                onRequestClose={onClose}
                 style={styles.modalContainer}
             >
                 <ScrollView>
@@ -144,9 +151,9 @@ export default function AddPlantModal({ user, visible, onClose }) {
                             />
                         </View>
 
-                        <Text variant="bodyMedium">{t("screens.addPlant.price")} €</Text>
+                        <Text variant="bodyMedium">{t("screens.addPlant.price")}</Text>
                         <View style={styles.inputContainer}>
-                            <TextInput style={styles.textInput} keyboardType='numeric' onChangeText={(text) => setPlantPrice(text)}></TextInput>
+                            <TextInput style={styles.textInput} keyboardType='decimal-pad' onChangeText={(text) => setPlantPrice(text)}></TextInput>
                         </View>
 
                         <Text variant="bodyMedium">{t("screens.addPlant.type")}*</Text>
