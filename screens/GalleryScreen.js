@@ -135,7 +135,7 @@ export default function GalleryScreen() {
         <View style={styles.deadSwitchContainer}>
           {isSwitchOn && (
             <Chip
-              icon='cross'
+              icon='skull'
               onPress={onDeadButtonPress}
               mode='outlined'
             >

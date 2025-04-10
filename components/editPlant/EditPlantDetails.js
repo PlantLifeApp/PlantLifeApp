@@ -14,14 +14,17 @@ const EditPlantDetails = ({ plant, onChange }) => {
     ]
 
     const [givenName, setGivenName] = useState(plant.givenName)
-    const [scientificName, setScientificName] = useState(plant.scientificName)
+    const [scientificName, setScientificName] = useState(plant.scientificName ?? null)
     const [plantType, setPlantType] = useState(plant.plantType)
-
+    const [plantPriceInput, setPlantPriceInput] = useState(
+        plant.plantPrice != null ? plant.plantPrice.toString().replace(".", ",") : ""
+    )
     const [menuVisible, setMenuVisible] = useState(false)
     const selectedLabel = plantTypeOptions.find(opt => opt.value === plantType)?.label || ""
 
 
     // onChange receives an object with the new values to pass back to the parent
+
     const handleGivenNameChange = (value) => {
         setGivenName(value)
         onChange({ givenName: value, scientificName, plantType })
@@ -33,6 +36,20 @@ const EditPlantDetails = ({ plant, onChange }) => {
     const handlePlantTypeChange = (value) => {
         setPlantType(value)
         onChange({ givenName, scientificName, plantType: value })
+    }
+    const handlePriceChange = (value) => {
+        setPlantPriceInput(value)
+    
+        const raw = value.replace(",", ".")
+        const parsed = parseFloat(raw)
+        const cleanValue = isNaN(parsed) ? null : parsed
+    
+        onChange({
+            givenName,
+            scientificName,
+            plantType,
+            plantPrice: cleanValue,
+        })
     }
 
 
@@ -52,6 +69,15 @@ const EditPlantDetails = ({ plant, onChange }) => {
                 onChangeText={handleScientificNameChange}
                 style={styles.input}
                 mode="outlined"
+            />
+
+            <TextInput
+                label={t("screens.editPlant.plantPrice")}
+                value={plantPriceInput}
+                onChangeText={handlePriceChange}
+                style={styles.input}
+                mode="outlined"
+                keyboardType="decimal-pad"
             />
 
             <Menu
