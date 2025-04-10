@@ -73,7 +73,10 @@ export default function EditPlantScreen({ route }) {
 
             await updatePlantData(plantId, true)
             setGraveyardModalVisible(false)
-            navigation.navigate("HomeScreen")
+            navigation.reset({
+                index: 0,
+                routes: [{ name: "HomeScreen" }]
+            })
 
             Toast.show({
                 type: "success",
@@ -94,7 +97,10 @@ export default function EditPlantScreen({ route }) {
         try {
             setDeleteModalVisible(false)
             await deletePlant(user.uid, plantId)
-            navigation.navigate("HomeScreen")
+            navigation.reset({
+                index: 0,
+                routes: [{ name: "HomeScreen" }]
+            })
             Toast.show({
                 type: "success",
                 text1: t("screens.editPlant.successDeleting"),

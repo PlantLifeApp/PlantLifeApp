@@ -436,7 +436,7 @@ const resources = {
                     graveyardHeading: "Kuolleiden kasvien hautausmaa",
                 },
                 graveyard: {
-                    title: "Kasvien hautausmaa",
+                    title: "Hautausmaa",
                     noPlants: "Ei kasveja hautausmaalla vielä",
                     empty: "Ei kasveja hautausmaalla...vielä!",
                     plantListEmptyDescription: "Kun kasvi kuolee, se siirretään tänne. Voit tarkastella sen historiaa ja tietoja, mutta et voi herättää sitä henkiin.",

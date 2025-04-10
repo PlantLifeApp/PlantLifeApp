@@ -198,7 +198,7 @@ export default function ProfileScreen() {
                     },
                 ]}
                 mode="contained"
-                onPress={() => navigation.navigate("Home", { screen: "GraveyardScreen" })}
+                onPress={() => navigation.navigate("GraveyardScreen")}
                 >
                 {t("screens.options.rip")} 🌿
             </Button>
