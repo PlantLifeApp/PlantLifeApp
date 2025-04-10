@@ -1,6 +1,8 @@
 import i18n from "i18next"
 import { initReactI18next } from "react-i18next"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import * as Localization from 'expo-localization'
+import LANGUAGES from '../localization/languages'
 
 const resources = {
     en: {
@@ -786,6 +788,14 @@ const resources = {
 const getStoredLanguage = async () => {
     try {
         const storedLang = await AsyncStorage.getItem("language")
+        if (!storedLang) {
+            const locales = Localization.getLocales()
+            const systemLang = locales[0].languageCode
+            if (LANGUAGES.some(lang => lang.value === systemLang)) {
+                await AsyncStorage.setItem("language", systemLang)
+                return systemLang
+            }
+        }
         return storedLang || "en"
     } catch (error) {
         console.error("Error fetching stored language", error)
