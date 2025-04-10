@@ -239,8 +239,10 @@ export default function GalleryScreen() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: 'stretch',
     justifyContent: "center",
+    height: '100%',
   },
   row: {
     justifyContent: 'space-evenly',

@@ -1,29 +1,30 @@
 import React, { useContext, useEffect, useState } from "react"
-import { Alert, StyleSheet, View, Text, Modal, TouchableOpacity, FlatList } from "react-native"
-import { FAB, Portal } from "react-native-paper"
+import { Alert, ScrollView, StyleSheet, View, TouchableOpacity, FlatList } from "react-native"
+import { FAB, Portal, Modal, Text, Surface } from "react-native-paper"
 import * as ImagePicker from 'expo-image-picker'
 import { useImages } from "../../context/imageContext";
 import { useTranslation } from "react-i18next"
 import { usePlants } from "../../context/plantsContext";
 import { uploadPlantImage } from "../../services/plantService"
 import { AuthContext } from "../../context/authContext";
+import { ThemeContext } from "../../context/themeContext";
 
-export default function FloatingButton({ plantId }) {
-  const { addImage } = useImages() //openCamera, pickImage
-  const [fabState, setFabState] = useState({ open: false }) // fab
-  const onStateChange = ({ open }) => setFabState({ open }) // fab
-  const { open } = fabState  // fab
-  const [modalVisible, setModalVisible] = useState(false)
+export default function FloatingButton() {
+  const { theme } = useContext(ThemeContext)
+  const { addImage } = useImages()
   const { t } = useTranslation()
   const { plants } = usePlants()
   const { user } = useContext(AuthContext)
-  const [selectedAction, setSelectedAction] = useState('') // to choose gallery / camera
+
+  const [fabOpen, setFabOpen] = useState(false) //FAB
+  const [modalVisible, setModalVisible] = useState(false) // Choose plant modal
+  const [selectedAction, setSelectedAction] = useState('') // "camera" / "gallery"
 
   useEffect(() => {
     (async () => {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
       if (status !== 'granted') {
-        Alert.alert(t('screens.fab.requestPermissionHeader'), t('screens.fab.requestMediaPermission')) // saw this alert ONCE when first tried the program( delete cache to see it? )
+        Alert.alert(t('screens.fab.requestPermissionHeader'), t('screens.fab.requestMediaPermission'))
       }
     })()
   }, [])
@@ -38,11 +39,12 @@ export default function FloatingButton({ plantId }) {
 
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ['livePhotos'],
-      // allowsEditing: true,
-      quality: 1,
       allowsEditing: true,
       aspect: [4, 4],
+      quality: 1,
     })
+
+    setModalVisible(false)
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const imageUri = result.assets[0].uri
@@ -60,11 +62,12 @@ export default function FloatingButton({ plantId }) {
       aspect: [4, 4],
     })
 
+    setModalVisible(false)
+
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const imageUri = result.assets[0].uri;
       if (imageUri) {
         addImage(plantId, imageUri); // Lisää kuva valitulle plantId:lle
-        console.log
       } else {
         console.error("Floatingbutton: Image URI is undefined");
       }
@@ -78,7 +81,7 @@ export default function FloatingButton({ plantId }) {
       if (!downloadUrl || typeof downloadUrl !== "string") {
         throw new Error("Invalid download URL: must be a string");
       }
-      console.log("Floatingbutton:✅ Image uploaded successfully:", downloadUrl)
+
       addImage(plantId, downloadUrl)
     } catch (error) {
       console.error("Floatingbutton: Error uploading image:", error)
@@ -90,12 +93,10 @@ export default function FloatingButton({ plantId }) {
   const openPlantSelectionModal = (action) => {
     setSelectedAction(action)
     setModalVisible(true)
-
   }
 
   // Choose correct plant to add new picture
   const handlePlantSelect = (plantId) => {
-    setModalVisible(false)
     if (selectedAction === 'camera') {
       handleOpenCamera(plantId)
     } else if (selectedAction === 'gallery') {
@@ -105,56 +106,64 @@ export default function FloatingButton({ plantId }) {
   }
 
   return (
-    <View style={styles.container}>
-      <Portal>
-        <FAB.Group
-          open={open}
-          visible={true}
-          icon={open ? 'flower' : 'plus-circle-outline'}
-          actions={[
-            {
-              icon: 'camera',
-              label: t('screens.fab.camera'),
-              onPress: () => openPlantSelectionModal('camera'),
-            },
-            {
-              icon: 'image',
-              label: t('screens.fab.phoneGallery'),
-              onPress: () => openPlantSelectionModal('gallery'),
-            },
-          ]}
-          onStateChange={({ open }) => setFabState({ open })}
-          style={styles.fabGroup}
-        />
-      </Portal>
+    <>
+      <FAB.Group
+        open={fabOpen}
+        visible={true}
+        icon={fabOpen ? 'flower' : 'plus-circle-outline'}
+        actions={[
+          {
+            icon: 'camera',
+            label: t('screens.fab.camera'),
+            onPress: () => openPlantSelectionModal('camera'),
+          },
+          {
+            icon: 'image',
+            label: t('screens.fab.phoneGallery'),
+            onPress: () => openPlantSelectionModal('gallery'),
+          },
+        ]}
+        onStateChange={({ open }) => setFabOpen(open)}
+        fabStyle={{
+          backgroundColor: theme.colors.secondaryContainer,
+          bottom: -32,
+        }}
+      />
+
 
       {/* Kasvien valintamodal --minne lisätään uusi kuva-- */}
-      <Modal visible={modalVisible} transparent={true} animationType="slide">
-        <View style={styles.modalContainer}>
-          <View >
-            <Text style={styles.modalTitle}>{t("screens.fab.choosePlantName")}</Text>
-            <FlatList
-              data={plants}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.plantItem}
-                  onPress={() => handlePlantSelect(item.id)}
-                >
-                  <Text style={styles.plantName}>{item.givenName}</Text>
-                </TouchableOpacity>
-              )}
-            />
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setModalVisible(false)}
-            >
-              <Text style={styles.closeButtonText}>{t("common.cancel")}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    </View>
+      <Portal>
+        <Modal
+          visible={modalVisible}
+          transparent={true}
+          animationType="slide"
+          style={styles.modalContainer}
+        >
+            <Surface style={styles.modalSurface}>
+              <Text variant="bodyLarge" style={styles.modalTitle}>{t("screens.fab.choosePlantName")}</Text>
+              <FlatList
+                data={plants}
+                keyExtractor={(item) => item.id}
+                numColumns={2}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={[styles.plantItem, {backgroundColor: theme.colors.secondaryContainer}]}
+                    onPress={() => handlePlantSelect(item.id)}
+                  >
+                    <Text variant="bodyMedium">{item.givenName}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setModalVisible(false)}
+              >
+                <Text variant="bodyMedium" style={styles.closeButtonText}>{t("common.cancel")}</Text>
+              </TouchableOpacity>
+            </Surface>
+        </Modal>
+      </Portal>
+    </>
   );
 }
 
@@ -171,13 +180,17 @@ const styles = StyleSheet.create({
     right: 16,
   },
   modalContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 50,
-    paddingBottom: 300,
+    justifyContent: "center",
+    padding: 20,
+    width: '100%',
     height: '100%',
+  },
+  modalSurface: {
+    padding: 16,
+    margin: 20,
+    borderRadius: 10,
+    elevation: 4,
+    justifyContent: "center",
   },
   modalContent: {
     width: '90%',
@@ -186,23 +199,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalTitle: {
-    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: 'white',
     alignSelf: 'center'
   },
   plantItem: {
-    padding: 15,
-    backgroundColor: 'white',
-    marginVertical: 5,
-    borderRadius: 10,
-    width: '80%',
-    alignSelf: 'center',
-  },
-  plantName: {
-    fontSize: 16,
-    color: 'black',
+    flex: 1,
+    marginBottom: 16,
+    paddingHorizontal: 10,
   },
   closeButton: {
     marginTop: 20,

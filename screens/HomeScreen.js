@@ -132,8 +132,6 @@ const HomeScreen = () => {
                 fabStyle={{
                     backgroundColor: theme.colors.secondaryContainer,
                     bottom: -32,
-                    right: 0,
-                    margin: 0,
                 }}
             />
 
