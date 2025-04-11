@@ -206,7 +206,7 @@ const resources = {
                     successAdd: "Changed plant cover image.",
                     errorAdd: "Error adding event. Please try again.",
                     changeMenuTitle: "Set to cover image",
-                    toGraveYard: "To graveyard",
+                    toGraveYard: "To the dead",
                     toAlivePlant: "To the living",
                 },
                 fab: {
@@ -481,7 +481,7 @@ const resources = {
                     successAdd: "Onnistuneesti vaihdettu kasvin kansikuva",
                     errorAdd: "Virhe lisättäessä tapahtumaa. Yritä uudelleen.",
                     changeMenuTitle: "Valitse kansikuvaksi",
-                    toGraveYard: "Hautausmaalle",
+                    toGraveYard: "Kuolleisiin",
                     toAlivePlant: "Elossa oleviin",
                 },
                 fab: {
@@ -746,7 +746,7 @@ const resources = {
                     successAdd: "Ändrat växtomslagsbild",
                     errorAdd: "Det gick inte att lägga till händelse. Försök igen.",
                     changeMenuTitle: "Välj som omslagsbild",
-                    toGraveYard: "Kyrkogård",
+                    toGraveYard: "Till de döda",
                     toAlivePlant: "Till de levande",
                 },
                 fab: {
