@@ -1,5 +1,5 @@
 import React, { useContext, useState, useMemo } from "react";
-import { StyleSheet, FlatList, TouchableOpacity, View } from "react-native";
+import { StyleSheet, FlatList, TouchableOpacity, View, Platform } from "react-native";
 import { FAB, IconButton } from "react-native-paper";
 import { AuthContext } from "../context/authContext";
 import AddPlantModal from "../components/home/AddPlantModal";
@@ -11,6 +11,8 @@ import { searchMostRecentWatering } from '../utils/searchWaterUtils';
 import ActionBar from "../components/home/ActionBar";
 import QuickCareMenu from "../components/home/QuickCareMenu";
 import { useTranslation } from "react-i18next";
+import { useSafeAreaInsets } from "react-native-safe-area-context"
+
 
 const HomeScreen = () => {
     const { theme } = useContext(ThemeContext)
@@ -29,6 +31,12 @@ const HomeScreen = () => {
     const [selectedPlantId, setSelectedPlantId] = useState(null)
     const [isReversed, setIsReversed] = useState(false)
     const [fabOpen, setFabOpen] = useState(false)
+
+    const insets = useSafeAreaInsets()
+    // fab positioning based on OS
+    const bottomOffset = Platform.OS === "ios"
+        ? -32 
+        : insets.bottom + 8
 
     const filteredPlants = useMemo(() => {
         const sorted = [...alivePlants]
@@ -131,7 +139,7 @@ const HomeScreen = () => {
                 onStateChange={({ open }) => setFabOpen(open)}
                 fabStyle={{
                     backgroundColor: theme.colors.secondaryContainer,
-                    bottom: -32,
+                    bottom: bottomOffset,
                 }}
             />
 

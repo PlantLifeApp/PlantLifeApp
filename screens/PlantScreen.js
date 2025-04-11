@@ -23,12 +23,12 @@ const PlantScreen = ({ route }) => {
     const { updatePlantData } = usePlants()
     const { t } = useTranslation()
     const theme = useTheme()
-    const navigation = useNavigation()
+    //const navigation = useNavigation()
 
     const [plant, setPlant] = useState(null)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
-    const [fabOpen, setFabOpen] = useState(false)
+    //const [fabOpen, setFabOpen] = useState(false)
 
     const displayName = plant?.plant.givenName || plantPreview?.givenName || ""
     const displayScientific = plant?.plant.scientificName || plantPreview?.scientificName || ""
@@ -93,7 +93,6 @@ const PlantScreen = ({ route }) => {
                     <ItalicText variant="bodyLarge">{displayScientific}</ItalicText>
                 </Surface>
 
-
                 {loading && (
                     <View style={styles.centered}>
                         <ActivityIndicator animating size="large" />
@@ -102,7 +101,7 @@ const PlantScreen = ({ route }) => {
 
                 {!loading && plant && (
                     <>
-                        {plant?.plant.coverImageUrl || plant?.plant.createdAt || plant?.plant.plantPrice ? (
+                        {(plant.plant.coverImageUrl || plant.plant.createdAt || plant.plant.plantPrice != null) && (
                             <Surface style={styles.imageSurface}>
                                 {plant.plant.coverImageUrl && (
                                     <Image
@@ -111,20 +110,23 @@ const PlantScreen = ({ route }) => {
                                     />
                                 )}
 
-                            {(plant.plant.createdAt || plant.plant.plantPrice) && (
-                            <Text variant="bodyMedium" style={styles.plantMetaText}>
-                                {plant.plant.createdAt
-                                ? `${t("screens.plant.createdAt")}: ${formatDate(
-                                    plant.plant.createdAt.toDate?.() ?? plant.plant.createdAt
-                                    )}\n`
-                                : ""}
-                                {plant.plant.plantPrice
-                                ? `${t("screens.plant.price")}: ${plant.plant.plantPrice} €`
-                                : ""}
-                            </Text>
-                            )}
+                                {plant.plant.createdAt && (
+                                    <Text variant="bodyMedium" style={styles.plantMetaText}>
+                                        {`${t("screens.plant.createdAt")}: ${formatDate(plant.plant.createdAt.toDate?.() ?? plant.plant.createdAt)}`}
+                                    </Text>
+                                )}
+
+                                {plant.plant.plantPrice != null && (
+                                    <Text variant="bodyMedium" style={styles.plantMetaText}>
+                                        {`${t("screens.plant.price")}: ${
+                                            plant.plant.plantPrice === 0
+                                                ? t("screens.plant.free")
+                                                : `${plant.plant.plantPrice} €`
+                                        }`}
+                                    </Text>
+                                )}
                             </Surface>
-                        ) : null}
+                        )}
 
                         <PlantDetails
                             plant={plant.plant}
@@ -147,7 +149,6 @@ const PlantScreen = ({ route }) => {
             </ScrollView>
 
             <PlantFAB onAddCareEvent={handleAddCareEvent} plant={plant?.plant} />
-
         </View>
     )
 }

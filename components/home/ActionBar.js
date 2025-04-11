@@ -52,7 +52,7 @@ export default function ActionBar({ isTwoColumns, isReversed, setIsReversed, set
                     onPress={() => setIsTwoColumns(!isTwoColumns)}
                 />
 
-                <IconButton icon="menu" size={30} onPress={() => setTypeMenuVisible(!typeMenuVisible)} />
+                <IconButton icon="filter-variant" size={30} onPress={() => setTypeMenuVisible(!typeMenuVisible)} />
             </View>
 
             {typeMenuVisible &&
