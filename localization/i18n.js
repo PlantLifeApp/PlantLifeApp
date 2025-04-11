@@ -194,6 +194,7 @@ const resources = {
                         unknown: "Unknown",
                         other: "Other",
                     },
+                    plantPrice: "Cost to acquire",
                     deletePermanently: "Delete Permanently",
                     deleted: "Plant deleted permanently",
                 },
@@ -468,6 +469,7 @@ const resources = {
                         unknown: "tuntematon",
                         other: "muu"
                     },
+                    plantPrice: "Hankintahinta",
                     deletePermanently: "Poista pysyvästi",
                     deleted: "Kasvi poistettu pysyvästi",
                 },
@@ -732,6 +734,7 @@ const resources = {
                         unknown: "okänd",
                         other: "annat"
                     },
+                    plantPrice: "Inköpspris",
                     deletePermanently: "Ta bort permanent",
                     deleted: "Växten borttagen permanent",
                 },
