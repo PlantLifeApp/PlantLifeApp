@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react"
-import { Alert, StyleSheet, FlatList } from "react-native"
+import { Alert, StyleSheet, FlatList, Platform } from "react-native"
 import { FAB, Portal, Modal, Text, Surface, Button, Chip } from "react-native-paper"
 import * as ImagePicker from 'expo-image-picker'
 import { useImages } from "../../context/imageContext";
@@ -8,7 +8,7 @@ import { usePlants } from "../../context/plantsContext";
 import { uploadPlantImage } from "../../services/plantService"
 import { AuthContext } from "../../context/authContext";
 import { ThemeContext } from "../../context/themeContext";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function FloatingButton(props) {
   const { theme } = useContext(ThemeContext)
@@ -20,6 +20,11 @@ export default function FloatingButton(props) {
   const [fabOpen, setFabOpen] = useState(false) //FAB
   const [modalVisible, setModalVisible] = useState(false) // Choose plant modal
   const [selectedAction, setSelectedAction] = useState('') // "camera" / "gallery"
+
+      const insets = useSafeAreaInsets()
+      const bottomOffset = Platform.OS === "ios"
+          ? -32 
+          : insets.bottom + 8
 
   useEffect(() => {
     (async () => {
@@ -138,7 +143,7 @@ export default function FloatingButton(props) {
         onStateChange={({ open }) => setFabOpen(open)}
         fabStyle={{
           backgroundColor: theme.colors.secondaryContainer,
-          bottom: -32,
+          bottom: bottomOffset,
         }}
       />
 
