@@ -54,8 +54,6 @@ export const PlantsProvider = ({ children }) => {
                     const nextWatering = calculateNextWatering(sortedGroupedHistory)
                     const nextFertilizing = await calculateNextFertilizing(sortedGroupedHistory)
 
-                    console.log(baseData.givenName, baseData.plantPrice)
-
                     return {
                         ...baseData,
                         careHistory,

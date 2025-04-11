@@ -17,274 +17,262 @@ import LineChartComponent from '../components/stats/LineChart.js'
 
 
 export default function StatsScreen() {
-    const theme = useTheme();
-    const { t } = useTranslation();
-    const plants = usePlants();
-    const [careEvents, setCareEvents] = useState({});
-    const [filterOption, setFilterOption] = useState('month');
-    const [totalWaterings, setTotalWaterings] = useState(0);
-    const [totalFertilizings, setTotalFertilizings] = useState(0);
-    const [totalPrunings, setTotalPrunings] = useState(0);
-    const [totalPottings, setTotalPottings] = useState(0);
-    const [totalAlivePlants, setTotalAlivePlants] = useState(0);
-    const [totalDeadPlants, setTotalDeadPlants] = useState(0);
-    const [totalPrice, setTotalPrice] = useState(0);
-    const [chartWateringData, setChartWateringData] = useState([]);
-    const [chartFertilizingData, setChartFertilizingData] = useState([]);
-    const [chartPruningData, setChartPruningData] = useState([]);
-    const [chartPottingsData, setChartPottingsData] = useState([]);
-    const [barChartFilterOption, setBarChartFilterOption] = useState('watering');
-    const [currentDate, setCurrentDate] = useState(new Date());
-    const [listOfPurchases, setListOfPurchases] = useState({});
+    const theme = useTheme()
+    const { t } = useTranslation()
+    const plants = usePlants()
+
+    // console.log("🪴 Plants summary from context:");
+    // plants.plants.forEach((p) => {
+    //   console.log(`• ${p.givenName} (${p.id}) – careHistory length: ${p.careHistory?.length ?? "N/A"}`);
+    // })
+
+    const [careEvents, setCareEvents] = useState({})
+    const [filterOption, setFilterOption] = useState('month')
+    const [totalWaterings, setTotalWaterings] = useState(0)
+    const [totalFertilizings, setTotalFertilizings] = useState(0)
+    const [totalPrunings, setTotalPrunings] = useState(0)
+    const [totalPottings, setTotalPottings] = useState(0)
+    const [totalAlivePlants, setTotalAlivePlants] = useState(0)
+    const [totalDeadPlants, setTotalDeadPlants] = useState(0)
+    const [totalPrice, setTotalPrice] = useState(0)
+    const [chartWateringData, setChartWateringData] = useState([])
+    const [chartFertilizingData, setChartFertilizingData] = useState([])
+    const [chartPruningData, setChartPruningData] = useState([])
+    const [chartPottingsData, setChartPottingsData] = useState([])
+    const [barChartFilterOption, setBarChartFilterOption] = useState('watering')
+    const [currentDate, setCurrentDate] = useState(new Date())
+    const [listOfPurchases, setListOfPurchases] = useState({})
 
     const TYPES = [
         { label: t('screens.stats.daily'), value: 'day' },
         { label: t('screens.stats.monthly'), value: 'month' },
         { label: t('screens.stats.yearly'), value: 'year' },
-    ];
+    ]
 
     const BARCHARTTYPES = [
         { label: <List.Icon icon="water" />, value: 'watering', chartType: chartWateringData },
         { label: <List.Icon icon="bottle-tonic" />, value: 'fertilizing', chartType: chartFertilizingData },
         { label: <List.Icon icon="content-cut" />, value: 'pruning', chartType: chartPruningData },
         { label: <List.Icon icon="shovel" />, value: 'pottings', chartType: chartPottingsData }
-    ];
+    ]
     const handlePreviousMonth = () => {
-        const newDate = new Date(currentDate);
-        newDate.setMonth(currentDate.getMonth() - 1);
-        setCurrentDate(newDate);
-    };
+        const newDate = new Date(currentDate)
+        newDate.setMonth(currentDate.getMonth() - 1)
+        setCurrentDate(newDate)
+    }
 
     const handleNextMonth = () => {
-        const newDate = new Date(currentDate);
-        newDate.setMonth(currentDate.getMonth() + 1);
-        setCurrentDate(newDate);
-    };
+        const newDate = new Date(currentDate)
+        newDate.setMonth(currentDate.getMonth() + 1)
+        setCurrentDate(newDate)
+    }
 
     const handlePreviousYear = () => {
-        const newDate = new Date(currentDate);
-        newDate.setFullYear(currentDate.getFullYear() - 1);
-        setCurrentDate(newDate);
-    };
+        const newDate = new Date(currentDate)
+        newDate.setFullYear(currentDate.getFullYear() - 1)
+        setCurrentDate(newDate)
+    }
 
     const handleNextYear = () => {
-        const newDate = new Date(currentDate);
-        newDate.setFullYear(currentDate.getFullYear() + 1);
-        setCurrentDate(newDate);
-    };
+        const newDate = new Date(currentDate)
+        newDate.setFullYear(currentDate.getFullYear() + 1)
+        setCurrentDate(newDate)
+    }
 
     useEffect(() => {
 
         const fetchCareHistory = async () => {
-            const updatedPlants = await Promise.all(plants.plants.map(async (plant) => {
-                const careHistory = plant.careHistory || [];
-                return {
-                    ...plant,
-                    careHistory,
-                };
-            }));
+    
+            const updatedPlants = plants.plants.map((plant) => {
 
-            const careEvents = {};
-            let waterings = 0;
-            let fertilizings = 0;
-            let prunings = 0;
-            let pottings = 0;
-            let alivePlants = 0;
-            let deadPlants = 0;
+                const rawHistory = plant.careHistory || []
+                const normalizedHistory = rawHistory.map((event, idx) => {
+                    const events = event.events ?? (event.type ? [event.type] : [])
+                    const date = event.date?.seconds
+                        ? new Date(event.date.seconds * 1000)
+                        : event.date instanceof Date
+                        ? event.date
+                        : null
+    
+                    if (!events.length || !date) {
+                        console.warn(`⚠️ ${plant.givenName} [${idx}] has invalid event`, event)
+                    }
+    
+                    return { date, events }
+                }).filter(e => e.date)
+    
+                const eventString = normalizedHistory
+                    .map(e => `${e.events.join(",")} @ ${e.date.toLocaleDateString()}`)
+                    .join(" | ")
+    
+                return { ...plant, careHistory: normalizedHistory }
+            })
+    
+            const careEvents = {}
+            let waterings = 0, fertilizings = 0, prunings = 0, pottings = 0
+            let alivePlants = 0, deadPlants = 0
             let price = 0
+            const purchases = {}
+    
             updatedPlants.forEach(plant => {
-                if (plant.isDead == true) deadPlants++;
-                else alivePlants++;
-                if (plant.plantPrice) {
-                    price += plant.plantPrice;
-                    setTotalPrice(prevPrice => prevPrice + plant.plantPrice);
-                    dateFormated = formatDate(plant.createdAt.seconds * 1000)
-                    setListOfPurchases(prevPurchases => ({
-                        ...prevPurchases,
-                        [dateFormated]: plant.plantPrice
-                    }));
-
+                if (plant.isDead) deadPlants++
+                else alivePlants++
+    
+                if (plant.plantPrice && plant.createdAt?.seconds) {
+                    const dateFormatted = formatDate(plant.createdAt.seconds * 1000)
+                    price += plant.plantPrice
+                    purchases[dateFormatted] = (purchases[dateFormatted] || 0) + plant.plantPrice
                 }
+    
                 plant.careHistory.forEach(event => {
-                    const date = new Date(event.date.seconds * 1000);
-                    const year = date.getFullYear();
-                    const month = date.toLocaleString('default', { month: 'long' });
-                    const day = date.getDate();
-
-                    if (!careEvents[event.type]) {
-                        careEvents[event.type] = {};
-                    }
-                    if (!careEvents[event.type][year]) {
-                        careEvents[event.type][year] = {};
-                    }
-                    if (!careEvents[event.type][year][month]) {
-                        careEvents[event.type][year][month] = {};
-                    }
-                    if (!careEvents[event.type][year][month][day]) {
-                        careEvents[event.type][year][month][day] = 0;
-                    }
-                    careEvents[event.type][year][month][day]++;
-                    if (event.type === 'watering') waterings++;
-                    if (event.type === 'fertilizing') fertilizings++;
-                    if (event.type === 'pruning') prunings++;
-                    if (event.type === 'repotting') pottings++;
-                });
-            });
-
-            setTotalWaterings(waterings);
-            setTotalFertilizings(fertilizings);
-            setTotalPrunings(prunings);
-            setTotalPottings(pottings);
-            setTotalAlivePlants(alivePlants);
-            setTotalDeadPlants(deadPlants);
-            setTotalPrice(price)
-
-            // Populate all dates for years with care events
-            const months = [
-                { label: t("common.january") },
-                { label: t("common.february") },
-                { label: t("common.march") },
-                { label: t("common.april") },
-                { label: t("common.may") },
-                { label: t("common.june") },
-                { label: t("common.july") },
-                { label: t("common.august") },
-                { label: t("common.september") },
-                { label: t("common.october") },
-                { label: t("common.november") },
-                { label: t("common.december") }
-            ];
-
+                    const date = event.date
+                    if (!date) return
+                    const year = date.getFullYear()
+                    const month = date.toLocaleString('default', { month: 'long' })
+                    const day = date.getDate()
+    
+                    event.events.forEach(type => {
+                        careEvents[type] ??= {}
+                        careEvents[type][year] ??= {}
+                        careEvents[type][year][month] ??= {}
+                        careEvents[type][year][month][day] ??= 0
+                        careEvents[type][year][month][day]++
+    
+                        if (type === 'watering') waterings++
+                        if (type === 'fertilizing') fertilizings++
+                        if (type === 'pruning') prunings++
+                        if (type === 'repotting') pottings++
+                    })
+                })
+            })
+    
+            // Täydentää tyhjät päivät 0:lla
             const monthsStatic = [
-                'January',
-                'February',
-                'March',
-                'April',
-                'May',
-                'June',
-                'July',
-                'August',
-                'September',
-                'October',
-                'November',
-                'December'
-            ];
-
-            const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
-
-            Object.keys(careEvents).forEach(eventType => {
-                Object.keys(careEvents[eventType]).forEach(year => {
-                    monthsStatic.forEach((month, index) => {
-                        if (!careEvents[eventType][year][month]) {
-                            careEvents[eventType][year][month] = {};
-                        }
-                        days.forEach(day => {
-                            if (!careEvents[eventType][year][month][day]) {
-                                careEvents[eventType][year][month][day] = 0;
-                            }
-                        });
-                    });
-                });
-            });
-            // Sort the months and days in the correct order
-            Object.keys(careEvents).forEach(eventType => {
-                Object.keys(careEvents[eventType]).forEach(year => {
-                    const sortedCareEvents = {};
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ]
+            const days = Array.from({ length: 31 }, (_, i) => i + 1)
+    
+            Object.keys(careEvents).forEach(type =>
+                Object.keys(careEvents[type]).forEach(year =>
                     monthsStatic.forEach(month => {
-                        if (careEvents[eventType][year][month]) {
-                            const sortedDays = Object.keys(careEvents[eventType][year][month]).map(Number).sort((a, b) => a - b);
-                            sortedCareEvents[month] = {};
-                            sortedDays.forEach(day => {
-                                sortedCareEvents[month][day] = careEvents[eventType][year][month][day];
-                            });
+                        careEvents[type][year][month] ??= {}
+                        days.forEach(day => {
+                            careEvents[type][year][month][day] ??= 0
+                        })
+                    })
+                )
+            )
+    
+            // Sortataan päivät oikeaan järjestykseen
+            Object.keys(careEvents).forEach(type =>
+                Object.keys(careEvents[type]).forEach(year => {
+                    const sorted = {}
+                    monthsStatic.forEach(month => {
+                        if (careEvents[type][year][month]) {
+                            const sortedDays = Object.entries(careEvents[type][year][month])
+                                .sort(([a], [b]) => Number(a) - Number(b))
+                            sorted[month] = Object.fromEntries(sortedDays)
                         }
-                    });
-                    careEvents[eventType][year] = sortedCareEvents;
-                });
-            });
+                    })
+                    careEvents[type][year] = sorted
+                })
+            )
+    
+            // Päivitetään state
+            setCareEvents(careEvents)
+            setTotalWaterings(waterings)
+            setTotalFertilizings(fertilizings)
+            setTotalPrunings(prunings)
+            setTotalPottings(pottings)
+            setTotalAlivePlants(alivePlants)
+            setTotalDeadPlants(deadPlants)
+            setTotalPrice(price)
+            setListOfPurchases(purchases)
+    
+        }
+    
+        fetchCareHistory()
 
-            setCareEvents(careEvents);
-        };
-        fetchCareHistory();
-
-    }, [plants]);
+    }, [plants])
+    
     useEffect(() => {
         const getChartData = (careEvents, filterOption, careType) => {
-            const chartData = {};
+            const chartData = {}
 
             if (!careEvents || !careEvents[careType]) {
-                return chartData;
+                return chartData
             }
             // Get the current year and month
-            const currentYear = currentDate.getFullYear();
-            const currentMonth = currentDate.toLocaleString('default', { month: 'long' });
+            const currentYear = currentDate.getFullYear()
+            const currentMonth = currentDate.toLocaleString('default', { month: 'long' })
 
             if (filterOption === 'year') {
                 if (filterOption === 'year') {
                     Object.keys(careEvents[careType]).forEach(year => {
-                        let total = 0;
+                        let total = 0
                         Object.keys(careEvents[careType][year]).forEach(month => {
                             Object.keys(careEvents[careType][year][month]).forEach(day => {
-                                total += careEvents[careType][year][month][day];
-                            });
-                        });
-                        chartData[year] = total;
-                    });
+                                total += careEvents[careType][year][month][day]
+                            })
+                        })
+                        chartData[year] = total
+                    })
                 }
             }
 
             else if (filterOption === 'month') {
                 if (careEvents[careType][currentYear]) {
                     Object.keys(careEvents[careType][currentYear]).forEach(month => {
-                        let total = 0;
+                        let total = 0
                         Object.keys(careEvents[careType][currentYear][month]).forEach(day => {
-                            total += careEvents[careType][currentYear][month][day];
-                        });
-                        chartData[month] = total;
-                    });
+                            total += careEvents[careType][currentYear][month][day]
+                        })
+                        chartData[month] = total
+                    })
                 }
             }
 
             else if (filterOption === 'day') {
                 if (careEvents[careType][currentYear] && careEvents[careType][currentYear][currentMonth]) {
                     Object.keys(careEvents[careType][currentYear][currentMonth]).forEach(day => {
-                        chartData[day] = careEvents[careType][currentYear][currentMonth][day];
-                    });
+                        chartData[day] = careEvents[careType][currentYear][currentMonth][day]
+                    })
                 }
             }
 
-            return chartData;
-        };
+            return chartData
+        }
 
-        let data = getChartData(careEvents, filterOption, "watering");
-        setChartWateringData(data);
+        let data = getChartData(careEvents, filterOption, "watering")
+        setChartWateringData(data)
 
+        data = getChartData(careEvents, filterOption, "fertilizing")
+        setChartFertilizingData(data)
 
-        data = getChartData(careEvents, filterOption, "fertilizing");
-        setChartFertilizingData(data);
+        data = getChartData(careEvents, filterOption, "pruning")
+        setChartPruningData(data)
 
-        data = getChartData(careEvents, filterOption, "pruning");
-        setChartPruningData(data);
+        data = getChartData(careEvents, filterOption, "repotting")
+        setChartPottingsData(data)
 
-        data = getChartData(careEvents, filterOption, "repotting");
-        setChartPottingsData(data);
-
-    }, [filterOption, careEvents, currentDate, plants]);
+    }, [filterOption, careEvents, currentDate, plants])
 
     const renderChart = () => {
         switch (barChartFilterOption) {
             case 'watering':
-                return <BarChartComponent param_data={chartWateringData} filterType={filterOption} careType={barChartFilterOption} currentDate={currentDate} />;
+                return <BarChartComponent param_data={chartWateringData} filterType={filterOption} careType={barChartFilterOption} currentDate={currentDate} />
             case 'fertilizing':
-                return <BarChartComponent param_data={chartFertilizingData} filterType={filterOption} careType={barChartFilterOption} currentDate={currentDate} />;
+                return <BarChartComponent param_data={chartFertilizingData} filterType={filterOption} careType={barChartFilterOption} currentDate={currentDate} />
             case 'pruning':
-                return <BarChartComponent param_data={chartPruningData} filterType={filterOption} careType={barChartFilterOption} currentDate={currentDate} />;
+                return <BarChartComponent param_data={chartPruningData} filterType={filterOption} careType={barChartFilterOption} currentDate={currentDate} />
             case 'pottings':
-                return <BarChartComponent param_data={chartPottingsData} filterType={filterOption} careType={barChartFilterOption} currentDate={currentDate} />;
+                return <BarChartComponent param_data={chartPottingsData} filterType={filterOption} careType={barChartFilterOption} currentDate={currentDate} />
             default:
-                return <></>;
+                return <></>
         }
-    };
+    }
+
     return (
         <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>
             <View style={styles.inputContainer}>
@@ -352,18 +340,16 @@ export default function StatsScreen() {
 
                 </Surface>
 
-
-
-                <Surface style={styles.surface}>
+                {/* <Surface style={styles.surface}>
                     <LineChartComponent
                         param_data={listOfPurchases}
                     />
-                </Surface>
+                </Surface> */}
 
             </ScrollView>
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     fullScreen: {
