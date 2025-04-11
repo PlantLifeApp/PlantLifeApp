@@ -135,7 +135,7 @@ export default function GalleryScreen() {
         <View style={styles.deadSwitchContainer}>
           {isSwitchOn && (
             <Chip
-              icon='cross'
+              icon={deadSwitch ? 'flower-outline' : 'grave-stone'}
               onPress={onDeadButtonPress}
               mode='outlined'
             >
@@ -232,13 +232,16 @@ export default function GalleryScreen() {
         </Modal>
       </Portal>
       {/* set fab*/}
-      {!modalVisible && fabVisible && <FloatingButton />}
+      {!modalVisible && fabVisible && 
+      <FloatingButton {...{ deadSwitch, setDeadSwitch }}/>}
     </Surface>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    paddingLeft: 2,
+    paddingRight: 2,
     flex: 1,
     alignItems: 'stretch',
     justifyContent: "center",
@@ -261,9 +264,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   cardImage: {
-    height: 150,
+    height: 175,
     borderRadius: 10,
-    width: 150,
+    width: 175,
+    
   },
   modalCard: {
     justifyContent: 'center',

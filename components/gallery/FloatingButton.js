@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react"
-import { Alert, ScrollView, StyleSheet, View, TouchableOpacity, FlatList } from "react-native"
-import { FAB, Portal, Modal, Text, Surface } from "react-native-paper"
+import React, { useContext, useEffect, useMemo, useState } from "react"
+import { Alert, StyleSheet, FlatList } from "react-native"
+import { FAB, Portal, Modal, Text, Surface, Button, Chip } from "react-native-paper"
 import * as ImagePicker from 'expo-image-picker'
 import { useImages } from "../../context/imageContext";
 import { useTranslation } from "react-i18next"
@@ -8,12 +8,13 @@ import { usePlants } from "../../context/plantsContext";
 import { uploadPlantImage } from "../../services/plantService"
 import { AuthContext } from "../../context/authContext";
 import { ThemeContext } from "../../context/themeContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function FloatingButton() {
+export default function FloatingButton(props) {
   const { theme } = useContext(ThemeContext)
   const { addImage } = useImages()
   const { t } = useTranslation()
-  const { plants } = usePlants()
+  const { alivePlants, deadPlants } = usePlants()
   const { user } = useContext(AuthContext)
 
   const [fabOpen, setFabOpen] = useState(false) //FAB
@@ -105,12 +106,23 @@ export default function FloatingButton() {
     setSelectedAction(null)
   }
 
+  const filteredPlants = useMemo(() => {
+    const plants = props.deadSwitch ? deadPlants : alivePlants
+    return plants
+    .map((plant) => ({
+      givenName: plant.givenName,
+      id: plant.id
+    }))
+    .sort((a, b) => a.givenName.localeCompare(b.givenName)) 
+  }, [deadPlants, alivePlants, props])
+
+
   return (
     <>
       <FAB.Group
         open={fabOpen}
         visible={true}
-        icon={fabOpen ? 'flower' : 'plus-circle-outline'}
+        icon={fabOpen ? 'flower-outline' : 'plus-circle-outline'}
         actions={[
           {
             icon: 'camera',
@@ -139,28 +151,33 @@ export default function FloatingButton() {
           animationType="slide"
           style={styles.modalContainer}
         >
+          <SafeAreaView>
             <Surface style={styles.modalSurface}>
               <Text variant="bodyLarge" style={styles.modalTitle}>{t("screens.fab.choosePlantName")}</Text>
+              
               <FlatList
-                data={plants}
+                data={filteredPlants}
                 keyExtractor={(item) => item.id}
                 numColumns={2}
                 renderItem={({ item }) => (
-                  <TouchableOpacity
-                    style={[styles.plantItem, {backgroundColor: theme.colors.secondaryContainer}]}
+
+                  <Chip
+                    style={[styles.plantItem, { backgroundColor: theme.colors.secondaryContainer }]}
                     onPress={() => handlePlantSelect(item.id)}
                   >
-                    <Text variant="bodyMedium">{item.givenName}</Text>
-                  </TouchableOpacity>
+                    {item.givenName}
+                  </Chip>
                 )}
               />
-              <TouchableOpacity
-                style={styles.closeButton}
+              <Button
                 onPress={() => setModalVisible(false)}
+                mode="contained"
+                style={[styles.closeButtonText, { backgroundColor: theme.colors.primary }]}
               >
-                <Text variant="bodyMedium" style={styles.closeButtonText}>{t("common.cancel")}</Text>
-              </TouchableOpacity>
+                {t("common.cancel")}
+              </Button>
             </Surface>
+          </SafeAreaView>
         </Modal>
       </Portal>
     </>
@@ -181,9 +198,10 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     justifyContent: "center",
-    padding: 20,
+    padding: 10,
+    borderRadius: 10,
     width: '100%',
-    height: '100%',
+    height: '85%',
   },
   modalSurface: {
     padding: 16,
@@ -204,20 +222,16 @@ const styles = StyleSheet.create({
     alignSelf: 'center'
   },
   plantItem: {
-    flex: 1,
-    marginBottom: 16,
-    paddingHorizontal: 10,
-  },
-  closeButton: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: 'red',
-    borderRadius: 10,
-    width: 100,
-    alignSelf: 'center'
+    margin: 4,
+    // marginBottom: 20,
+    marginRight: 15,
+    // borderRadius: 10,
+    // justifyContent: 'space-between',
+    // alignSelf: 'stretch',
   },
   closeButtonText: {
-    color: 'white',
-    fontSize: 16,
+    alignSelf: 'stretch',
+    marginTop: 10,
+    marginBottom: 5,
   },
 });
