@@ -99,11 +99,8 @@ export default function StatsScreen() {
                     }
     
                     return { date, events }
+
                 }).filter(e => e.date)
-    
-                const eventString = normalizedHistory
-                    .map(e => `${e.events.join(",")} @ ${e.date.toLocaleDateString()}`)
-                    .join(" | ")
     
                 return { ...plant, careHistory: normalizedHistory }
             })
@@ -208,17 +205,15 @@ export default function StatsScreen() {
             const currentMonth = currentDate.toLocaleString('default', { month: 'long' })
 
             if (filterOption === 'year') {
-                if (filterOption === 'year') {
-                    Object.keys(careEvents[careType]).forEach(year => {
-                        let total = 0
-                        Object.keys(careEvents[careType][year]).forEach(month => {
-                            Object.keys(careEvents[careType][year][month]).forEach(day => {
-                                total += careEvents[careType][year][month][day]
-                            })
+                Object.keys(careEvents[careType]).forEach(year => {
+                    let total = 0
+                    Object.keys(careEvents[careType][year]).forEach(month => {
+                        Object.keys(careEvents[careType][year][month]).forEach(day => {
+                            total += careEvents[careType][year][month][day]
                         })
-                        chartData[year] = total
                     })
-                }
+                    chartData[year] = total
+                })
             }
 
             else if (filterOption === 'month') {
