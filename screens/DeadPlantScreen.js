@@ -108,6 +108,7 @@ export default function DeadPlantScreen({ route }) {
                         <Text variant="bodyMedium" style={styles.killedText}>
                             {lifespan ? `${lifespan}\n` : ""}
                             {t("screens.graveyard.causeOfDeath")}: {t(`screens.graveyard.causesOfDeath.${causeOfDeathKey}`)}
+                            {plant.plantPrice != null ? `\n${t("screens.graveyard.plantPrice")}: ${plant.plantPrice.toFixed(2)}` : ""}
                         </Text>
                     </Surface>
                 ) : (
@@ -115,6 +116,7 @@ export default function DeadPlantScreen({ route }) {
                         <Text variant="bodyMedium" style={styles.killedText}>
                             {lifespan ? `${lifespan}\n` : ""}
                             {t("screens.graveyard.causeOfDeath")}: {t(`screens.graveyard.causesOfDeath.${causeOfDeathKey}`)}
+                            {plant.plantPrice != null ? `\n${t("screens.graveyard.plantPrice")}: ${plant.plantPrice.toFixed(2)}` : ""}
                         </Text>
                     </Surface>
                 )}
