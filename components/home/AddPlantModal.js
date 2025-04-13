@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import * as ImagePicker from 'expo-image-picker'
 import { useImages } from '../../context/imageContext';
 import Toast from 'react-native-toast-message';
+import { useNavigation } from '@react-navigation/native';
 
 export default function AddPlantModal({ user, visible, onClose }) {
     const [plantType, setPlantType] = useState("");
@@ -19,6 +20,7 @@ export default function AddPlantModal({ user, visible, onClose }) {
 
     const { t } = useTranslation()
     const { addImage } = useImages()
+    const navigation = useNavigation()
 
     const TYPES = [
         { label: t("screens.plant.cactus"), value: 'cactus' },
@@ -89,6 +91,15 @@ export default function AddPlantModal({ user, visible, onClose }) {
             position: "bottom",
             visibilityTime: 3000,
         })
+
+        navigation.navigate("PlantScreen", {
+            plantId: newPlantId,
+            plantPreview: {
+                givenName: plantNickname,
+                scientificName: scientificName,
+            }
+        })
+
         onCloseFunction();
     }
 
