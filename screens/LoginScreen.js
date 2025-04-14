@@ -16,7 +16,7 @@ const LoginScreen = () => {
         try {
             await loginUser(email, password);
         } catch (error) {
-            alert("Virhe: " + error.message);
+            alert("Error: " + error.message);
         }
     };
 
@@ -29,12 +29,14 @@ const LoginScreen = () => {
                 onChangeText={setEmail} 
                 keyboardType="email-address"
                 autoCapitalize="none"
+                returnKeyType='done'
             />
             <TextInput 
                 style={styles.input} 
                 placeholder={t("screens.auth.password")} 
                 onChangeText={setPassword} 
                 secureTextEntry
+                returnKeyType='done'
             />
             <Button style={styles.mainButton} mode="contained" onPress={handleLogin}>{t("screens.auth.loginButton")}</Button>
             <Text style={styles.link} onPress={() => navigation.navigate("Register")}>

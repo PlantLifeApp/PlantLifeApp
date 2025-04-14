@@ -65,15 +65,15 @@ export default function AddPlantModal({ user, visible, onClose }) {
         }
 
         // Format price to number if given by user. If price not numeric, then it must be null
-        let formattedPrice = plantPrice 
-            ? parseFloat(typeof plantPrice === "string" 
-                ? plantPrice.replace(",", ".") 
+        let formattedPrice = plantPrice
+            ? parseFloat(typeof plantPrice === "string"
+                ? plantPrice.replace(",", ".")
                 : plantPrice)
             : null
 
-            if (isNaN(formattedPrice)) {
+        if (isNaN(formattedPrice)) {
             formattedPrice = null
-            }
+        }
 
         const newPlantId = await addPlant(plantNickname, scientificName, formattedPrice, plantType, user.uid);
 
@@ -151,6 +151,7 @@ export default function AddPlantModal({ user, visible, onClose }) {
                                     setPlantNickname(text)
                                     setPlantNicknameError(false)
                                 }}
+                                returnKeyType='done'
                             />
                         </View>
 
@@ -159,12 +160,18 @@ export default function AddPlantModal({ user, visible, onClose }) {
                             <TextInput
                                 style={styles.textInput}
                                 onChangeText={(text) => setScientificName(text)}
+                                returnKeyType='done'
                             />
                         </View>
 
                         <Text variant="bodyMedium">{t("screens.addPlant.price")}</Text>
                         <View style={styles.inputContainer}>
-                            <TextInput style={styles.textInput} keyboardType='decimal-pad' onChangeText={(text) => setPlantPrice(text)}></TextInput>
+                            <TextInput
+                                style={styles.textInput}
+                                keyboardType='decimal-pad'
+                                onChangeText={(text) => setPlantPrice(text)}
+                                returnKeyType='done'
+                            />
                         </View>
 
                         <Text variant="bodyMedium">{t("screens.addPlant.type")}*</Text>

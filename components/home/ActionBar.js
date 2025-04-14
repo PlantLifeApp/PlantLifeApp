@@ -42,6 +42,7 @@ export default function ActionBar({ isTwoColumns, isReversed, setIsReversed, set
                             placeholder=""
                             value={searchQuery}
                             onChangeText={setSearchQuery}
+                            returnKeyType='done'
                         />
                     </View>
                 )}
