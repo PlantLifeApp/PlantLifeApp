@@ -2,7 +2,6 @@ import React, { createContext, useEffect, useState } from "react"
 import { useColorScheme } from "react-native"
 import { customLightTheme, customDarkTheme } from "../themes/CustomTheme"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import ThemedStatusBar from "../themes/ThemedStatusbar"
 
 // create a context for the theme
 export const ThemeContext = createContext()
@@ -33,7 +32,7 @@ export const ThemeProvider = ({ children }) => {
             }
         }
         loadThemePreference()
-    }, [systemTheme])
+    }, [systemTheme, useSystemTheme])
 
     if (useSystemTheme === null || isDarkMode === null) {
         return null
@@ -47,7 +46,6 @@ export const ThemeProvider = ({ children }) => {
 
     return (
         <ThemeContext.Provider value={{ theme, useSystemTheme, setUseSystemTheme, isDarkMode, setIsDarkMode }}>
-            <ThemedStatusBar />
             {children}
         </ThemeContext.Provider>
     )
