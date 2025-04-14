@@ -12,6 +12,7 @@ import ActionBar from "../components/home/ActionBar";
 import QuickCareMenu from "../components/home/QuickCareMenu";
 import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import * as Haptics from "expo-haptics"
 
 
 const HomeScreen = () => {
@@ -35,7 +36,7 @@ const HomeScreen = () => {
     const insets = useSafeAreaInsets()
     // fab positioning based on OS
     const bottomOffset = Platform.OS === "ios"
-        ? -32 
+        ? -32
         : insets.bottom + 8
 
     const filteredPlants = useMemo(() => {
@@ -110,15 +111,17 @@ const HomeScreen = () => {
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         style={isTwoColumns ? styles.itemContainerSimple : styles.itemContainerComplex}
-                        onLongPress={() => handleOpenCareMenu(item.id)}
+                        onLongPress={() => {
+                            handleOpenCareMenu(item.id)
+                            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+                        }}
                         onPress={() => navigation.navigate("PlantScreen", {
                             plantId: item.id,
                             plantPreview: {
                                 givenName: item.givenName,
                                 scientificName: item.scientificName,
                             }
-                        })
-                        }
+                        })}
                     >
                         <CardComponent item={item} isTwoColumns={isTwoColumns} />
                     </TouchableOpacity>
