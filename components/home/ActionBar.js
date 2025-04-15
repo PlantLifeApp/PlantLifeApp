@@ -4,7 +4,18 @@ import { IconButton, TextInput } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import { Dropdown } from "react-native-paper-dropdown";
 
-export default function ActionBar({ isTwoColumns, isReversed, setIsReversed, setIsTwoColumns, searchQuery, setSearchQuery, sortOption, setSortOption, selectedType, setSelectedType }) {
+export default function ActionBar({
+    isTwoColumns,
+    isReversed,
+    setIsReversed,
+    setIsTwoColumns,
+    searchQuery,
+    setSearchQuery,
+    sortOption,
+    setSortOption,
+    selectedType,
+    setSelectedType
+}) {
     const [isSearchVisible, setIsSearchVisible] = useState(false)
     const [typeMenuVisible, setTypeMenuVisible] = useState(false)
 
@@ -19,7 +30,7 @@ export default function ActionBar({ isTwoColumns, isReversed, setIsReversed, set
     ]
     const SORTOPTIONS = [
         { label: t("common.alphabetical"), value: 'alphabetical' },
-        { label: t("common.newestPlant"), value: 'newestPlant'},
+        { label: t("common.newestPlant"), value: 'newestPlant' },
         { label: t("common.scientificName"), value: 'scientificName' },
         { label: t("common.lastWatered"), value: 'lastWatered' },
         { label: t("common.nextWatering"), value: 'nextWatering' }
@@ -48,7 +59,7 @@ export default function ActionBar({ isTwoColumns, isReversed, setIsReversed, set
                 )}
 
                 <IconButton
-                    icon={isTwoColumns ? "view-grid" : "view-agenda"}
+                    icon={isTwoColumns ? "view-agenda" : "view-grid"}
                     size={24}
                     onPress={() => setIsTwoColumns(!isTwoColumns)}
                 />
