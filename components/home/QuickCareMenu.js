@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Dimensions, View } from "react-native"
+import { View } from "react-native"
 import { Menu } from "react-native-paper";
 import { AuthContext } from "../../context/authContext";
 import { useTranslation } from "react-i18next";
@@ -36,11 +36,12 @@ export default function QuickCareMenu({ plantId, menuVisible, setMenuVisible, an
     }
 
     return (
-        <View>
+        <>
             <Menu
                 visible={menuVisible}
                 onDismiss={() => setMenuVisible(false)}
                 anchor={{ x: anchorPosition.x, y: anchorPosition.y }}
+                contentStyle={{ borderRadius: 8 }}
             >
                 <Menu.Item
                     onPress={() => {
@@ -79,6 +80,6 @@ export default function QuickCareMenu({ plantId, menuVisible, setMenuVisible, an
                     leadingIcon="flower"
                 />
             </Menu>
-        </View>
+        </>
     )
 }

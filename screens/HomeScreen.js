@@ -14,7 +14,6 @@ import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import * as Haptics from "expo-haptics"
 
-
 const HomeScreen = () => {
     const { theme } = useContext(ThemeContext)
     const { user } = useContext(AuthContext)
@@ -131,12 +130,12 @@ const HomeScreen = () => {
                     </TouchableOpacity>
                 )}
             />
-            <QuickCareMenu 
-                plantId={selectedPlantId} 
-                menuVisible={careMenuVisible} 
+            <QuickCareMenu
+                plantId={selectedPlantId}
+                menuVisible={careMenuVisible}
                 setMenuVisible={setCareMenuVisible}
-                anchorPosition={anchorPosition} 
-                />
+                anchorPosition={anchorPosition}
+            />
 
             <FAB.Group
                 open={fabOpen}
