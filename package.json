@@ -19,6 +19,8 @@
     "expo": "~52.0.38",
     "expo-image-manipulator": "^13.0.6",
     "expo-image-picker": "~16.0.6",
+    "expo-localization": "~16.0.1",
+    "expo-navigation-bar": "^4.0.9",
     "expo-status-bar": "~2.0.1",
     "firebase": "^11.4.0",
     "i18next": "^24.2.3",
@@ -41,7 +43,6 @@
     "react-native-toast-message": "^2.2.1",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.13",
-    "expo-localization": "~16.0.1",
     "victory-native": "^40.2.1"
   },
   "devDependencies": {
