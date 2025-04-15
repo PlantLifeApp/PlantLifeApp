@@ -75,32 +75,42 @@ export default function AddPlantModal({ user, visible, onClose }) {
             formattedPrice = null
         }
 
-        const newPlantId = await addPlant(plantNickname, scientificName, formattedPrice, plantType, user.uid);
+        try {
+            const newPlantId = await addPlant(plantNickname, scientificName, formattedPrice, plantType, user.uid);
 
-        if (newPlantId && plantImageUri) {
-            const imageUrl = await uploadPlantImage(user.uid, newPlantId, plantImageUri, true)  // Upload image to Firestorage
+            if (newPlantId && plantImageUri) {
+                const imageUrl = await uploadPlantImage(user.uid, newPlantId, plantImageUri, true)  // Upload image to Firestorage
 
-            if (imageUrl) {
-                await addImage(newPlantId, imageUrl)    // Add image to asyncstorage
+                if (imageUrl) {
+                    await addImage(newPlantId, imageUrl)    // Add image to asyncstorage
+                }
             }
+
+            Toast.show({
+                type: "success",
+                text1: t("screens.addPlant.addSuccess"),
+                position: "bottom",
+                visibilityTime: 3000,
+            })
+
+            navigation.navigate("PlantScreen", {
+                plantId: newPlantId,
+                plantPreview: {
+                    givenName: plantNickname,
+                    scientificName: scientificName,
+                }
+            })
+        } catch (error) {
+            console.log("Error adding plant: ", error)
+            Toast.show({
+                type: "error",
+                text1: t("screens.addPlant.addError"),
+                position: "bottom",
+                visibilityTime: 3000,
+            })
+        } finally {
+            onCloseFunction();
         }
-
-        Toast.show({
-            type: "success",
-            text1: t("screens.addPlant.addSuccess"),
-            position: "bottom",
-            visibilityTime: 3000,
-        })
-
-        navigation.navigate("PlantScreen", {
-            plantId: newPlantId,
-            plantPreview: {
-                givenName: plantNickname,
-                scientificName: scientificName,
-            }
-        })
-
-        onCloseFunction();
     }
 
     const handleOpenCamera = async () => {
