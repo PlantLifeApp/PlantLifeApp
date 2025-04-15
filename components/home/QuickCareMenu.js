@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { View } from "react-native"
+import { Dimensions, View } from "react-native"
 import { Menu } from "react-native-paper";
 import { AuthContext } from "../../context/authContext";
 import { useTranslation } from "react-i18next";
@@ -7,7 +7,7 @@ import { addCareEvent } from "../../services/plantService";
 import Toast from "react-native-toast-message";
 import { usePlants } from "../../context/plantsContext";
 
-export default function QuickCareMenu({ plantId, menuVisible, setMenuVisible }) {
+export default function QuickCareMenu({ plantId, menuVisible, setMenuVisible, anchorPosition }) {
 
     const { user } = useContext(AuthContext)
     const { t } = useTranslation()
@@ -40,7 +40,7 @@ export default function QuickCareMenu({ plantId, menuVisible, setMenuVisible }) 
             <Menu
                 visible={menuVisible}
                 onDismiss={() => setMenuVisible(false)}
-                anchor={<View style={{ height: 1, width: 1 }} />}
+                anchor={{ x: anchorPosition.x, y: anchorPosition.y }}
             >
                 <Menu.Item
                     onPress={() => {
