@@ -52,6 +52,7 @@ export const uploadPlantImage = async (userId, plantId, imageUri, setAsCover = f
     }
 }
 
+// UPDATE COVER IMAGE
 export const updateCoverImage = async (userId, plantId, imageUri) => {
     try {
         console.log("SetNewCoverImage - Plant ID:", plantId);
@@ -104,6 +105,49 @@ export const getUserPlantImages = async (userId) => {
         return {};
     }
 }
+
+// DELETE SELECTED IMAGE
+export const deleteImage = async (userId, plantId, imageUri) => {
+    try{
+
+        const filePath = imageUri.includes('firebasestorage.googleapis.com')
+            ? imageUri.split('?')[0].split('/o/')[1]
+            : imageUri;
+
+        const decodedPath = decodeURIComponent(filePath)
+        const storage = getStorage()
+        const imageRef = ref(storage, decodedPath)
+        console.log('PLANTSERVICE: ', imageRef.fullPath)
+    
+        await deleteObject(imageRef)
+    }
+    catch (error) {
+        console.error('Error deleting image: ', error)
+        throw error
+    }
+}
+// DELETE IMAGE URI
+export const removeImageUriFromFirestore = async (userId, plantId, imageUri) => {
+    try {
+      const db = getFirestore()
+      const plantRef = doc(db, "users", userId, "plants", plantId)
+  
+      const plantSnap = await getDoc(plantRef)
+      if (!plantSnap.exists()) {
+        console.error('No plant found to remove image from Firestore')
+        return
+      }
+  
+      const currentImages = plantSnap.data().images || []
+      const updatedImages = currentImages.filter(uri => uri !== imageUri)
+  
+      await updateDoc(plantRef, { images: updatedImages })
+      console.log("🧹 Removed image URI from Firestore:", imageUri)
+    } catch (error) {
+      console.error("Error removing image URI from Firestore:", error)
+      throw error
+    }
+  }
 
 // FETCH FULL DATA FOR ONE PLANT
 export const fetchFullPlantData = async (userId, plantId) => {

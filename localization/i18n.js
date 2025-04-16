@@ -41,7 +41,8 @@ const resources = {
                     addButton: "Add Plant",
                     cancelButton: "Cancel",
                     inputRequired: "Plant nickname and type are required",
-                    addSuccess: "Plant added successfully!"
+                    addSuccess: "Plant added successfully!",
+                    addError: "Error adding the plant!"
                 },
                 plant: {
                     title: "Plant Info",
@@ -208,6 +209,9 @@ const resources = {
                     changeMenuTitle: "Set to cover image",
                     toGraveYard: "To the dead",
                     toAlivePlant: "To the living",
+                    imageDeleted: "Image deleted succesfully",
+                    imageDeleteError: "Something went wrong",
+                    deleteMenuTitle: "Delete",
                 },
                 fab: {
                     camera: "Take Photo",
@@ -312,7 +316,8 @@ const resources = {
                     addButton: "Lisää kasvi",
                     cancelButton: "Peruuta",
                     inputRequired: "Kasvin lempinimi ja tyyppi vaaditaan",
-                    addSuccess: "Kasvi lisätty onnistuneesti"
+                    addSuccess: "Kasvi lisätty onnistuneesti",
+                    addError: "Kasvin lisäys epäonnistui"
                 },
                 plant: {
                     title: "Kasvin tiedot",
@@ -483,6 +488,9 @@ const resources = {
                     changeMenuTitle: "Valitse kansikuvaksi",
                     toGraveYard: "Kuolleisiin",
                     toAlivePlant: "Elossa oleviin",
+                    imageDeleted: "Kuvan poistaminen onnistui",
+                    imageDeleteError: "Jokin meni pieleen",
+                    deleteMenuTitle: "Poista",
                 },
                 fab: {
                     camera: "Ota kuva",
@@ -587,7 +595,8 @@ const resources = {
                     addButton: "Lägg till växt",
                     cancelButton: "Avbryt",
                     inputRequired: "Växtens smeknamn och typ är obligatoriska",
-                    addSuccess: "Växten lades till"
+                    addSuccess: "Växten lades till",
+                    addError: "Fel vid tillägg av växten!"
                 },
                 plant: {
                     title: "Växtinfo",
@@ -748,6 +757,9 @@ const resources = {
                     changeMenuTitle: "Välj som omslagsbild",
                     toGraveYard: "Till de döda",
                     toAlivePlant: "Till de levande",
+                    imageDeleted: "Bilden har raderats",
+                    imageDeleteError: "Något gick fel",
+                    deleteMenuTitle: "Ta bort",
                 },
                 fab: {
                     camera: "Ta foto",

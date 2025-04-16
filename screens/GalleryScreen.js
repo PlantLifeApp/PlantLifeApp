@@ -7,6 +7,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useTranslation } from "react-i18next"
 import { usePlants } from "../context/plantsContext";
 import NewCoverImage from "../components/gallery/NewCoverImage";
+import * as Haptics from "expo-haptics"
 
 
 import { useRoute } from "@react-navigation/native"
@@ -16,7 +17,7 @@ export default function GalleryScreen() {
   const route = useRoute()
   const { preselectedPlantID } = route.params || {}
 
-  const { images } = useImages()
+  const { images, setImages } = useImages()
   const [selectedImage, setSelectedImage] = useState(null)
   const [modalVisible, setModalVisible] = useState(false)
   const [fabVisible, setFabVisible] = useState(false)
@@ -39,6 +40,16 @@ export default function GalleryScreen() {
       setIsSwitchOn(false)
     }
   }, [preselectedPlantID])
+
+  const handleImageDeleted = (plantId, imageUri) => {
+    setImages((prevImages) => {
+        const updatedImages = { ...prevImages };
+        if (updatedImages[plantId]) {
+            updatedImages[plantId] = updatedImages[plantId].filter((uri) => uri !== imageUri);
+        }
+        return updatedImages;
+    });
+};
 
   // Open picture 
   const handleImagePress = (item) => {
@@ -78,7 +89,8 @@ export default function GalleryScreen() {
 
   const onDeadButtonPress = () => {
     setSelectedPlantId('')
-    setDeadSwitch(prev => !prev)}
+    setDeadSwitch(prev => !prev)
+  }
 
 
   const TYPES = [
@@ -135,7 +147,7 @@ export default function GalleryScreen() {
         <View style={styles.deadSwitchContainer}>
           {isSwitchOn && (
             <Chip
-              icon='skull'
+              icon={deadSwitch ? 'flower-outline' : 'skull'}
               onPress={onDeadButtonPress}
               mode='outlined'
             >
@@ -199,7 +211,11 @@ export default function GalleryScreen() {
           <TouchableOpacity
             ref={(ref) => (imageRefs.current[index] = ref)}
             onPress={() => handleImagePress(item)}
-            onLongPress={() => handleLongPress(item.plantId, item.uri, index)}>
+            onLongPress={() => {
+              handleLongPress(item.plantId, item.uri, index)
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+            }}
+          >
             <Card style={styles.card}>
               <Image source={{ uri: item?.uri }} style={styles.cardImage} />
             </Card>
@@ -213,6 +229,7 @@ export default function GalleryScreen() {
         menuVisible={menuVisible}
         setMenuVisible={setMenuVisible}
         anchor={menuAnchor}
+        onImageDeleted={handleImageDeleted}
       />
 
       {/* Opens full picture*/}
@@ -232,13 +249,16 @@ export default function GalleryScreen() {
         </Modal>
       </Portal>
       {/* set fab*/}
-      {!modalVisible && fabVisible && <FloatingButton />}
+      {!modalVisible && fabVisible &&
+        <FloatingButton {...{ deadSwitch, setDeadSwitch }} />}
     </Surface>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    paddingLeft: 2,
+    paddingRight: 2,
     flex: 1,
     alignItems: 'stretch',
     justifyContent: "center",
@@ -261,9 +281,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   cardImage: {
-    height: 150,
+    height: 175,
     borderRadius: 10,
-    width: 150,
+    width: 175,
+
   },
   modalCard: {
     justifyContent: 'center',

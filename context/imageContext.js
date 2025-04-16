@@ -15,7 +15,7 @@ export const ImagesProvider = ({ children }) => {
         const storedImages = await AsyncStorage.getItem("plantImages")
         if (storedImages) {
           setImages(JSON.parse(storedImages))
-         // console.log("✅ Images loaded from AsyncStorage:", JSON.parse(storedImages));
+          // console.log("✅ Images loaded from AsyncStorage:", JSON.parse(storedImages));
         }
       } catch (error) {
         console.error("Error loading images from storage: ", error)
@@ -43,7 +43,7 @@ export const ImagesProvider = ({ children }) => {
   };
 
   const addImage = async (plantId, imageUrl, plantType, isDead = false) => {
-    console.log('Ei saisi tulla tänne')
+
     try {
 
       // Haetaan nykyiset kuvat AsyncStoragesta
@@ -73,8 +73,30 @@ export const ImagesProvider = ({ children }) => {
     }
   };
 
+  const removeImage = async (plantId, imageUri) => {
+    try {
+      const storageImages = await AsyncStorage.getItem('plantimages')
+      const images = storageImages ? JSON.parse(storageImages) : {}
+
+      if (!images[plantId]) return
+
+      const updatedPlantImages = images[plantId].filter(
+        (img) => img.uri !== imageUri && img.uri?.uri !== imageUri
+      )
+
+      const updatedImages = {
+        ...images,
+        [plantId]: updatedPlantImages
+      }
+      await AsyncStorage.setItem("plantImages", JSON.stringify(updatedImages))
+      setImages(updatedImages)
+    }catch(error) {
+      console.error('Error removing imgage:', error)
+    }
+  }
+
   return (
-    <ImagesContext.Provider value={{ images, addImage }}>
+    <ImagesContext.Provider value={{ images, setImages, addImage, removeImage }}>
       {children}
     </ImagesContext.Provider>
   );
