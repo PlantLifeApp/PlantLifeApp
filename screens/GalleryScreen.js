@@ -16,7 +16,7 @@ export default function GalleryScreen() {
   const route = useRoute()
   const { preselectedPlantID } = route.params || {}
 
-  const { images } = useImages()
+  const { images, setImages } = useImages()
   const [selectedImage, setSelectedImage] = useState(null)
   const [modalVisible, setModalVisible] = useState(false)
   const [fabVisible, setFabVisible] = useState(false)
@@ -39,6 +39,16 @@ export default function GalleryScreen() {
       setIsSwitchOn(false)
     }
   }, [preselectedPlantID])
+
+  const handleImageDeleted = (plantId, imageUri) => {
+    setImages((prevImages) => {
+        const updatedImages = { ...prevImages };
+        if (updatedImages[plantId]) {
+            updatedImages[plantId] = updatedImages[plantId].filter((uri) => uri !== imageUri);
+        }
+        return updatedImages;
+    });
+};
 
   // Open picture 
   const handleImagePress = (item) => {
@@ -213,6 +223,7 @@ export default function GalleryScreen() {
         menuVisible={menuVisible}
         setMenuVisible={setMenuVisible}
         anchor={menuAnchor}
+        onImageDeleted={handleImageDeleted}
       />
 
       {/* Opens full picture*/}

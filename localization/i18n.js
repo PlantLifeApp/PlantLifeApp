@@ -208,6 +208,9 @@ const resources = {
                     changeMenuTitle: "Set to cover image",
                     toGraveYard: "To the dead",
                     toAlivePlant: "To the living",
+                    imageDeleted: "Image deleted succesfully",
+                    imageDeleteError: "Something went wrong",
+                    deleteMenuTitle: "Delete",
                 },
                 fab: {
                     camera: "Take Photo",
@@ -483,6 +486,9 @@ const resources = {
                     changeMenuTitle: "Valitse kansikuvaksi",
                     toGraveYard: "Kuolleisiin",
                     toAlivePlant: "Elossa oleviin",
+                    imageDeleted: "Kuvan poistaminen onnistui",
+                    imageDeleteError: "Jokin meni pieleen",
+                    deleteMenuTitle: "Poista",
                 },
                 fab: {
                     camera: "Ota kuva",
@@ -748,6 +754,9 @@ const resources = {
                     changeMenuTitle: "Välj som omslagsbild",
                     toGraveYard: "Till de döda",
                     toAlivePlant: "Till de levande",
+                    imageDeleted: "Bilden har raderats",
+                    imageDeleteError: "Något gick fel",
+                    deleteMenuTitle: "Ta bort",
                 },
                 fab: {
                     camera: "Ta foto",
