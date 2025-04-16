@@ -7,7 +7,7 @@ import { addCareEvent } from "../../services/plantService";
 import Toast from "react-native-toast-message";
 import { usePlants } from "../../context/plantsContext";
 
-export default function QuickCareMenu({ plantId, menuVisible, setMenuVisible }) {
+export default function QuickCareMenu({ plantId, menuVisible, setMenuVisible, anchorPosition }) {
 
     const { user } = useContext(AuthContext)
     const { t } = useTranslation()
@@ -36,11 +36,12 @@ export default function QuickCareMenu({ plantId, menuVisible, setMenuVisible }) 
     }
 
     return (
-        <View>
+        <>
             <Menu
                 visible={menuVisible}
                 onDismiss={() => setMenuVisible(false)}
-                anchor={<View style={{ height: 1, width: 1 }} />}
+                anchor={{ x: anchorPosition.x, y: anchorPosition.y }}
+                contentStyle={{ borderRadius: 8 }}
             >
                 <Menu.Item
                     onPress={() => {
@@ -79,6 +80,6 @@ export default function QuickCareMenu({ plantId, menuVisible, setMenuVisible }) 
                     leadingIcon="flower"
                 />
             </Menu>
-        </View>
+        </>
     )
 }

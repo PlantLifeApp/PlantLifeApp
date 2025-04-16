@@ -7,6 +7,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useTranslation } from "react-i18next"
 import { usePlants } from "../context/plantsContext";
 import NewCoverImage from "../components/gallery/NewCoverImage";
+import * as Haptics from "expo-haptics"
 
 
 import { useRoute } from "@react-navigation/native"
@@ -88,7 +89,8 @@ export default function GalleryScreen() {
 
   const onDeadButtonPress = () => {
     setSelectedPlantId('')
-    setDeadSwitch(prev => !prev)}
+    setDeadSwitch(prev => !prev)
+  }
 
 
   const TYPES = [
@@ -209,7 +211,11 @@ export default function GalleryScreen() {
           <TouchableOpacity
             ref={(ref) => (imageRefs.current[index] = ref)}
             onPress={() => handleImagePress(item)}
-            onLongPress={() => handleLongPress(item.plantId, item.uri, index)}>
+            onLongPress={() => {
+              handleLongPress(item.plantId, item.uri, index)
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+            }}
+          >
             <Card style={styles.card}>
               <Image source={{ uri: item?.uri }} style={styles.cardImage} />
             </Card>
@@ -243,8 +249,8 @@ export default function GalleryScreen() {
         </Modal>
       </Portal>
       {/* set fab*/}
-      {!modalVisible && fabVisible && 
-      <FloatingButton {...{ deadSwitch, setDeadSwitch }}/>}
+      {!modalVisible && fabVisible &&
+        <FloatingButton {...{ deadSwitch, setDeadSwitch }} />}
     </Surface>
   );
 }
@@ -278,7 +284,7 @@ const styles = StyleSheet.create({
     height: 175,
     borderRadius: 10,
     width: 175,
-    
+
   },
   modalCard: {
     justifyContent: 'center',

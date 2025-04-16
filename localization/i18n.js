@@ -41,7 +41,8 @@ const resources = {
                     addButton: "Add Plant",
                     cancelButton: "Cancel",
                     inputRequired: "Plant nickname and type are required",
-                    addSuccess: "Plant added successfully!"
+                    addSuccess: "Plant added successfully!",
+                    addError: "Error adding the plant!"
                 },
                 plant: {
                     title: "Plant Info",
@@ -315,7 +316,8 @@ const resources = {
                     addButton: "Lisää kasvi",
                     cancelButton: "Peruuta",
                     inputRequired: "Kasvin lempinimi ja tyyppi vaaditaan",
-                    addSuccess: "Kasvi lisätty onnistuneesti"
+                    addSuccess: "Kasvi lisätty onnistuneesti",
+                    addError: "Kasvin lisäys epäonnistui"
                 },
                 plant: {
                     title: "Kasvin tiedot",
@@ -593,7 +595,8 @@ const resources = {
                     addButton: "Lägg till växt",
                     cancelButton: "Avbryt",
                     inputRequired: "Växtens smeknamn och typ är obligatoriska",
-                    addSuccess: "Växten lades till"
+                    addSuccess: "Växten lades till",
+                    addError: "Fel vid tillägg av växten!"
                 },
                 plant: {
                     title: "Växtinfo",

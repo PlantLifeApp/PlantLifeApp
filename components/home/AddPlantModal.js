@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import * as ImagePicker from 'expo-image-picker'
 import { useImages } from '../../context/imageContext';
 import Toast from 'react-native-toast-message';
+import { useNavigation } from '@react-navigation/native';
 
 export default function AddPlantModal({ user, visible, onClose }) {
     const [plantType, setPlantType] = useState("");
@@ -19,6 +20,7 @@ export default function AddPlantModal({ user, visible, onClose }) {
 
     const { t } = useTranslation()
     const { addImage } = useImages()
+    const navigation = useNavigation()
 
     const TYPES = [
         { label: t("screens.plant.cactus"), value: 'cactus' },
@@ -63,33 +65,52 @@ export default function AddPlantModal({ user, visible, onClose }) {
         }
 
         // Format price to number if given by user. If price not numeric, then it must be null
-        let formattedPrice = plantPrice 
-            ? parseFloat(typeof plantPrice === "string" 
-                ? plantPrice.replace(",", ".") 
+        let formattedPrice = plantPrice
+            ? parseFloat(typeof plantPrice === "string"
+                ? plantPrice.replace(",", ".")
                 : plantPrice)
             : null
 
-            if (isNaN(formattedPrice)) {
+        if (isNaN(formattedPrice)) {
             formattedPrice = null
-            }
-
-        const newPlantId = await addPlant(plantNickname, scientificName, formattedPrice, plantType, user.uid);
-
-        if (newPlantId && plantImageUri) {
-            const imageUrl = await uploadPlantImage(user.uid, newPlantId, plantImageUri, true)  // Upload image to Firestorage
-
-            if (imageUrl) {
-                await addImage(newPlantId, imageUrl)    // Add image to asyncstorage
-            }
         }
 
-        Toast.show({
-            type: "success",
-            text1: t("screens.addPlant.addSuccess"),
-            position: "bottom",
-            visibilityTime: 3000,
-        })
-        onCloseFunction();
+        try {
+            const newPlantId = await addPlant(plantNickname, scientificName, formattedPrice, plantType, user.uid);
+
+            if (newPlantId && plantImageUri) {
+                const imageUrl = await uploadPlantImage(user.uid, newPlantId, plantImageUri, true)  // Upload image to Firestorage
+
+                if (imageUrl) {
+                    await addImage(newPlantId, imageUrl)    // Add image to asyncstorage
+                }
+            }
+
+            Toast.show({
+                type: "success",
+                text1: t("screens.addPlant.addSuccess"),
+                position: "bottom",
+                visibilityTime: 3000,
+            })
+
+            navigation.navigate("PlantScreen", {
+                plantId: newPlantId,
+                plantPreview: {
+                    givenName: plantNickname,
+                    scientificName: scientificName,
+                }
+            })
+        } catch (error) {
+            console.log("Error adding plant: ", error)
+            Toast.show({
+                type: "error",
+                text1: t("screens.addPlant.addError"),
+                position: "bottom",
+                visibilityTime: 3000,
+            })
+        } finally {
+            onCloseFunction();
+        }
     }
 
     const handleOpenCamera = async () => {
@@ -140,6 +161,7 @@ export default function AddPlantModal({ user, visible, onClose }) {
                                     setPlantNickname(text)
                                     setPlantNicknameError(false)
                                 }}
+                                returnKeyType='done'
                             />
                         </View>
 
@@ -148,12 +170,18 @@ export default function AddPlantModal({ user, visible, onClose }) {
                             <TextInput
                                 style={styles.textInput}
                                 onChangeText={(text) => setScientificName(text)}
+                                returnKeyType='done'
                             />
                         </View>
 
                         <Text variant="bodyMedium">{t("screens.addPlant.price")}</Text>
                         <View style={styles.inputContainer}>
-                            <TextInput style={styles.textInput} keyboardType='decimal-pad' onChangeText={(text) => setPlantPrice(text)}></TextInput>
+                            <TextInput
+                                style={styles.textInput}
+                                keyboardType='decimal-pad'
+                                onChangeText={(text) => setPlantPrice(text)}
+                                returnKeyType='done'
+                            />
                         </View>
 
                         <Text variant="bodyMedium">{t("screens.addPlant.type")}*</Text>
