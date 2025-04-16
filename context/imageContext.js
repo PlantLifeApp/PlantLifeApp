@@ -43,7 +43,7 @@ export const ImagesProvider = ({ children }) => {
   };
 
   const addImage = async (plantId, imageUrl, plantType, isDead = false) => {
-    console.log('Ei saisi tulla tänne')
+
     try {
 
       // Haetaan nykyiset kuvat AsyncStoragesta

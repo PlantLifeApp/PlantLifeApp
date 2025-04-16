@@ -73,7 +73,7 @@ export default function FloatingButton(props) {
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const imageUri = result.assets[0].uri;
       if (imageUri) {
-        addImage(plantId, imageUri); // Lisää kuva valitulle plantId:lle
+        await uploadImageToPlant(plantId, imageUri); // Lisää kuva valitulle plantId:lle
       } else {
         console.error("Floatingbutton: Image URI is undefined");
       }
