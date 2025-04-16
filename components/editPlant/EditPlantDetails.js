@@ -61,6 +61,7 @@ const EditPlantDetails = ({ plant, onChange }) => {
                 onChangeText={handleGivenNameChange}
                 style={styles.input}
                 mode="outlined"
+                returnKeyType='done'
             />
 
             <TextInput
@@ -69,6 +70,7 @@ const EditPlantDetails = ({ plant, onChange }) => {
                 onChangeText={handleScientificNameChange}
                 style={styles.input}
                 mode="outlined"
+                returnKeyType='done'
             />
 
             <TextInput
@@ -78,6 +80,7 @@ const EditPlantDetails = ({ plant, onChange }) => {
                 style={styles.input}
                 mode="outlined"
                 keyboardType="decimal-pad"
+                returnKeyType='done'
             />
 
             <Menu

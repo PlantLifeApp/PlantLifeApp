@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo } from "react";
+import React, { useContext, useState, useMemo, useRef } from "react";
 import { StyleSheet, FlatList, TouchableOpacity, View, Platform } from "react-native";
 import { FAB, IconButton } from "react-native-paper";
 import { AuthContext } from "../context/authContext";
@@ -12,7 +12,7 @@ import ActionBar from "../components/home/ActionBar";
 import QuickCareMenu from "../components/home/QuickCareMenu";
 import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-
+import * as Haptics from "expo-haptics"
 
 const HomeScreen = () => {
     const { theme } = useContext(ThemeContext)
@@ -31,11 +31,13 @@ const HomeScreen = () => {
     const [selectedPlantId, setSelectedPlantId] = useState(null)
     const [isReversed, setIsReversed] = useState(false)
     const [fabOpen, setFabOpen] = useState(false)
+    const [anchorPosition, setAnchorPosition] = useState({ x: 0, y: 0 });
+    const itemRefs = useRef({})
 
     const insets = useSafeAreaInsets()
     // fab positioning based on OS
     const bottomOffset = Platform.OS === "ios"
-        ? -32 
+        ? -32
         : insets.bottom + 8
 
     const filteredPlants = useMemo(() => {
@@ -80,11 +82,6 @@ const HomeScreen = () => {
         return isReversed ? sorted.reverse() : sorted
     }, [alivePlants, plants, searchQuery, selectedType, sortOption, isReversed]);
 
-    const handleOpenCareMenu = (plantId) => {
-        setSelectedPlantId(plantId)
-        setCareMenuVisible(true)
-    }
-
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
             <ActionBar
@@ -109,22 +106,36 @@ const HomeScreen = () => {
                 style={{ width: "100%", paddingTop: 10 }}
                 renderItem={({ item }) => (
                     <TouchableOpacity
+                        ref={ref => {
+                            if (ref) itemRefs.current[item.id] = ref;
+                        }}
                         style={isTwoColumns ? styles.itemContainerSimple : styles.itemContainerComplex}
-                        onLongPress={() => handleOpenCareMenu(item.id)}
+                        onLongPress={() => {
+                            itemRefs.current[item.id]?.measure((fx, fy, width, height, px, py) => {
+                                setAnchorPosition({ x: px, y: py })
+                                setSelectedPlantId(item.id);
+                                setCareMenuVisible(true);
+                            });
+                            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
+                        }}
                         onPress={() => navigation.navigate("PlantScreen", {
                             plantId: item.id,
                             plantPreview: {
                                 givenName: item.givenName,
                                 scientificName: item.scientificName,
                             }
-                        })
-                        }
+                        })}
                     >
                         <CardComponent item={item} isTwoColumns={isTwoColumns} />
                     </TouchableOpacity>
                 )}
             />
-            <QuickCareMenu plantId={selectedPlantId} menuVisible={careMenuVisible} setMenuVisible={setCareMenuVisible} />
+            <QuickCareMenu
+                plantId={selectedPlantId}
+                menuVisible={careMenuVisible}
+                setMenuVisible={setCareMenuVisible}
+                anchorPosition={anchorPosition}
+            />
 
             <FAB.Group
                 open={fabOpen}

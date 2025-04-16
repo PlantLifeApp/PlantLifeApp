@@ -32,7 +32,7 @@ export const ThemeProvider = ({ children }) => {
             }
         }
         loadThemePreference()
-    }, [systemTheme])
+    }, [systemTheme, useSystemTheme])
 
     if (useSystemTheme === null || isDarkMode === null) {
         return null
