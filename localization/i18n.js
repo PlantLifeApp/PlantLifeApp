@@ -574,7 +574,7 @@ const resources = {
                     registerHeader: "Registrera dig på PlantLife!"
                 },
                 home: {
-                    noWateringHistory: "inga vattningar",
+                    noWateringHistory: "Inga vattningar",
                     lastWatered: "Senast vattnad",
                     nextWatering: "Nästa vattning",
 
@@ -804,7 +804,7 @@ const resources = {
                 sort: "Sortera",
                 alphabetical: "Namn",
                 newestPlant: "Nyaste växten",
-                scientificName: "Vetenskapligt namn",    // Check
+                scientificName: "Vetenskapligt namn", 
                 latestWatered: "Senast vattnad",
                 nextWatering: "Nästa vattning",
                 all: "Alla Typer",
