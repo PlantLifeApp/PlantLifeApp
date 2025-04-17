@@ -132,20 +132,22 @@ export const removeImageUriFromFirestore = async (userId, plantId, imageUri) => 
       const db = getFirestore()
       const plantRef = doc(db, "users", userId, "plants", plantId)
   
-      const plantSnap = await getDoc(plantRef)
-      if (!plantSnap.exists()) {
-        console.error('No plant found to remove image from Firestore')
-        return
-      }
+      const snap = await getDoc(plantRef)
+      if (!snap.exists()) return
   
-      const currentImages = plantSnap.data().images || []
-      const updatedImages = currentImages.filter(uri => uri !== imageUri)
+      const plantData = snap.data()
+      const currentImages = plantData.images || []
+  
+      const normalizedToString = (uri) => typeof uri === 'string' ? uri : uri?.uri;
+  
+      const updatedImages = currentImages.filter(
+        (url) => normalizedToString(url) !== normalizedToString(imageUri)
+      )
   
       await updateDoc(plantRef, { images: updatedImages })
-      console.log("🧹 Removed image URI from Firestore:", imageUri)
+      console.log('✅ Image removed from Firestore')
     } catch (error) {
-      console.error("Error removing image URI from Firestore:", error)
-      throw error
+      console.error('error removing image from Firestore:', error)
     }
   }
 

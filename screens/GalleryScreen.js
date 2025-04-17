@@ -69,12 +69,6 @@ export default function GalleryScreen() {
       });
     }
   };
-  // const handleLongPress = (plantId, imageUri) => {
-  //   setSelectedPlantIdCover(plantId)
-  //   setSelectedImage({ uri: imageUri })
-  //   setMenuVisible(true)
-  //   // console.log('Täää ny perkl, ', selectedImage)
-  // }
 
   // FAB "only" on this screen
   useFocusEffect(
