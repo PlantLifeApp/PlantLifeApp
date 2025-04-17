@@ -38,12 +38,10 @@ export default function LineChartComponent({ param_data }) {
         const [day, month, year] = label.split('.');
         const rawDate = new Date(`${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`)
     
-        const formattedLabel = formatDate(
-            rawDate,
-            labels.length > 3
-                ? { month: 'short', year: 'numeric' }
-                : { month: 'short' }
-        );
+        const formattedLabel = rawDate.toLocaleDateString(undefined, {
+            day: 'numeric',
+            month: 'short',
+        }); // Example: "10 Apr"
     
         return {
             label: formattedLabel,
