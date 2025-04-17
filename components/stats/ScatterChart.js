@@ -82,9 +82,12 @@ export default function ScatterChartComponent({ dataPoints }) {
                     lineColor: theme.colors.outline,
                     labelColor: theme.colors.outline,
                     formatYLabel(value) {
-                        return Number.isInteger(value) ? value.toString() : ""
+                      return Number.isFinite(value) ? `${Math.round(value)}d` : "";
+                    },
+                    formatXLabel(value) {
+                      return Number.isFinite(value) ? `${Math.round(value)}€` : "";
                     }
-                }}
+                  }}
             >
                 {({ points }) => {
                     const scatterPoints = Array.isArray(points.daysAlive)
@@ -113,11 +116,9 @@ export default function ScatterChartComponent({ dataPoints }) {
                                     color={theme.colors.onBackground}
                                 />
                             </>
-
                         </>)
                 }}
-            </CartesianChart>
-
+            </CartesianChart>  
         </View>
     );
 }
