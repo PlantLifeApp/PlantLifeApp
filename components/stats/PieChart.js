@@ -5,15 +5,15 @@ import { ThemeContext } from "../../context/themeContext";
 
 
 export default function PieChartComponent({ param_data }) {
-    const { isDarkMode } = useContext(ThemeContext)
+    const { theme } = useContext(ThemeContext)
 
     const screenWidth = Dimensions.get("window").width;
 
     const ColorsArray = [
-        "#C8E6C9", // Light Green
-        "#FFCDD2", // Light Red
+        theme.colors.primaryContainer,
+        theme.colors.pruningColor,
     ];
-    const legendFontColor = isDarkMode ? "#FFFFFF" : "#000000";
+    const legendFontColor = theme.colors.outline;
 
     const data = Object.keys(param_data).map((key, index) => ({
         name: key,
@@ -28,7 +28,7 @@ export default function PieChartComponent({ param_data }) {
         backgroundGradientFromOpacity: 0,
         backgroundGradientTo: "#ffffff",
         backgroundGradientToOpacity: 0.5,
-        color: (opacity = 1) => isDarkMode ? `rgba(255, 255, 255, ${opacity})` : `rgba(0, 0, 0, ${opacity})`,
+        color: (opacity = 1) => theme.colors.primary,
         strokeWidth: 2, // optional, default 3
         useShadowColorFromDataset: false, // optional
         fillShadowGradientToOffset: 0,
