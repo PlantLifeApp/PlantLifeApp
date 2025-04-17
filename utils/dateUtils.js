@@ -44,12 +44,14 @@ export const calculateNextWatering = (careHistory) => {
     // calculate intervals between consecutive waterings
     let intervals = []
     for (let i = 0; i < relevantWaterings.length - 1; i++) {
-        const interval = (relevantWaterings[i] - relevantWaterings[i + 1]) / (1000 * 60 * 60 * 24) // convert ms to days
+        // convert ms to days
+        const interval = (relevantWaterings[i] - relevantWaterings[i + 1]) / (1000 * 60 * 60 * 24) 
         intervals.push(interval)
     }
 
     // calculate average interval
-    const avgInterval = intervals.reduce((sum, val) => sum + val, 0) / intervals.length // the reduce method is used to sum up all values in the array, 0 is the initial value
+    const avgInterval = intervals.reduce((sum, val) => sum + val, 0) / intervals.length 
+    // the reduce method is used to sum up all values in the array, 0 is the initial value
 
     // predict next watering date based on last watering event
     const lastWateringDate = relevantWaterings[0]
@@ -95,6 +97,7 @@ export const calculateNextFertilizing = async (careHistory) => {
     // find user's winter months
     const {start: winterStart, end: winterEnd} = await getWinterMonths()
 
+    // first filter out all fertilizing events from care history
     const fertilizingEvents = careHistory
         .filter(entry => entry.events.includes("fertilizing"))
         .map(entry => {
@@ -107,11 +110,12 @@ export const calculateNextFertilizing = async (careHistory) => {
         })
         .sort((a, b) => b - a)
 
-    //console.log("Filtered fertilizing events:", fertilizingEvents)
-
+    // at least 2 fertilizing events are needed to calculate an estimate
+    // use only the 5 most recent fertilizing events to avoid out-of-season statistics
     if (fertilizingEvents.length < 2) return null
     const relevantFertilizings = fertilizingEvents.slice(0, 5)
 
+    // calculate intervals between consecutive fertilizing events
     let intervals = []
     for (let i = 0; i < relevantFertilizings.length - 1; i++) {
         const prevDate = new Date(relevantFertilizings[i + 1])
@@ -127,10 +131,12 @@ export const calculateNextFertilizing = async (careHistory) => {
         }
         intervals.push(intervalDays)
     }
+
     const avgInterval = Math.round(intervals.reduce((sum, val) => sum + val, 0) / intervals.length)
     const lastFertilizingDate = new Date(relevantFertilizings[0])
     const predictedNextFertilizingDate = new Date(lastFertilizingDate)
 
+    // add the average interval to the last fertilizing date
     let daysAdded = 0
     while (daysAdded < avgInterval) {
         predictedNextFertilizingDate.setDate(predictedNextFertilizingDate.getDate() + 1)
@@ -140,10 +146,6 @@ export const calculateNextFertilizing = async (careHistory) => {
         }
     }
 
-    //console.log("Last fertilizing date:", lastFertilizingDate)
-    //console.log("Predicted next fertilizing date:", predictedNextFertilizingDate)
-    //console.log("Type:", typeof predictedNextFertilizingDate)
-    //console.log("Is valid:", !isNaN(predictedNextFertilizingDate.getTime()))
-
 return predictedNextFertilizingDate 
+
 }

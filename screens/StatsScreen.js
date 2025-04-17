@@ -386,7 +386,8 @@ export default function StatsScreen() {
                 </Surface>
 
                 <Surface style={styles.surface}>
-                    <View style={styles.barChartHeader}>
+                    <Text variant='headlineSmall'>{t("screens.stats.moneyHeader")}</Text>
+                    <View style={styles.barChartHeader}>    
                         <SegmentedButtons
                             value={graphView}
                             onValueChange={setGraphView}
@@ -404,9 +405,15 @@ export default function StatsScreen() {
                         />
                     </View>
                     {graphView === 'line' ? (
-                        <LineChartComponent param_data={listOfPurchases} />
+                        <>
+                            <Text variant="bodyLarge">{t("screens.stats.purchaseOverTime")}</Text>
+                            <LineChartComponent param_data={listOfPurchases} />
+                        </>
                     ) : (
-                        <ScatterChartComponent dataPoints={scatterData} />
+                        <>
+                            <Text variant="bodyLarge">{t("screens.stats.lifespanCorrelation")}</Text>
+                            <ScatterChartComponent dataPoints={scatterData} />
+                        </>
                     )}
                 </Surface>
 

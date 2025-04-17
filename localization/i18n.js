@@ -244,6 +244,9 @@ const resources = {
                     nextMonth: "Next Month",
                     lineView: 'Line View',
                     scatterView: 'Scatter View',
+                    purchaseOverTime: 'Plant Purchase Price Over Time',
+                    lifespanCorrelation: 'Plant Lifespan vs. Price Correlation',
+                    moneyHeader: 'Money Statistics',
                 }
             },
             common: {
@@ -525,6 +528,9 @@ const resources = {
                     nextMonth: "seuraava kuukausi",
                     lineView: 'Viivadiagrammi',
                     scatterView: 'Pistekaavio',
+                    purchaseOverTime: 'Kasvin hankintahinta ajan myötä',
+                    lifespanCorrelation: 'Kasvin elinajan ja hinnan korrelaatio',
+                    moneyHeader: 'Rahankäyttötilastot',
                 },
             },
             common: {
@@ -584,7 +590,7 @@ const resources = {
                     registerHeader: "Registrera dig på PlantLife!"
                 },
                 home: {
-                    noWateringHistory: "inga vattningar",
+                    noWateringHistory: "Inga vattningar",
                     lastWatered: "Senast vattnad",
                     nextWatering: "Nästa vattning",
 
@@ -700,6 +706,17 @@ const resources = {
                     successDeleting: "Vårdpost borttagen!",
                 },
                 options: {
+                    account: "Ditt konto",
+                    accountActions: "Kontohandlingar",
+                    collectionCount: "och du tar hand om {{count}} levande växter",
+                    displayPreferences: "Visningsinställningar",
+                    plantLifeFeatures: "PlantLife-funktioner",
+                    winterModeLabel: "Välj dina vilomånader (ingen gödsling)",
+                    graveyardLabel: "Besök växtkyrkogården",
+                    themeLabel: "Välj app-tema",
+                    languageLabel: "Välj app-språk",
+                    rip: "Vila i frid",
+                    userSince: "Välkommen till PlantLife! Du har varit användare sedan",
                     themeHeader: "Tema",
                     system: "System",
                     light: "Ljus",
@@ -722,7 +739,7 @@ const resources = {
                     winterEnd: "Sista vintermånad",
                     saveWinterMonths: "Spara vintermånader",
                     saved: "Sparat!",
-                    useDefault: "Standard (nov-mars)",
+                    useDefault: "Standard (11-03)",
                     setCustom: "Anpassa",
                     editCustomMonths: "Ställ in vilomånader",
                     selectStartEnd: "Ställ in första och sista månad utan gödsling:",
@@ -795,8 +812,11 @@ const resources = {
                     nextYear: "Nästa år",
                     previousMonth: "Föregående månad",
                     nextMonth: "Nästa månad",
-                    lineView: 'Linjevy',    // Check
-                    scatterView: 'Spridningsvy',    // Check
+                    lineView: 'Linjevy',
+                    scatterView: 'Spridningsvy',
+                    purchaseOverTime: 'Kostnad för växt över tid',
+                    lifespanCorrelation: 'Växtens livslängd vs. pris korrelation',
+                    moneyHeader: 'Pengastatistik',
                 },
             },
             common: {
@@ -808,7 +828,7 @@ const resources = {
                 sort: "Sortera",
                 alphabetical: "Namn",
                 newestPlant: "Nyaste växten",
-                scientificName: "Vetenskapligt namn",    // Check
+                scientificName: "Vetenskapligt namn", 
                 latestWatered: "Senast vattnad",
                 nextWatering: "Nästa vattning",
                 all: "Alla Typer",
