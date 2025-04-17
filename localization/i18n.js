@@ -242,6 +242,8 @@ const resources = {
                     nextYear: "Next Year",
                     previousMonth: "Previous Month",
                     nextMonth: "Next Month",
+                    lineView: 'Line View',
+                    scatterView: 'Scatter View',
                 }
             },
             common: {
@@ -521,6 +523,8 @@ const resources = {
                     nextYear: "Seuraava vuosi",
                     previousMonth: "edellinen kuukausi",
                     nextMonth: "seuraava kuukausi",
+                    lineView: 'Viivadiagrammi',
+                    scatterView: 'Pistekaavio',
                 },
             },
             common: {
@@ -791,6 +795,8 @@ const resources = {
                     nextYear: "Nästa år",
                     previousMonth: "Föregående månad",
                     nextMonth: "Nästa månad",
+                    lineView: 'Linjevy',    // Check
+                    scatterView: 'Spridningsvy',    // Check
                 },
             },
             common: {
