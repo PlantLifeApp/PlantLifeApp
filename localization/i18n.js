@@ -244,6 +244,9 @@ const resources = {
                     nextMonth: "Next Month",
                     lineView: 'Line View',
                     scatterView: 'Scatter View',
+                    purchaseOverTime: 'Plant Purchase Price Over Time',
+                    lifespanCorrelation: 'Plant Lifespan vs. Price Correlation',
+                    moneyHeader: 'Money Statistics',
                 }
             },
             common: {
@@ -525,6 +528,9 @@ const resources = {
                     nextMonth: "seuraava kuukausi",
                     lineView: 'Viivadiagrammi',
                     scatterView: 'Pistekaavio',
+                    purchaseOverTime: 'Kasvin hankintahinta ajan myötä',
+                    lifespanCorrelation: 'Kasvin elinajan ja hinnan korrelaatio',
+                    moneyHeader: 'Rahankäyttötilastot',
                 },
             },
             common: {
@@ -806,8 +812,11 @@ const resources = {
                     nextYear: "Nästa år",
                     previousMonth: "Föregående månad",
                     nextMonth: "Nästa månad",
-                    lineView: 'Linjevy',    // Check
-                    scatterView: 'Spridningsvy',    // Check
+                    lineView: 'Linjevy',
+                    scatterView: 'Spridningsvy',
+                    purchaseOverTime: 'Kostnad för växt över tid',
+                    lifespanCorrelation: 'Växtens livslängd vs. pris korrelation',
+                    moneyHeader: 'Pengastatistik',
                 },
             },
             common: {
