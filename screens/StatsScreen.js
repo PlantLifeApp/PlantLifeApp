@@ -2,6 +2,7 @@
 /*
     - barChart date not centered
     - Fragment code
+    - Colors for dark and light modes
 */
 
 import React, { useState, useEffect } from 'react'
@@ -14,7 +15,7 @@ import { Dropdown } from 'react-native-paper-dropdown';
 import PieChartComponent from '../components/stats/PieChart.js'
 import { formatDate } from '../utils/dateUtils.js'
 import LineChartComponent from '../components/stats/LineChart.js'
-
+import ScatterChartComponent from '../components/stats/ScatterChart.js'
 
 export default function StatsScreen() {
     const theme = useTheme()
@@ -42,6 +43,8 @@ export default function StatsScreen() {
     const [barChartFilterOption, setBarChartFilterOption] = useState('watering')
     const [currentDate, setCurrentDate] = useState(new Date())
     const [listOfPurchases, setListOfPurchases] = useState({})
+    const [graphView, setGraphView] = useState('line');
+    const [scatterData, setScatterData] = useState([])
 
     const TYPES = [
         { label: t('screens.stats.daily'), value: 'day' },
@@ -79,10 +82,35 @@ export default function StatsScreen() {
         setCurrentDate(newDate)
     }
 
+    function getDeadPlantPriceCorrelation(plants) {
+        const priceDeadMap = {};
+
+        for (let plant of plants) {
+            const { price, isDead } = plant;
+            if (!price) continue;
+
+            if (!priceDeadMap[price]) {
+                priceDeadMap[price] = 0;
+            }
+
+            if (isDead) {
+                priceDeadMap[price] += 1;
+            }
+        }
+
+        // Convert to array for scatter chart
+        const correlationData = Object.entries(priceDeadMap).map(([price, dead]) => ({
+            price: parseFloat(price),
+            dead,
+        }));
+
+        return correlationData;
+    }
+
     useEffect(() => {
 
         const fetchCareHistory = async () => {
-    
+
             const updatedPlants = plants.plants.map((plant) => {
 
                 const rawHistory = plant.careHistory || []
@@ -91,50 +119,71 @@ export default function StatsScreen() {
                     const date = event.date?.seconds
                         ? new Date(event.date.seconds * 1000)
                         : event.date instanceof Date
-                        ? event.date
-                        : null
-    
+                            ? event.date
+                            : null
+
                     if (!events.length || !date) {
                         console.warn(`⚠️ ${plant.givenName} [${idx}] has invalid event`, event)
                     }
-    
+
                     return { date, events }
 
                 }).filter(e => e.date)
-    
+
                 return { ...plant, careHistory: normalizedHistory }
             })
-    
+
             const careEvents = {}
             let waterings = 0, fertilizings = 0, prunings = 0, pottings = 0
             let alivePlants = 0, deadPlants = 0
             let price = 0
             const purchases = {}
-    
+            const priceDeadMap = {}
+            const scatterDataTemp = []
+
             updatedPlants.forEach(plant => {
-                if (plant.isDead) deadPlants++
-                else alivePlants++
-    
+                if (plant.isDead) {
+                    deadPlants++
+
+                    if (plant.plantPrice) {
+                        priceDeadMap[plant.plantPrice] = (priceDeadMap[plant.plantPrice] || 0) + 1
+                    }
+                } else {
+                    alivePlants++
+                }
+
                 if (plant.plantPrice && plant.createdAt?.seconds) {
                     const dateFormatted = formatDate(plant.createdAt.seconds * 1000)
                     price += plant.plantPrice
                     purchases[dateFormatted] = (purchases[dateFormatted] || 0) + plant.plantPrice
                 }
-    
+                if (plant.plantPrice && plant.createdAt?.seconds) {
+                    const createdAt = new Date(plant.createdAt.seconds * 1000);
+                    const endDate = plant.isDead && plant.dateOfDeath?.seconds
+                        ? new Date(plant.dateOfDeath.seconds * 1000)
+                        : new Date(); // if still alive, use now
+
+                    const daysAlive = Math.floor((endDate - createdAt) / (1000 * 60 * 60 * 24));
+
+                    scatterDataTemp.push({
+                        price: plant.plantPrice,
+                        daysAlive: daysAlive,
+                    });
+                }
                 plant.careHistory.forEach(event => {
                     const date = event.date
                     if (!date) return
                     const year = date.getFullYear()
                     const month = date.toLocaleString('default', { month: 'long' })
                     const day = date.getDate()
-    
+
                     event.events.forEach(type => {
                         careEvents[type] ??= {}
                         careEvents[type][year] ??= {}
                         careEvents[type][year][month] ??= {}
                         careEvents[type][year][month][day] ??= 0
                         careEvents[type][year][month][day]++
-    
+
                         if (type === 'watering') waterings++
                         if (type === 'fertilizing') fertilizings++
                         if (type === 'pruning') prunings++
@@ -142,14 +191,14 @@ export default function StatsScreen() {
                     })
                 })
             })
-    
+
             // Täydentää tyhjät päivät 0:lla
             const monthsStatic = [
                 'January', 'February', 'March', 'April', 'May', 'June',
                 'July', 'August', 'September', 'October', 'November', 'December'
             ]
             const days = Array.from({ length: 31 }, (_, i) => i + 1)
-    
+
             Object.keys(careEvents).forEach(type =>
                 Object.keys(careEvents[type]).forEach(year =>
                     monthsStatic.forEach(month => {
@@ -160,7 +209,7 @@ export default function StatsScreen() {
                     })
                 )
             )
-    
+
             // Sortataan päivät oikeaan järjestykseen
             Object.keys(careEvents).forEach(type =>
                 Object.keys(careEvents[type]).forEach(year => {
@@ -175,7 +224,7 @@ export default function StatsScreen() {
                     careEvents[type][year] = sorted
                 })
             )
-    
+
             // Päivitetään state
             setCareEvents(careEvents)
             setTotalWaterings(waterings)
@@ -186,13 +235,13 @@ export default function StatsScreen() {
             setTotalDeadPlants(deadPlants)
             setTotalPrice(price)
             setListOfPurchases(purchases)
-    
+            setScatterData(scatterDataTemp)
         }
-    
+
         fetchCareHistory()
 
     }, [plants])
-    
+
     useEffect(() => {
         const getChartData = (careEvents, filterOption, careType) => {
             const chartData = {}
@@ -254,6 +303,7 @@ export default function StatsScreen() {
     }, [filterOption, careEvents, currentDate, plants])
 
     const renderChart = () => {
+
         switch (barChartFilterOption) {
             case 'watering':
                 return <BarChartComponent param_data={chartWateringData} filterType={filterOption} careType={barChartFilterOption} currentDate={currentDate} />
@@ -335,11 +385,30 @@ export default function StatsScreen() {
 
                 </Surface>
 
-                {/* <Surface style={styles.surface}>
-                    <LineChartComponent
-                        param_data={listOfPurchases}
-                    />
-                </Surface> */}
+                <Surface style={styles.surface}>
+                    <View style={styles.barChartHeader}>
+                        <SegmentedButtons
+                            value={graphView}
+                            onValueChange={setGraphView}
+                            buttons={[
+                                {
+                                    value: 'line',
+                                    label: t('screens.stats.lineView'),
+                                },
+                                {
+                                    value: 'scatter',
+                                    label: t('screens.stats.scatterView'),
+                                },
+                            ]}
+                            style={styles.segmented}
+                        />
+                    </View>
+                    {graphView === 'line' ? (
+                        <LineChartComponent param_data={listOfPurchases} />
+                    ) : (
+                        <ScatterChartComponent dataPoints={scatterData} />
+                    )}
+                </Surface>
 
             </ScrollView>
         </View>
