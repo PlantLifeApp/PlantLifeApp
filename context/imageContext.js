@@ -75,19 +75,25 @@ export const ImagesProvider = ({ children }) => {
 
   const removeImage = async (plantId, imageUri) => {
     try {
-      const storageImages = await AsyncStorage.getItem('plantimages')
+      const storageImages = await AsyncStorage.getItem('plantImages')
       const images = storageImages ? JSON.parse(storageImages) : {}
 
       if (!images[plantId]) return
 
-      const updatedPlantImages = images[plantId].filter(
-        (img) => img.uri !== imageUri && img.uri?.uri !== imageUri
-      )
+      const updatedPlantImages = images[plantId].filter((imgObj) => {
+        const uri = typeof imgObj === "string" ? imgObj : imgObj?.uri
+        return uri !== imageUri
+      })
 
       const updatedImages = {
         ...images,
         [plantId]: updatedPlantImages
       }
+
+      if (updatedPlantImages.length === 0) {
+        delete updatedImages[plantId]
+      }
+
       await AsyncStorage.setItem("plantImages", JSON.stringify(updatedImages))
       setImages(updatedImages)
     }catch(error) {
