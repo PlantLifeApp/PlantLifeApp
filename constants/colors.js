@@ -43,9 +43,11 @@ export const Colors = {
     "backdrop": "rgba(44, 50, 42, 0.4)",
     "barChartGradient": "rgb(255, 255, 255)",
     "barChartColor": "rgba(0, 0, 0, 1)",
-    "wateringColor": "rgba(0, 0, 128, 1)", 
-    "fertilizingColor": "rgba(0, 128, 0, 1)", 
-    "pruningColor": "rgba(128, 64, 0, 1)" 
+    "wateringColor": "rgba(0, 0, 128, 1)",
+    "fertilizingColor": "rgba(0, 128, 0, 1)",
+    "pruningColor": "rgba(128, 64, 0, 1)",
+    "pieChartColor1": "rgb(168, 255, 179)",
+    "pieChartColor2": "rgb(252, 174, 183)",
   },
 
   "dark": {
@@ -93,6 +95,8 @@ export const Colors = {
     "barChartColor": "rgba(255, 255, 255, 1)",
     "wateringColor": "rgba(200, 200, 255, 1)",
     "fertilizingColor": "rgba(200, 255, 200, 1)",
-    "pruningColor": "rgba(255, 220, 200, 1)"
+    "pruningColor": "rgba(255, 220, 200, 1)",
+    "pieChartColor1": "rgb(80, 180, 100)",
+    "pieChartColor2": "rgb(200, 120, 130)",
   }
 }
