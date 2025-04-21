@@ -10,8 +10,8 @@ export default function PieChartComponent({ param_data }) {
     const screenWidth = Dimensions.get("window").width;
 
     const ColorsArray = [
-        theme.colors.primaryContainer,
-        theme.colors.pruningColor,
+        theme.colors.pieChartColor1,
+        theme.colors.pieChartColor2,
     ];
     const legendFontColor = theme.colors.outline;
 

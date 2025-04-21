@@ -95,7 +95,7 @@ export default function LineChartComponent({ param_data }) {
     if (Object.keys(param_data).length === 0) {
         return (
             <View style={styles.emptyText}>
-                <Text>{t('screens.stats.noData') || "No data available"}</Text>
+                <Text>{t('screens.stats.noDataAvailable') || "No data available"}</Text>
             </View>
         );
     }
