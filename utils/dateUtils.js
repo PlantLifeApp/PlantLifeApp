@@ -45,12 +45,12 @@ export const calculateNextWatering = (careHistory) => {
     let intervals = []
     for (let i = 0; i < relevantWaterings.length - 1; i++) {
         // convert ms to days
-        const interval = (relevantWaterings[i] - relevantWaterings[i + 1]) / (1000 * 60 * 60 * 24) 
+        const interval = (relevantWaterings[i] - relevantWaterings[i + 1]) / (1000 * 60 * 60 * 24)
         intervals.push(interval)
     }
 
     // calculate average interval
-    const avgInterval = intervals.reduce((sum, val) => sum + val, 0) / intervals.length 
+    const avgInterval = intervals.reduce((sum, val) => sum + val, 0) / intervals.length
     // the reduce method is used to sum up all values in the array, 0 is the initial value
 
     // predict next watering date based on last watering event
@@ -72,8 +72,9 @@ export const getWinterMonths = async () => {
         //console.log("Winter months value from Async Storage:", value)
         return value ? JSON.parse(value) : { start: 11, end: 3 } // default nov through march
     } catch (e) {
-        return { start: 11, end: 3
-         }
+        return {
+            start: 11, end: 3
+        }
     }
 }
 
@@ -86,7 +87,8 @@ export const setWinterMonths = async (start, end) => {
 // check if month is in winter months, take into account new year
 const isWinterMonth = (month, winterStart, winterEnd) => {
     if (winterStart <= winterEnd) {
-        return month >= winterStart && month <= winterEnd }
+        return month >= winterStart && month <= winterEnd
+    }
     else {
         return month >= winterStart || month <= winterEnd
     }
@@ -95,7 +97,7 @@ const isWinterMonth = (month, winterStart, winterEnd) => {
 export const calculateNextFertilizing = async (careHistory) => {
 
     // find user's winter months
-    const {start: winterStart, end: winterEnd} = await getWinterMonths()
+    const { start: winterStart, end: winterEnd } = await getWinterMonths()
 
     // first filter out all fertilizing events from care history
     const fertilizingEvents = careHistory
@@ -146,6 +148,30 @@ export const calculateNextFertilizing = async (careHistory) => {
         }
     }
 
-return predictedNextFertilizingDate 
+    return predictedNextFertilizingDate
 
+}
+
+export const getPreviousMonth = ({ date, setCurrentDate }) => {
+    updateDate({ date, setCurrentDate, type: 'month', offset: -1 })
+}
+
+export const getNextMonth = ({ date, setCurrentDate }) => {
+    updateDate({ date, setCurrentDate, type: 'month', offset: 1 })
+}
+
+export const getPreviousYear = ({ date, setCurrentDate }) => {
+    updateDate({ date, setCurrentDate, type: 'year', offset: -1 })
+}
+
+export const getNextYear = ({ date, setCurrentDate }) => {
+    updateDate({ date, setCurrentDate, type: 'year', offset: 1 })
+}
+
+// Shared helper
+const updateDate = ({ date, setCurrentDate, type, offset }) => {
+    const newDate = new Date(date)
+    if (type === 'month') newDate.setMonth(date.getMonth() + offset)
+    if (type === 'year') newDate.setFullYear(date.getFullYear() + offset)
+    setCurrentDate(newDate)
 }

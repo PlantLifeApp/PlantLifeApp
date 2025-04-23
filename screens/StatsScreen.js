@@ -1,10 +1,3 @@
-
-/*
-    - barChart date not centered
-    - Fragment code
-    - Colors for dark and light modes
-*/
-
 import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, ScrollView } from 'react-native'
 import { Surface, useTheme, Text, Button, SegmentedButtons, List } from 'react-native-paper'
@@ -13,9 +6,11 @@ import { usePlants } from "../context/plantsContext"
 import BarChartComponent from '../components/stats/BarChart.js'
 import { Dropdown } from 'react-native-paper-dropdown';
 import PieChartComponent from '../components/stats/PieChart.js'
-import { formatDate } from '../utils/dateUtils.js'
+import { formatDate, getNextMonth, getNextYear, getPreviousMonth, getPreviousYear } from '../utils/dateUtils.js'
 import LineChartComponent from '../components/stats/LineChart.js'
 import ScatterChartComponent from '../components/stats/ScatterChart.js'
+import { getChartData } from '../utils/chartUtils.js'
+
 
 export default function StatsScreen() {
     const theme = useTheme()
@@ -58,54 +53,6 @@ export default function StatsScreen() {
         { label: <List.Icon icon="content-cut" />, value: 'pruning', chartType: chartPruningData },
         { label: <List.Icon icon="shovel" />, value: 'pottings', chartType: chartPottingsData }
     ]
-    const handlePreviousMonth = () => {
-        const newDate = new Date(currentDate)
-        newDate.setMonth(currentDate.getMonth() - 1)
-        setCurrentDate(newDate)
-    }
-
-    const handleNextMonth = () => {
-        const newDate = new Date(currentDate)
-        newDate.setMonth(currentDate.getMonth() + 1)
-        setCurrentDate(newDate)
-    }
-
-    const handlePreviousYear = () => {
-        const newDate = new Date(currentDate)
-        newDate.setFullYear(currentDate.getFullYear() - 1)
-        setCurrentDate(newDate)
-    }
-
-    const handleNextYear = () => {
-        const newDate = new Date(currentDate)
-        newDate.setFullYear(currentDate.getFullYear() + 1)
-        setCurrentDate(newDate)
-    }
-
-    function getDeadPlantPriceCorrelation(plants) {
-        const priceDeadMap = {};
-
-        for (let plant of plants) {
-            const { price, isDead } = plant;
-            if (!price) continue;
-
-            if (!priceDeadMap[price]) {
-                priceDeadMap[price] = 0;
-            }
-
-            if (isDead) {
-                priceDeadMap[price] += 1;
-            }
-        }
-
-        // Convert to array for scatter chart
-        const correlationData = Object.entries(priceDeadMap).map(([price, dead]) => ({
-            price: parseFloat(price),
-            dead,
-        }));
-
-        return correlationData;
-    }
 
     useEffect(() => {
 
@@ -243,61 +190,18 @@ export default function StatsScreen() {
     }, [plants])
 
     useEffect(() => {
-        const getChartData = (careEvents, filterOption, careType) => {
-            const chartData = {}
 
-            if (!careEvents || !careEvents[careType]) {
-                return chartData
-            }
-            // Get the current year and month
-            const currentYear = currentDate.getFullYear()
-            const currentMonth = currentDate.toLocaleString('default', { month: 'long' })
 
-            if (filterOption === 'year') {
-                Object.keys(careEvents[careType]).forEach(year => {
-                    let total = 0
-                    Object.keys(careEvents[careType][year]).forEach(month => {
-                        Object.keys(careEvents[careType][year][month]).forEach(day => {
-                            total += careEvents[careType][year][month][day]
-                        })
-                    })
-                    chartData[year] = total
-                })
-            }
-
-            else if (filterOption === 'month') {
-                if (careEvents[careType][currentYear]) {
-                    Object.keys(careEvents[careType][currentYear]).forEach(month => {
-                        let total = 0
-                        Object.keys(careEvents[careType][currentYear][month]).forEach(day => {
-                            total += careEvents[careType][currentYear][month][day]
-                        })
-                        chartData[month] = total
-                    })
-                }
-            }
-
-            else if (filterOption === 'day') {
-                if (careEvents[careType][currentYear] && careEvents[careType][currentYear][currentMonth]) {
-                    Object.keys(careEvents[careType][currentYear][currentMonth]).forEach(day => {
-                        chartData[day] = careEvents[careType][currentYear][currentMonth][day]
-                    })
-                }
-            }
-
-            return chartData
-        }
-
-        let data = getChartData(careEvents, filterOption, "watering")
+        let data = getChartData(careEvents, filterOption, "watering", currentDate)
         setChartWateringData(data)
 
-        data = getChartData(careEvents, filterOption, "fertilizing")
+        data = getChartData(careEvents, filterOption, "fertilizing", currentDate)
         setChartFertilizingData(data)
 
-        data = getChartData(careEvents, filterOption, "pruning")
+        data = getChartData(careEvents, filterOption, "pruning", currentDate)
         setChartPruningData(data)
 
-        data = getChartData(careEvents, filterOption, "repotting")
+        data = getChartData(careEvents, filterOption, "repotting", currentDate)
         setChartPottingsData(data)
 
     }, [filterOption, careEvents, currentDate, plants])
@@ -358,18 +262,18 @@ export default function StatsScreen() {
                     </View>
                     {filterOption === 'day' ?
                         <View style={styles.navigationButtons}>
-                            <Button title="Previous Month" onPress={handlePreviousMonth} >{t('screens.stats.previousMonth')}</Button>
+                            <Button title="Previous Month" onPress={() => getPreviousMonth({ date: currentDate, setCurrentDate })} >{t('screens.stats.previousMonth')}</Button>
                             <Text style={styles.barChartDate}>{formatDate(currentDate)}</Text>
 
-                            <Button title="Next Month" onPress={handleNextMonth} >{t('screens.stats.nextMonth')}</Button>
+                            <Button title="Next Month" onPress={() => getNextMonth({ date: currentDate, setCurrentDate })} >{t('screens.stats.nextMonth')}</Button>
                         </View>
                         :
                         <View style={styles.navigationButtons}>
 
-                            <Button title="Previous Year" onPress={handlePreviousYear} >{t('screens.stats.previousYear')}</Button>
+                            <Button title="Previous Year" onPress={() => getPreviousYear({ date: currentDate, setCurrentDate })} >{t('screens.stats.previousYear')}</Button>
                             <Text style={styles.barChartDate}>{formatDate(currentDate)}</Text>
 
-                            <Button title="Next Year" onPress={handleNextYear} >{t('screens.stats.nextYear')}</Button>
+                            <Button title="Next Year" onPress={() => getNextYear({ date: currentDate, setCurrentDate })} >{t('screens.stats.nextYear')}</Button>
                         </View>
 
                     }
@@ -387,7 +291,7 @@ export default function StatsScreen() {
 
                 <Surface style={styles.surface}>
                     <Text variant='headlineSmall'>{t("screens.stats.moneyHeader")}</Text>
-                    <View style={styles.barChartHeader}>    
+                    <View style={styles.barChartHeader}>
                         <SegmentedButtons
                             value={graphView}
                             onValueChange={setGraphView}
