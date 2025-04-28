@@ -2,6 +2,9 @@ import React from "react"
 import { Portal, Dialog, Button, Text } from "react-native-paper"
 import { useTranslation } from "react-i18next"
 
+// this component is used to confirm the deletion of a care event
+// it is used in the EditCareHistoryScreen
+
 const DeleteCareEventModal = ({ visible, onCancel, onConfirm }) => {
     const { t } = useTranslation()
 

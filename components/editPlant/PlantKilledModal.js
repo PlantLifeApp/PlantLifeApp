@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
 import { Portal, Dialog, Button, Text, Menu } from 'react-native-paper'
-import { View } from 'react-native'
 import { useTranslation } from "react-i18next"
+
+// this component is used to confirm the death of a plant
+// it is used in the EditPlantScreen
+// it is a modal that pops up when the user tries to mark a plant as dead
 
 const PlantKilledModal = ({ visible, onCancel, onConfirm }) => {
     const { t } = useTranslation()

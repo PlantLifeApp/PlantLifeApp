@@ -7,6 +7,10 @@ import { calculateNextFertilizing, calculateNextWatering } from "../utils/dateUt
 
 const PlantsContext = createContext()
 
+// PlantsContext is used to provide the plant data to the app
+// it fetches the plant data from the firestore database
+// and provides functions to update the plant data
+
 export const PlantsProvider = ({ children }) => {
     const { user } = useContext(AuthContext)
     const [plants, setPlants] = useState([])
@@ -18,6 +22,9 @@ export const PlantsProvider = ({ children }) => {
 
         const plantsRef = collection(db, "users", user.uid, "plants")
 
+        // listen to changes in the plants collection
+        // this will update the plants state whenever there is a change in the collection
+        // note that this will not listen to changes in subcollections
         const unsubscribe = onSnapshot(plantsRef, async (querySnapshot) => {
             try {
                 const plantDocs = querySnapshot.docs
@@ -25,14 +32,17 @@ export const PlantsProvider = ({ children }) => {
                 const plantPromises = plantDocs.map(async (doc) => {
                     const baseData = { ...doc.data(), id: doc.id }
 
+                    // fetch care history for each plant
                     const careHistoryRef = collection(db, "users", user.uid, "plants", doc.id, "careHistory")
                     const careHistorySnap = await getDocs(careHistoryRef)
 
                     const careHistory = careHistorySnap.docs.map(careDoc => ({
                         id: careDoc.id,
                         ...careDoc.data(),
-                    }))
+                    })) // map care history to include id
 
+                    // sort care history by date
+                    // convert date to Date object if it's a timestamp
                     const careEntries = careHistory
                         .map(entry => ({
                             ...entry,
@@ -41,6 +51,8 @@ export const PlantsProvider = ({ children }) => {
                         .filter(e => e.date)
                         .sort((a, b) => b.date - a.date)
 
+                    // group care history by date
+                    // this is used to show the care history in a list
                     const groupedHistory = {}
                     careEntries.forEach(entry => {
                         const dateKey = entry.date.toISOString().split("T")[0]
@@ -51,6 +63,8 @@ export const PlantsProvider = ({ children }) => {
                     })
 
                     const sortedGroupedHistory = Object.values(groupedHistory)
+
+                    // calculate next watering and fertilizing dates
                     const nextWatering = calculateNextWatering(sortedGroupedHistory)
                     const nextFertilizing = await calculateNextFertilizing(sortedGroupedHistory)
 
@@ -62,6 +76,8 @@ export const PlantsProvider = ({ children }) => {
                     }
                 })
 
+                // wait for all plant promises to resolve
+                // and set the plants state with the resolved data
                 const plantsWithCareHistory = await Promise.all(plantPromises)
                 setPlants(plantsWithCareHistory)
 
@@ -83,7 +99,6 @@ export const PlantsProvider = ({ children }) => {
 
         try {
             const data = await fetchFullPlantData(user.uid, plantId)
-
             const updatedPlant = {
                 ...data.plant,
                 careHistory: data.ungroupedHistory.map(entry => ({
@@ -106,6 +121,7 @@ export const PlantsProvider = ({ children }) => {
             )
 
             return data
+
         } catch (error) {
             console.error("Error updating plant data:", error)
             return null

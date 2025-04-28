@@ -5,12 +5,17 @@ import { useTranslation } from "react-i18next"
 import { formatDate } from "../../utils/dateUtils"
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 
+// emoji for different care types
+// this is used to show the type of care in the care history
 const typeEmoji = {
   watering: "💧",
   fertilizing: "💥",
   pruning: "✂️",
   repotting: "🪴",
 }
+// this component is used to show the care history of a plant
+// it is a list of care events that the user can edit or delete
+// it is a child of the EditCareHistoryScreen
 
 const EditCareHistoryDetails = ({ careHistory, onDelete, onEditDate }) => {
   const { t } = useTranslation()
@@ -35,6 +40,8 @@ const EditCareHistoryDetails = ({ careHistory, onDelete, onEditDate }) => {
     hideDatePicker()
   }
 
+  // group care history by date
+  // this is used to show the care history in a list
   const grouped = careHistory.reduce((acc, entry) => {
     const dateKey = entry.date.toISOString().split("T")[0]
     if (!acc[dateKey]) acc[dateKey] = []
@@ -42,6 +49,7 @@ const EditCareHistoryDetails = ({ careHistory, onDelete, onEditDate }) => {
     return acc
   }, {})
 
+  // sort the dates in descending order
   const sortedDates = Object.keys(grouped).sort((a, b) => new Date(b) - new Date(a))
 
   return (

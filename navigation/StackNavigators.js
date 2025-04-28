@@ -16,6 +16,8 @@ import StatsScreen from "../screens/StatsScreen"
 
 const Stack = createNativeStackNavigator()
 
+// Stack Navigator for the Home tab
+// this stack contains the HomeScreen, PlantScreen, EditPlantScreen, and EditCareHistoryScreen
 export const HomeStackNavigator = () => {
   const { t } = useTranslation()
   const theme = useTheme()
@@ -57,6 +59,8 @@ export const HomeStackNavigator = () => {
   )
 }
 
+// Stack Navigator for the Options tab
+// This stack navigator contains the ProfileScreen, GraveyardScreen, and DeadPlantScreen
 export const OptionsStackNavigator = () => {
   const { t } = useTranslation()
   const theme = useTheme()
@@ -89,6 +93,8 @@ export const OptionsStackNavigator = () => {
   )
 }
 
+// Stack Navigator for the Gallery tab
+// This stack navigator contains only the GalleryScreen
 export const GalleryStackNavigator = () => {
   const { t } = useTranslation()
   const theme = useTheme()
@@ -109,6 +115,8 @@ export const GalleryStackNavigator = () => {
   )
 }
 
+// Stack Navigator for the Stats tab
+// This stack contains only the StatsScreen
 export const StatsStackNavigator = () => {
   const { t } = useTranslation()
   const theme = useTheme()

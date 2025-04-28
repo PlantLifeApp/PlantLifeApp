@@ -6,12 +6,15 @@ import { usePlants } from "../context/plantsContext"
 import { useTranslation } from "react-i18next"
 import GraveyardCard from "../components/graveyard/GraveyardCard"
 
+// this screen is used to show the list of dead plants
+// it is navigated to from the options screen
+// it contains a list of dead plants as GraveyardCard components
+
 export default function GraveyardScreen() {
     const { t } = useTranslation()
     const { deadPlants } = usePlants()
     const navigation = useNavigation()
 
-    //console.log("Graveyard Screen deadPlants:", deadPlants)
 
     // sort dead plants by killedAt (most recent first)
     const sortedDeadPlants = [...deadPlants].sort((a, b) => {

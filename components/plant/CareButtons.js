@@ -3,6 +3,9 @@ import { View, StyleSheet } from 'react-native'
 import { Button } from 'react-native-paper'
 import { useTranslation } from "react-i18next"
 
+// this component is used to show care buttons for a plant
+// it is currently not used in the app
+
 const CareButtons = ({ onAddCareEvent, saving }) => {
     const { t } = useTranslation()
 
