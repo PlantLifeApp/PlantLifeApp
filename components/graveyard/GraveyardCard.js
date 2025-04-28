@@ -5,11 +5,16 @@ import { useTranslation } from "react-i18next"
 import { formatDate } from "../../utils/dateUtils"
 import ItalicText from "../../utils/italicText"
 
+// this component is used to show the plant in the graveyard
+// it is a modified version of the PlantCard component
+// it is used in the GraveyardScreen
+
 const GraveyardCard = ({ plant }) => {
-    const { t } = useTranslation()
+    
+    let plantImageUrl // to hold the image URL
 
-    let plantImageUrl
-
+    // if the plant has a cover image, use it
+    // otherwise, use the default image based on the plant type
     if (!plant.coverImageUrl || plant.coverImageUrl.length <= 0) {
         if (plant.plantType === "cactus") {
             plantImageUrl = require("../../assets/plants/cactus-preview.png")

@@ -4,23 +4,23 @@ import { Surface, List } from 'react-native-paper'
 import { formatDate } from '../../utils/dateUtils'
 import { useTranslation } from "react-i18next"
 
-const CareHistory = ({ careHistory }) => {
+// this component is used to show the care history of a plant
+// the events are grouped by date
+// it is used in PlantScreen and GraveyardScreen
 
-    //console.log("Care history received in CareHistory:", careHistory)
+const CareHistory = ({ careHistory }) => {
 
     const { t } = useTranslation()
     const [expanded, setExpanded] = useState(false)
 
+    // get icon for different event types
     const getIconForEvents = (events) => {
-
         const has = (type) => events.includes(type)
-    
         if (has("repotting")) return "shovel"
         if (has("pruning")) return "content-cut"
         if (has("fertilizing")) return "bottle-tonic"
         if (has("watering")) return "water"
-        
-        return "help-circle"
+        return "help-circle" // default icon if something goes wrong
     }
 
     return (

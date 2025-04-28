@@ -3,7 +3,12 @@ import { StyleSheet } from 'react-native'
 import { TextInput, Menu, Surface } from 'react-native-paper'
 import { useTranslation } from "react-i18next"
 
+// this component is used to edit the details of a plant
+// it is a child of the EditPlantScreen
+
 const EditPlantDetails = ({ plant, onChange }) => {
+    // onChange receives an object with the new values to pass back to the parent
+   
     const { t } = useTranslation()
 
     const plantTypeOptions = [
@@ -18,13 +23,11 @@ const EditPlantDetails = ({ plant, onChange }) => {
     const [plantType, setPlantType] = useState(plant.plantType)
     const [plantPriceInput, setPlantPriceInput] = useState(
         plant.plantPrice != null ? plant.plantPrice.toString().replace(".", ",") : ""
-    )
+    ) // replace dot with comma for decimal input
     const [menuVisible, setMenuVisible] = useState(false)
     const selectedLabel = plantTypeOptions.find(opt => opt.value === plantType)?.label || ""
 
-
-    // onChange receives an object with the new values to pass back to the parent
-
+    // handle changes to the input fields
     const handleGivenNameChange = (value) => {
         setGivenName(value)
         onChange({ givenName: value, scientificName, plantType })

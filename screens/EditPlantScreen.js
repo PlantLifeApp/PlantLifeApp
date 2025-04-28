@@ -13,6 +13,11 @@ import PlantKilledModal from "../components/editPlant/PlantKilledModal"
 import EditPlantDetails from "../components/editPlant/EditPlantDetails"
 import { Timestamp } from "firebase/firestore"
 
+// this screen is used to edit the details of a plant
+// it is navigated to from the PlantScreen component
+// you can edit the plant names, type, and price
+// you can also delete the plant or mark it as dead
+
 export default function EditPlantScreen({ route }) {
 
     const { t } = useTranslation()
@@ -42,6 +47,7 @@ export default function EditPlantScreen({ route }) {
         }
     }, [plantId, user])
 
+    // load the plant data from the context
     const loadData = async () => {
         setLoading(true)
         const data = await updatePlantData(plantId, false) // cached load
@@ -49,6 +55,7 @@ export default function EditPlantScreen({ route }) {
         setLoading(false)
     }
 
+    // handle changes to the input fields
     const handleSave = async () => {
         try {
             await updatePlant(user.uid, plantId, editedPlant)
@@ -65,6 +72,7 @@ export default function EditPlantScreen({ route }) {
         }
     }
 
+    // handle plant death
     const handleKillPlant = async (causeOfDeath) => {
         try {
             await updatePlant(user.uid, plantId, {
@@ -95,6 +103,7 @@ export default function EditPlantScreen({ route }) {
         }
     }
 
+    // handle delete action
     const handleDeletePlant = async () => {
         try {
             setDeleteModalVisible(false)
@@ -118,6 +127,7 @@ export default function EditPlantScreen({ route }) {
         }
     }
 
+    // loading spinner
     if (loading) {
         return (
             <View style={styles.centered}>

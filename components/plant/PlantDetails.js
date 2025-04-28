@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
-import { StyleSheet, TouchableOpacity } from 'react-native'
-import { Text, Surface, IconButton } from 'react-native-paper'
+import React from 'react'
+import { StyleSheet } from 'react-native'
+import { Text, Surface } from 'react-native-paper'
 import { formatDate, formatRelativeDate } from '../../utils/dateUtils'
 import { useTranslation } from "react-i18next"
 import { View } from 'react-native'
@@ -8,29 +8,32 @@ import ItalicText from '../../utils/italicText'
 
 const PlantDetails = ({ plant, careHistory, showRelativeTime = false }) => {
 
-    //console.log("nextWatering received in PlantDetails:", nextWatering);
-    //console.log("Care history receivedin PlantDetails:", careHistory);
-
     const { t } = useTranslation()
 
+    // care history is already sorted by date in descending order
+    // so we can just take the first entry for each type of care
     const lastWatering = careHistory.find(entry => entry.events.includes("watering"))
     const lastFertilization = careHistory.find(entry => entry.events.includes("fertilizing"))
     const lastPruning = careHistory.find(entry => entry.events.includes("pruning"))
     const lastRepotting = careHistory.find(entry => entry.events.includes("repotting"))
 
+    // check if the date is recent (within the last 7 days)
+    // this is used to show the date in relative format
     const isRecent = (date) => {
         const now = new Date()
         const d = date instanceof Date ? date : new Date(date)
         return (now - d) < 7 * 24 * 60 * 60 * 1000
     }
 
+    // format the date based on the showRelativeTime prop
+    // if showRelativeTime is true and the date is recent, show the relative date
     const formatSmart = (date) => {
         return showRelativeTime && isRecent(date)
             ? formatRelativeDate(date, t)
             : formatDate(date)
     }
 
-
+    // get the emoji for the plant type
     const getPlantEmoji = (plantType) => {
         switch (plantType) {
             case "succulent": return "🌵"

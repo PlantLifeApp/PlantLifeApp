@@ -4,6 +4,9 @@ import { View } from "react-native"
 import { useTranslation } from "react-i18next"
 import { Dropdown } from "react-native-paper-dropdown"
 
+// this component is used to select the start and end months for the winter season
+// it is used in the ProfileScreen
+
 const WinterModal = ({ visible, onClose, winterStart, winterEnd, setWinterStart, setWinterEnd, onSave, monthOptions }) => {
     const { t } = useTranslation()
 

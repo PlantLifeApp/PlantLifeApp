@@ -175,8 +175,10 @@ export const fetchFullPlantData = async (userId, plantId) => {
             }
         }).filter(e => e.date)
 
+        // Sort care entries by date in descending order
         careEntries.sort((a, b) => b.date - a.date)
 
+        // group care history by date for convenient display
         const groupedHistory = {}
         careEntries.forEach(entry => {
             const dateKey = entry.date.toISOString().split("T")[0]

@@ -9,6 +9,9 @@ import { deleteCareEvent, updateCareEventDate } from "../services/plantService"
 import DeleteCareEventModal from "../components/editPlant/DeleteCareEventModal"
 import EditCareHistoryDetails from "../components/editPlant/EditCareHistoryDetails"
 
+// this screen is used to edit the care history of a plant
+// it is navigated to from the PlantScreen component
+
 export default function EditCareHistory({ route }) {
     const { plant } = route.params
     const plantId = plant.id
@@ -27,6 +30,7 @@ export default function EditCareHistory({ route }) {
         }
     }, [user, plantId])
 
+    // load the care history from the plant data
     const loadHistory = async () => {
         try {
             setLoading(true)
@@ -50,11 +54,13 @@ export default function EditCareHistory({ route }) {
         }
     }
 
+    // handle delete action
     const handleDelete = (careId) => {
         setSelectedCareId(careId)
         setDeleteModalVisible(true)
     }
 
+    // handle confirm delete action
     const handleConfirmDelete = async () => {
         try {
             await deleteCareEvent(user.uid, plantId, selectedCareId)
@@ -79,6 +85,8 @@ export default function EditCareHistory({ route }) {
         }
     }
 
+    // handle edit date action
+    // this function is called when the user selects a new date from the date picker
     const handleEditDate = async (careId, newDate) => {
         try {
             await updateCareEventDate(user.uid, plantId, careId, newDate)

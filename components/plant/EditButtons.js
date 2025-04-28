@@ -4,6 +4,8 @@ import { Button } from 'react-native-paper'
 import { useTranslation } from "react-i18next"
 import { useNavigation } from "@react-navigation/native"
 
+// this component is used to show edit buttons for a plant
+// it is currently not used in the app
 
 const EditButtons = ({ plant }) => {
     const { t } = useTranslation()

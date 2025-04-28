@@ -16,6 +16,7 @@ import WinterModal from "../components/profile/WinterModal"
 import { usePlants } from "../context/plantsContext"
 import { useTheme } from "react-native-paper"
 
+// a reusable component to group options in the profile screen
 const ProfileOptionGroup = ({ title, children }) => (
   <View style={styles.groupWrapper}>
     <Text style={styles.groupTitle}>{title}</Text>
@@ -24,6 +25,10 @@ const ProfileOptionGroup = ({ title, children }) => (
     </Surface>
   </View>
 )
+
+// the options screen is used to show the user's account information
+// you can change the theme, language, and winter months
+// it is also used to log out, delete account, and navigate to the graveyard screen
 
 export default function ProfileScreen() {
 
@@ -100,6 +105,9 @@ export default function ProfileScreen() {
     }
   }
 
+  // create a list of month options for the dropdown
+  // this is used in the winter months modal
+  // the months are in the format "January", "February", etc.
   const MONTH_OPTIONS = Array.from({ length: 12 }, (_, i) => ({
     label: new Date(2000, i).toLocaleString(i18n.language, { month: 'long' }),
     value: i + 1,

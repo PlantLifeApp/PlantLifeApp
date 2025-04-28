@@ -6,12 +6,12 @@ import { formatDate } from '../../utils/dateUtils'
 import PlantInfoModal from './PlantInfoModal'
 import ItalicText from '../../utils/italicText'
 
+// this component is used to display the next watering and fertilizing dates
+// it is used in the PlantScreen
+
 const CarePredictions = ({ nextWatering, nextFertilizing }) => {
     const { t } = useTranslation()
     const [infoVisible, setInfoVisible] = useState(false)
-
-    //console.log("nextWatering received in CarePredictions:", nextWatering);
-    //console.log("nextFertilizing received in CarePredictions:", nextFertilizing);
 
     return (
         <Surface style={styles.detailsContainer}>

@@ -12,9 +12,12 @@ import { addCareEvent } from "../services/plantService"
 import { useFocusEffect } from "@react-navigation/native"
 import CarePredictions from "../components/plant/CarePredictions"
 import ItalicText from "../utils/italicText.js"
-import { useNavigation } from "@react-navigation/native"
 import { formatDate } from "../utils/dateUtils"
 import PlantFAB from "../components/plant/PlantFAB.js"
+
+// this screen is used to show the details of a plant
+// it is navigated to from the HomeScreen component
+// it shows the plant details, care history, and a FAB to add care events
 
 const PlantScreen = ({ route }) => {
 
@@ -23,12 +26,10 @@ const PlantScreen = ({ route }) => {
     const { updatePlantData } = usePlants()
     const { t } = useTranslation()
     const theme = useTheme()
-    //const navigation = useNavigation()
 
     const [plant, setPlant] = useState(null)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
-    //const [fabOpen, setFabOpen] = useState(false)
 
     const displayName = plant?.plant.givenName || plantPreview?.givenName || ""
     const displayScientific = plant?.plant.scientificName || plantPreview?.scientificName || ""
@@ -55,6 +56,7 @@ const PlantScreen = ({ route }) => {
         }, [plantId])
     )
 
+    // handle add care event action
     const handleAddCareEvent = async (eventType) => {
         setSaving(true)
         try {
@@ -82,7 +84,7 @@ const PlantScreen = ({ route }) => {
         }
     }
 
-    console.log(plant?.plant)
+    //console.log(plant?.plant)
 
     return (
         <View style={[styles.fullScreen, { backgroundColor: theme.colors.background }]}>

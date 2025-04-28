@@ -13,6 +13,8 @@ const PlantFAB = ({ onAddCareEvent, plant }) => {
     const insets = useSafeAreaInsets()
 
     // fab positioning based on OS
+    // Android calculates the bottom offset based on the button row
+    // iOS calculates based on screen
     const bottomOffset = Platform.OS === "ios"
         ? -32 
         : insets.bottom + 8

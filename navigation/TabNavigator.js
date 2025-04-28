@@ -16,6 +16,10 @@ import {
 
 const Tab = createBottomTabNavigator()
 
+// Tab Navigator for the main app
+// this navigator contains the Home, Gallery, Stats, and Options tabs
+// each tab has its own stack navigator
+
 export default function TabNavigator() {
 
   const paperTheme = useTheme()

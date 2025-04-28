@@ -5,6 +5,9 @@ import { PaperProvider } from 'react-native-paper'
 import { ThemeContext } from '../context/themeContext'
 import Toast from 'react-native-toast-message'
 
+// this component wraps the entire app in the theme provider and auth provider
+// toast is also wrapped here to ensure it has access to the theme
+
 export default function ThemeWrapper() {
     const { theme } = useContext(ThemeContext)
 

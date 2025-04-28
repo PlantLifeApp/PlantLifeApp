@@ -8,6 +8,8 @@ export const formatDate = (date) => {
     return isNaN(d.getTime()) ? "" : d.toLocaleDateString()
 }
 
+// format for relative time display, e.g. "in 2 days" or "yesterday"
+// this is used in the PlantScreen to show the next watering and fertilizing dates
 export const formatRelativeDate = (date, t) => {
     if (!date || typeof t !== "function") return ""
 
@@ -24,6 +26,7 @@ export const formatRelativeDate = (date, t) => {
     return t("relativeTime.inDays", { count: diffInDays })
 }
 
+// calculate next watering date based on care history
 export const calculateNextWatering = (careHistory) => {
 
     // first filter out all watering events
@@ -94,6 +97,7 @@ const isWinterMonth = (month, winterStart, winterEnd) => {
     }
 }
 
+// calculate next fertilizing date based on care history
 export const calculateNextFertilizing = async (careHistory) => {
 
     // find user's winter months

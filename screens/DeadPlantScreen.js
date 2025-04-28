@@ -14,9 +14,12 @@ import DeletePlantModal from "../components/editPlant/DeletePlantModal"
 import { AuthContext } from "../context/authContext"
 import { useContext } from "react"
 
-export default function DeadPlantScreen({ route }) {
+// the dead plant screen is used to show the details of a dead plant
+// it is navigated to from the graveyard screen
+// it shows the plant details, care history, and a delete button
+// it is a modified version of the PlantScreen component
 
-    //console.log("DeadPlantScreen route params:", route.params)
+export default function DeadPlantScreen({ route }) {
 
     const { plant } = route.params
     const { t } = useTranslation()
@@ -82,9 +85,8 @@ export default function DeadPlantScreen({ route }) {
     const createdAt = plant.createdAt?.toDate?.() ?? null
     const causeOfDeathKey = plant.causeOfDeath ?? "unknown"
     
-    //console.log("Cause of Death in DeadPlantScreen:", causeOfDeathKey)
-    //console.log("Killed At in DeadPlantScreen:", killedAt)
-
+    // format lifespan string
+    // if both createdAt and killedAt are null, show "?"
     const lifespan =
     createdAt || killedAt
         ? `${createdAt ? formatDate(createdAt) : "?"} — ${killedAt ? formatDate(killedAt) : "?"}`
